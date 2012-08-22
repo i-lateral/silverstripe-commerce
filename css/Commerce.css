@@ -1,0 +1,65 @@
+/* Shopping Cart
+----------------------------------------- */
+.CartController form .cart {
+    width: 80%;
+}
+.CartController form .cart td {
+    padding: 0 0 1em 0;
+}
+
+.CartController form .cart input {
+    width: 30px;
+    padding: 2px 3px;
+}
+.CartController form .Actions {
+    width: 70%;
+    padding: 10px 0;
+    text-align: right;
+}
+
+
+/* Checkout Page
+----------------------------------------- */
+#CheckoutForm_CheckoutForm label { 
+    display: block;
+}
+
+#CheckoutForm_CheckoutForm fieldset div.field {
+    width: 47%;
+    float: left;
+    margin-right: 10px;
+}
+
+#CheckoutForm_CheckoutForm .Actions {
+    text-align: right;
+    padding-right: 8%;
+}
+
+#CheckoutForm_CheckoutForm .action {
+    color: #fff;
+    background: #ec2028 url("../images/arrow-red.gif") no-repeat 98% 50%;
+}
+
+#CheckoutForm_CheckoutForm .message {
+    font-weight: bold;
+    width: 90%;
+    color: #fff !important;
+    padding: 5px;
+    background-color: #ec2028 !important;
+    font-size: 12pt !important;
+}
+
+
+/* Order Summary
+----------------------------------------- */
+.summary div {
+    width: 45%;
+}
+
+.summary .back {
+    float: left;
+}
+
+#SagePayForm {
+    clear: both;
+}

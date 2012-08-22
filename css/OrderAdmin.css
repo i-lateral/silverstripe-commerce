@@ -1,0 +1,27 @@
+.commerce {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+}
+
+.commerce h1 {
+    line-height: 1.25em;
+}
+
+.commerce form fieldset {
+    padding: 0.5em 0;
+}
+
+.commerce form .field {
+    padding: 0;
+    margin: 0;
+}
+
+.commerce form label {
+    float: none;
+    width: 100%;
+    margin: 0;
+    display: block;
+    font-size: 9pt;
+}
