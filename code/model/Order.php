@@ -82,15 +82,15 @@ class Order extends DataObject {
         return $fields;
     }
 
-    public function canCreate() {
+    public function canCreate($member = null) {
         return false;
     }
 
-    public function canEdit() {
+    public function canEdit($member = null) {
         return true;
     }
 
-    public function canDelete() {
+    public function canDelete($member = null) {
         return true;
     }
     

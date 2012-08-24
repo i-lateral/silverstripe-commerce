@@ -10,10 +10,10 @@ class PostageArea extends DataObject {
         'Cost'      => 'Decimal'
     );
     
-    public static $has_one = array(
-        'Parent'    => 'CartPage'
-    );
-    
+	public static $has_one = array(
+		'Site' => 'SiteConfig',
+	);
+	
     public static $summary_fields = array(
         'Location'  => 'Location',
         'Cost'      => 'Cost'
@@ -24,15 +24,15 @@ class PostageArea extends DataObject {
         'Cost'      => 'TextField'
     );
     
-    public function canCreate() {
+    public function canCreate($member = null) {
         return true;
     }
 
-    public function canEdit() {
+    public function canEdit($member = null) {
         return true;
     }
 
-    public function canDelete() {
+    public function canDelete($member = null) {
         return true;
     }
 }

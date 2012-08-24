@@ -7,53 +7,56 @@ class OrderReport extends SS_Report {
     }
     
     function parameterFields() {
-        $params = new FieldSet();
+        $params = new FieldList();
         
-        // List all months
-        $months = array(
-            'All'
-        );
-        for ($i = 1; $i <= 12; $i++) { $months[] = date("F", mktime(0, 0, 0, $i + 1, 0, 0, 0)); }
-        
-        $params->push(new DropdownField('Filter_Month', 'Filter by month', $months));
-        
-        // Get the first order, then count down from current year to that
-        $firstyear = new SS_Datetime('FirstDate');
-        $firstyear->setValue(Subsite::get_from_all_subsites("Order", null, 'Created ASC', null, 1)->First()->Created);
-        $years = array();
-        
-        for ($i = date('Y'); $i >= $firstyear->Year(); $i--) { $years[$i] = $i; }
-        
-        // Add years to dropdown for filtering
-        $params->push(new DropdownField('Filter_Year', 'Filter by year', $years));
-        
-        // Order Status
-        $status = singleton('Order')->dbObject('Status')->enumValues();
-        array_unshift($status, 'All'); // Add an all filter to the top of the list
-        $params->push(new DropdownField('Filter_Status', 'Filter By Status', $status));
-        
-        //Result Limit
-        $ResultLimitOptions = array(
-            0 => 'All',
-            50 => 50,
-            100 => 100,
-            200 => 200,
-            500 => 500,
-        );
-         
-        $params->push(new DropdownField(
-            "ResultsLimit", 
-            "Limit results to", 
-            $ResultLimitOptions
-        ));
-        
-        // Custom Sorting
-        $sort = array(
-            'Created DESC'      => 'Date (newest first)',
-            'Created ASC'       => 'Date (oldest first)'
-        );
-        
-        $params->push(new DropdownField('Sort', 'Sort results', $sort));
+		// Check if any order exist
+		if(Subsite::get_from_all_subsites("Order", null, 'Created ASC', null, 1)->exists()) {
+	        // List all months
+	        $months = array(
+	            'All'
+	        );
+	        for ($i = 1; $i <= 12; $i++) { $months[] = date("F", mktime(0, 0, 0, $i + 1, 0, 0)); }
+	        
+	        $params->push(new DropdownField('Filter_Month', 'Filter by month', $months));
+	        
+	        // Get the first order, then count down from current year to that
+	        $firstyear = new SS_Datetime('FirstDate');
+	        $firstyear->setValue(Subsite::get_from_all_subsites("Order", null, 'Created ASC', null, 1)->First()->Created);
+	        $years = array();
+	        
+	        for ($i = date('Y'); $i >= $firstyear->Year(); $i--) { $years[$i] = $i; }
+	        
+	        // Add years to dropdown for filtering
+	        $params->push(new DropdownField('Filter_Year', 'Filter by year', $years));
+	        
+	        // Order Status
+	        $status = singleton('Order')->dbObject('Status')->enumValues();
+	        array_unshift($status, 'All'); // Add an all filter to the top of the list
+	        $params->push(new DropdownField('Filter_Status', 'Filter By Status', $status));
+	        
+	        //Result Limit
+	        $ResultLimitOptions = array(
+	            0 => 'All',
+	            50 => 50,
+	            100 => 100,
+	            200 => 200,
+	            500 => 500,
+	        );
+	         
+	        $params->push(new DropdownField(
+	            "ResultsLimit", 
+	            "Limit results to", 
+	            $ResultLimitOptions
+	        ));
+	        
+	        // Custom Sorting
+	        $sort = array(
+	            'Created DESC'      => 'Date (newest first)',
+	            'Created ASC'       => 'Date (oldest first)'
+	        );
+	        
+	        $params->push(new DropdownField('Sort', 'Sort results', $sort));
+        }
                  
         return $params;
     }

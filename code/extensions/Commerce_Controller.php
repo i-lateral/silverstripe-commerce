@@ -8,12 +8,14 @@ class Commerce_Controller extends Extension {
      * @return void
      */
     public function onBeforeInit() {
-        // Set the location
-        i18n::set_locale(Subsite::currentSubsite()->Language);
-        
-        // Check if url is primary domain, if not, re-direct
-        if($_SERVER['HTTP_HOST'] != Subsite::currentSubsite()->getPrimaryDomain())
-            Director::redirect(Subsite::currentSubsite()->absoluteBaseURL());
+    	if(Subsite::currentSubsite()) {
+	        // Set the location
+	        i18n::set_locale(Subsite::currentSubsite()->Language);
+	        
+	        // Check if url is primary domain, if not, re-direct
+	        if($_SERVER['HTTP_HOST'] != Subsite::currentSubsite()->getPrimaryDomain())
+	            Director::redirect(Subsite::currentSubsite()->absoluteBaseURL());
+		}
     }
     
     /**

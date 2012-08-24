@@ -29,4 +29,16 @@ class OrderItem extends DataObject {
     public function getTotal() {
         return $this->Quantity * $this->Price;
     }
+
+    public function canCreate($member = null) {
+        return true;
+    }
+
+    public function canEdit($member = null) {
+        return true;
+    }
+
+    public function canDelete($member = null) {
+        return true;
+    }
 }
