@@ -18,12 +18,12 @@ class ProductCategory extends DataObject {
 	);
 	
 	/**
-     * Return a URL to link to this controller
+     * Return a URL to link to this catagory (via Catalog_Controller)
      * 
      * @return string URL to cart controller
      */
     public function getLink(){
-        return BASE_URL . '/' . Cart_Controller::$url_slug;
+        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . Convert::raw2url($this->Title);
     }
 
 	public function getCMSFields() {

@@ -1,6 +1,6 @@
 <?php
 
-class CatalogPage_Controller extends Page_Controller {
+class Catalog_Controller extends Page_Controller {
     public static $url_segment = 'catalog/$Action/$ID';
     public static $url_slug = 'catalog';
 	
