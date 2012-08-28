@@ -39,6 +39,16 @@ class ProductCategory extends DataObject {
 		return $fields;
 	}
 	
+	public function onBeforeDelete() {
+		parent::onBeforeDelete();
+		
+		if($this->Children()) {
+			foreach($this->Children() as $child) {
+				$child->delete();
+			}
+		}
+	}
+	
 	public function populateDefaults() {
 		$parentParam = Controller::curr()->request->requestVar('ParentID');
 		
