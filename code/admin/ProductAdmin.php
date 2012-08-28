@@ -11,11 +11,14 @@ class ProductAdmin extends ModelAdmin {
     public static $menu_priority = 10;
     public static $managed_models = array('Product','ProductCategory');
 	
+	public $showImportForm = array('Product');
+	
+	
     public function init() {
         parent::init();
     }
 	
-	function getEditForm($id = null, $fields = null) {
+	public function getEditForm($id = null, $fields = null) {
     	$form = parent::getEditForm($id, $fields);
 		$params = $this->request->requestVar('q');
 		

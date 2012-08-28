@@ -1,5 +1,8 @@
 <?php
 /**
+ * Extension for Content Controller that provide methods such as cart link and category list
+ * to templates
+ * 
  * @package commerce
  */
 class Commerce_Controller extends Extension {
@@ -8,7 +11,7 @@ class Commerce_Controller extends Extension {
      * @return void
      */
     public function onBeforeInit() {
-    	if(Subsite::currentSubsite()) {
+    	if(class_exists('Subsite') && Subsite::currentSubsite()) {
 	        // Set the location
 	        i18n::set_locale(Subsite::currentSubsite()->Language);
 	        
@@ -30,6 +33,28 @@ class Commerce_Controller extends Extension {
         Requirements::javascript('commerce/js/Commerce.js');
     }
     
+	/**
+	 * Gets a list of all ProductCategories
+	 * 
+	 * @return DataList
+	 */
+	public function getProductCategories($ParentID = 0) {
+		return ProductCategory::get()->where("ParentID = {$ParentID}");
+	}
+    
+	/**
+	 * Renders a list of all ProductCategories ready to be loaded into a template
+	 * 
+	 * @return HTML
+	 */
+	public function getProductCategoryNav($ParentID = 0) {
+		$vars = array(
+			'ProductCategories' => $this->owner->getProductCategories($ParentID)
+		);
+		
+		return $this->owner->renderWith('ProductCategoryNav_List',$vars);
+	}
+	
     /**
      * Return a URL to link to this controller
      * 

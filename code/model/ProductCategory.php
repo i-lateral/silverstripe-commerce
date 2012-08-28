@@ -16,6 +16,15 @@ class ProductCategory extends DataObject {
 	public static $extensions = array(
 		"Hierarchy"
 	);
+	
+	/**
+     * Return a URL to link to this controller
+     * 
+     * @return string URL to cart controller
+     */
+    public function getLink(){
+        return BASE_URL . '/' . Cart_Controller::$url_slug;
+    }
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -36,7 +45,7 @@ class ProductCategory extends DataObject {
 		if($parentParam && is_numeric($parentParam))
 			$this->ParentID = $parentParam;
 		
-		parent::populateDefaults();		
+		parent::populateDefaults();
 	}
 	
 	public function getChildren() {
