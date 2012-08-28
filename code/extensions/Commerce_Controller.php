@@ -39,7 +39,7 @@ class Commerce_Controller extends Extension {
 	 * @return DataList
 	 */
 	public function getProductCategories($ParentID = 0) {
-		return ProductCategory::get()->where("ParentID = {$ParentID}");
+		return ProductCategory::get()->where("ParentID = {$ParentID}")->sort('Sort','DESC');
 	}
     
 	/**

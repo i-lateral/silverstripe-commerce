@@ -2,7 +2,8 @@
 
 class ProductCategory extends DataObject {
 	public static $db = array(
-		'Title' => 'Varchar'
+		'Title' => 'Varchar',
+		'Sort'	=> 'Int'
 	);
 	
 	public static $has_one = array(
@@ -30,6 +31,7 @@ class ProductCategory extends DataObject {
 		$fields = parent::getCMSFields();
 		
 		$fields->addFieldToTab('Root.Main', new TextField('Title'));
+		$fields->addFieldToTab('Root.Main', new NumericField('Sort'));
 		
 		// If record is just created, check for parent ID in URL and set appropriately
 		$parentField = new TreeDropdownField('ParentID', 'Parent Category', 'ProductCategory');

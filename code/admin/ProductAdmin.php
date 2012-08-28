@@ -38,7 +38,9 @@ class ProductAdmin extends ModelAdmin {
 			
 			// Get GridField list
 			$categories = ProductCategory::get();
-			$categories->where("ParentID = {$this->currentCategoryID()}");
+			$categories
+				->where("ParentID = {$this->currentCategoryID()}")
+				->sort('Sort','DESC');
 			
 			// Update list
 			$gridField->setList($categories);
