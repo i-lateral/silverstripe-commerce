@@ -10,8 +10,16 @@ class Catalog_Controller extends Page_Controller {
 		Requirements::themedCSS("Commerce","commerce");
 	}
 	
+	/**
+	 * Find the current category via its URL
+	 *
+	 */
+	public static function get_current_category() {
+	    return ProductCategory::get()->filter('URLVariable', Controller::curr()->request->Param('ID'))->First();
+	}
+	
 	public function getCategory() {	    
-	    return ProductCategory::get()->filter('URLVariable', $this->request->Param('ID'))->First();
+	    return self::get_current_category();
 	}
 	
 	public function getTitle() {

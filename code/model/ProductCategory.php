@@ -28,6 +28,42 @@ class ProductCategory extends DataObject {
         return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $this->URLVariable;
     }
 
+    /**
+	 * Returns TRUE if this is the currently active category.
+	 *
+	 * @return bool
+	 */
+	public function isCurrent() {
+		return $this->ID ? $this->ID == Catalog_Controller::get_current_category()->ID : $this === Catalog_Controller::get_current_category();
+	}
+	
+	/**
+	 * Check if current category is a child of selected category
+	 *
+	 * @return bool
+	 */
+	public function isSection() {
+		return $this->isCurrent() || (
+			Catalog_Controller::get_current_category() instanceof ProductCategory && in_array($this->ID, Catalog_Controller::get_current_category()->getAncestors()->column())
+		);
+	}
+
+    /**
+	 * Return "link", "current" or section depending on if this category is the
+	 * current category, or a child of the current category.
+	 *
+	 * @return string
+	 */
+	public function LinkingMode() {
+		if($this->isCurrent()) {
+			return 'current';
+		} elseif($this->isSection()) {
+			return 'section';
+		} else {
+			return 'link';
+		}
+	}
+
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
