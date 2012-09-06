@@ -36,11 +36,26 @@ class Commerce_Controller extends Extension {
 	/**
 	 * Gets a list of all ProductCategories
 	 * 
+	 * @param Parent the ID of a parent cetegory
 	 * @return DataList
 	 */
 	public function getProductCategories($ParentID = 0) {
 		return ProductCategory::get()->where("ParentID = {$ParentID}")->sort('Sort','DESC');
 	}
+    
+    /**
+     * Get a full list of products, filtered by a category if provided.
+     *
+     * @param ParentCategory the ID of 
+     */
+    public function getProducts($ParentCategory = null) {
+        $products = Product::get();
+        
+        if(isset($ParentCategory) && is_int($ParentCategory))
+            $products = $products->where("ParentID = {$ParentID}");
+            
+        return $products;
+    }
     
 	/**
 	 * Renders a list of all ProductCategories ready to be loaded into a template
