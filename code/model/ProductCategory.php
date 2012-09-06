@@ -34,7 +34,7 @@ class ProductCategory extends DataObject {
 	 * @return bool
 	 */
 	public function isCurrent() {
-		return $this->ID ? $this->ID == Catalog_Controller::get_current_category()->ID : $this === Catalog_Controller::get_current_category();
+		return ($this->ID && Catalog_Controller::get_current_category()) ? $this->ID == Catalog_Controller::get_current_category()->ID : $this === Catalog_Controller::get_current_category();
 	}
 	
 	/**

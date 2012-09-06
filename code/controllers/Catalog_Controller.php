@@ -15,7 +15,10 @@ class Catalog_Controller extends Page_Controller {
 	 *
 	 */
 	public static function get_current_category() {
-	    return ProductCategory::get()->filter('URLVariable', Controller::curr()->request->Param('ID'))->First();
+	    if(Controller::curr() instanceof Catalog_Controller)
+	        return ProductCategory::get()->filter('URLVariable', Controller::curr()->request->Param('ID'))->First();
+        else
+            return false;
 	}
 	
 	public function getCategory() {	    
