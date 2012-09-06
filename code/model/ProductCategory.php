@@ -2,8 +2,9 @@
 
 class ProductCategory extends DataObject {
 	public static $db = array(
-		'Title' => 'Varchar',
-		'Sort'	=> 'Int'
+		'Title'         => 'Varchar',
+		'URLVariable'   => 'Varchar',
+		'Sort'	        => 'Int'
 	);
 	
 	public static $has_one = array(
@@ -23,15 +24,20 @@ class ProductCategory extends DataObject {
      * 
      * @return string URL to cart controller
      */
-    public function getLink(){
-        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . Convert::raw2url($this->Title);
+    public function Link(){
+        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $this->URLVariable;
     }
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$fields->addFieldToTab('Root.Main', new TextField('Title'));
-		$fields->addFieldToTab('Root.Main', new NumericField('Sort'));
+		$url_field = TextField::create('URLVariable')
+		    ->setReadonly(true)
+		    ->performReadonlyTransformation();
+		
+		$fields->addFieldToTab('Root.Main', TextField::create('Title'));
+		$fields->addFieldToTab('Root.Main', $url_field);
+		$fields->addFieldToTab('Root.Main', NumericField::create('Sort'));
 		
 		// If record is just created, check for parent ID in URL and set appropriately
 		$parentField = new TreeDropdownField('ParentID', 'Parent Category', 'ProductCategory');
@@ -39,6 +45,13 @@ class ProductCategory extends DataObject {
 		$fields->addFieldToTab('Root.Main', $parentField);
 		
 		return $fields;
+	}
+	
+	public function onBeforeWrite() {
+	    parent::onBeforeWrite();
+	    
+	    $this->URLVariable = Convert::raw2url($this->Title);
+	    
 	}
 	
 	public function onBeforeDelete() {

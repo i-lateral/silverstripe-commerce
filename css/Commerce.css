@@ -1,3 +1,10 @@
+/* Catalog
+----------------------------------------- */
+.commerce-list-children .commerce-list-child {
+    float: left;
+}
+
+
 /* Shopping Cart
 ----------------------------------------- */
 .CartController form .cart {

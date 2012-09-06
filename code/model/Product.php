@@ -3,6 +3,7 @@
 class Product extends DataObject {
 	public static $db = array(
 		'Title'			=> 'Varchar',
+		'Price'         => 'Decimal',
 		'Description'	=> 'HTMLText',
 		'Quantity'		=> 'Int',
 		'StockID'		=> 'Varchar(99)'
