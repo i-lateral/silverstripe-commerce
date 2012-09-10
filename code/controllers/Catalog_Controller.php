@@ -33,6 +33,6 @@ class Catalog_Controller extends Page_Controller {
         if(!$this->request->Param('ID'))
             return new SS_HTTPResponse(null, 404);
 		else
-        	return $this->renderWith(array('Catalog', 'Page'));
+        	return $this->renderWith(array('Categorys', 'Page'));
     }
 }
