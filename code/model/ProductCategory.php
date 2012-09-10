@@ -4,6 +4,7 @@ class ProductCategory extends DataObject {
 	public static $db = array(
 		'Title'         => 'Varchar',
 		'URLVariable'   => 'Varchar',
+		'ListOrGrid'    => "Enum('Grid,List','Grid')",
 		'Sort'	        => 'Int'
 	);
 	
@@ -73,6 +74,7 @@ class ProductCategory extends DataObject {
 		
 		$fields->addFieldToTab('Root.Main', TextField::create('Title'));
 		$fields->addFieldToTab('Root.Main', $url_field);
+		$fields->addFieldToTab('Root.Main', DropdownField::create('ListOrGrid','View children as a list or grid?',$this->dbObject('ListOrGrid')->enumValues()));		
 		$fields->addFieldToTab('Root.Main', NumericField::create('Sort'));
 		
 		// If record is just created, check for parent ID in URL and set appropriately
