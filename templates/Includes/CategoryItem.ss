@@ -1,4 +1,4 @@
-<div class="commerce-list-child site-float-left">
+<div class="commerce-list-child">
     <h2>
         <a href="$Link">
             $Title
