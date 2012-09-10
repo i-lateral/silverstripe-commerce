@@ -4,4 +4,4 @@ After: framework/routes#rootroutes
 ---
 Director:
   rules:
-    'catalog/$ID': 'Catalog_Controller'
+    'catalog/$ID/$ProductID': 'Catalog_Controller'

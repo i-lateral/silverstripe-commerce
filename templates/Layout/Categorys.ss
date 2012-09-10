@@ -3,13 +3,21 @@
 	
 	<div class="commerce-list commerce-list-children">
 	
-        <% if Category.Children %>
-            <% loop Category.Children %>
-                <div class="commerce-list-child<% if FirstLast %> commerce-list-$FirstLast<% end_if %>"><% include CategoryItem %></div>
-            <% end_loop %>
-        <% else_if Category.Products %>
-            <% loop Category.Products %>
-                <div class="commerce-list-child<% if FirstLast %> commerce-list-$FirstLast<% end_if %>"><% include CategoryItem %></div>
+        <% if CategoriesOrProducts %>
+            <% loop CategoriesOrProducts %>
+                <div class="commerce-list-child site-float-left">
+                    <h2><a href="$Link">$Title</a></h2>
+
+                    <% if Thumbnail %>
+                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
+                    <% else_if Images %>
+                        <div class="commerce-list-image"><a href="$Link">$Images.First.CroppedImage(230,190)</a></div>
+                    <% else %>
+                        <div class="commerce-noimage"></div>
+                    <% end_if %>
+                    
+                    <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>
+                </div>
             <% end_loop %>
         <% else %>
             <p>Unable to find any products.</p>
