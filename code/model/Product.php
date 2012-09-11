@@ -76,6 +76,10 @@ class Product extends DataObject {
 	    
 	    $this->URLVariable = Convert::raw2url($this->Title);
 	}
+	
+    public function canView($member = false) {
+        return true;
+    }
 
     public function canCreate($member = null) {
         return true;

@@ -119,15 +119,19 @@ class ProductCategory extends DataObject {
 		}
 	}
 
-    public function canCreate($member = null) {
+    public function canView($member = false) {
+        return true;
+    }
+    
+    public function canCreate($member = false) {
         return true;
     }
 
-    public function canEdit($member = null) {
+    public function canEdit($member = false) {
         return true;
     }
 
-    public function canDelete($member = null) {
+    public function canDelete($member = false) {
         return true;
     }
 }
