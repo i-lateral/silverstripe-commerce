@@ -1,9 +1,10 @@
-<div class="typography">
+<div class="typography commerce-cart">
     <div class="content">
         <h1>$Title</h1>
         $Content
     </div>
-    <div class="commerce-cart-form form">
+    
+    <div class="form">
         $CartForm
     </div>
 </div>

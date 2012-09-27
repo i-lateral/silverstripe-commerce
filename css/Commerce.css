@@ -7,20 +7,60 @@
 
 /* Shopping Cart
 ----------------------------------------- */
-.CartController form .cart {
-    width: 80%;
+.commerce-cart .commerce-cart-form {
+    padding: 0;
 }
-.CartController form .cart td {
-    padding: 0 0 1em 0;
-}
+    .commerce-cart .commerce-cart-form .commerce-cart-items,
+    .commerce-cart .commerce-cart-form .commerce-cart-postage,
+    .commerce-cart .commerce-cart-form .commerce-cart-actions {
+        padding: 0;
+    }
 
-.CartController form .cart input {
-    width: 30px;
-    padding: 2px 3px;
+.commerce-cart .commerce-cart-items table {
+    width: 100%;
+    border: 0;
 }
-.CartController form .Actions {
-    width: 70%;
-    padding: 10px 0;
+    .commerce-cart .commerce-cart-items th {
+        font-weight: bold;
+        font-size: 1.1em;
+        padding-bottom: 1em;
+    }
+    .commerce-cart .commerce-cart-items .subtotal th {
+        border-top: 1px solid #ccc;
+        text-align: right;
+        padding: 1em 1em 1em 0;
+    }
+    .commerce-cart .commerce-cart-items td {
+        padding: 1em 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    .commerce-cart .commerce-cart-items input {
+        width: 30px;
+        padding: 2px 3px;
+        margin-right: 1em;
+        border: 2px solid #ccc;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    }
+    
+.commerce-cart .commerce-cart-postage {}
+    .commerce-cart .commerce-cart-postage label {
+        display: inline;
+        color: #000;
+    }
+    .commerce-cart .commerce-cart-postage select {
+        font-size: 0.75em;
+    }
+    .commerce-cart .commerce-cart-postage .commerce-cart-total {
+        padding-right: 45px;
+        text-align: right;
+    }
+
+.commerce-cart .commerce-cart-form .commerce-cart-actions {
+    padding: 10px 40px 10px 0;
     text-align: right;
 }
 

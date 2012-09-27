@@ -1,8 +1,8 @@
 <% if $Cart %>
-<form $FormAttributes>
+<form class="commerce-cart-form" $FormAttributes>
     <fieldset class="commerce-cart-items">
         $Fields.FieldByName(SecurityID)
-        <table border="0" class="cart" cellpadding="0" cellspacing="0">
+        <table border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <th class="description"><% _t('Commerce.CARTPRODUCTDESCRIPTION','Product Description') %></th>
                 <th class="quantity"><% _t('Commerce.CARTQTY','Qty') %></th>
@@ -13,10 +13,9 @@
             $CartItems
             
             <tr class="subtotal">
-                <td colspan="2"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></td>
+                <th colspan="2"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></th>
                 <td colspan="2">{$Top.CurrencySymbol}$CartSubTotal</td>
             </tr>
-            
         </table>
     </fieldset>
     
@@ -25,13 +24,13 @@
         <div class="Field postage">
             <label class="left" for="{$FormName}_Postage"><% _t('Commerce.CARTLOCATION','Please choose the location to post to') %></label>
             $Fields.FieldByName(Postage)
-            <% if PostageCost %><label for="{$FormName}_Postage">{$Top.CurrencySymbol}{$PostageCost}</label><% end_if %>
+            <% if PostageCost %><label class="right" for="{$FormName}_Postage"><strong>{$Top.CurrencySymbol}{$PostageCost}</strong></label><% end_if %>
         </div>
         
-        <div class="commerce-cart-total">
+        <p class="commerce-cart-total">
             <strong><% _t('Commerce.CARTTOTAL','Total') %></strong>
             {$Top.CurrencySymbol}{$CartTotal}
-        </div>
+        </p>
     </fieldset>
     
     <fieldset class="commerce-cart-actions Actions">
