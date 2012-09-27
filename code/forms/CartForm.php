@@ -95,7 +95,20 @@ class CartForm extends Form {
      * @return DataObjectSet 
      */
     public function getCart() {
-        return ShoppingCart::get()->Items();
+        $session_items = ShoppingCart::get()->Items();
+        $items = new ArrayList();
+        
+        foreach($session_items as $item) {
+            $items->add(new ArrayData(array(
+                'ID'            => $item->Product->ID,
+                'Title'         => $item->Product->Title,
+                'Description'   => $item->Product->Description,
+                'Price'         => $item->Product->Price,
+                'Quantity'      => $item->Quantity
+            )));
+        }
+        
+        return $items;
     }
     
     
