@@ -45,7 +45,7 @@ class ShoppingCart extends ViewableData {
      */ 
     public static function get() {
         // Check for existing session, or set empty list if none
-        $session = (Session::get('ShoppingCart')) ? Session::get('ShoppingCart') : new ArrayList();
+        $session = (Session::get('commerce-shoppingcart')) ? Session::get('commerce-shoppingcart') : new ArrayList();
         
         return new ShoppingCart($session);
     }
@@ -126,8 +126,8 @@ class ShoppingCart extends ViewableData {
      *
      */
     public function clear() {
-        Session::clear('ShoppingCart');
-        unset($_SESSION['ShoppingCart']);
+        Session::clear('commerce-shoppingcart');
+        unset($_SESSION['commerce-shoppingcart']);
     }
     
     /**
@@ -163,7 +163,7 @@ class ShoppingCart extends ViewableData {
      *
      */
     public function save() {
-        Session::set("ShoppingCart",$this->items);
+        Session::set("commerce-shoppingcart",$this->items);
     }
     
     
