@@ -2,6 +2,10 @@
 
 class Catalog_Controller extends Page_Controller {
     public static $url_slug = 'catalog';
+    
+    public static $allowed_actions = array(
+        'AddItemForm'
+    );
 	
 	public function init() {
 		parent::init();
@@ -76,5 +80,34 @@ class Catalog_Controller extends Page_Controller {
         	return $this->renderWith(array('Product', 'Page'));
 		else
         	return $this->renderWith(array('Categorys', 'Page'));
+    }
+    
+    public function AddItemForm() {
+        if(ShoppingCart::isEnabled()) {
+            $productID = ($this->getProduct()) ? $this->getProduct()->ID : 0;
+            $fields = new FieldList(
+                HiddenField::create('ProductID')->setValue($productID),
+                NumericField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-quantity')
+            );
+            
+            $actions = new FieldList(
+                FormAction::create('doAddItemToCart', 'Add to Cart')->addExtraClass('commerce-button')
+            );
+            
+            return new Form($this, 'AddItemForm', $fields, $actions);
+        } else
+            return false;
+    }
+    
+    public function doAddItemToCart($data, $form) {
+        $product = Product::get()->byID($data['ProductID']);
+        
+        if($product) {
+            $cart = ShoppingCart::get();
+            $cart->add($product, $data['Quantity']);
+            $cart->save();
+        }
+        
+        return $this->redirectBack();
     }
 }

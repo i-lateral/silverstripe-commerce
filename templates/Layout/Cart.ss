@@ -1,6 +1,6 @@
 <div class="typography">
     <div class="content">
-        <h2>$Title</h2>
+        <h1>$Title</h1>
         $Content
     </div>
     <div class="form">

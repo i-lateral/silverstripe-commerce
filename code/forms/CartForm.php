@@ -6,16 +6,18 @@
  */
 class CartForm extends Form {
     public function __construct($controller, $name) {
-        $postage_map = (Subsite::currentSubsite()->PostageAreas()) ? Subsite::currentSubsite()->PostageAreas()->map('ID','Location',_t('Commerce.PLEASESELECT','Please Select')) : '';
+        $postage_map = (SiteConfig::current_site_config()->PostageAreas()) ? SiteConfig::current_site_config()->PostageAreas()->map('ID','Location') : '';
+        $postage_map->unshift(0, _t('Commerce.PLEASESELECT','Please Select'));
+        
         $postage_value = Session::get('PostageID');
         
-        $fields = new FieldSet(
+        $fields = new FieldList(
             new DropdownField('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map, $postage_value)
         );
-        $actions = new FieldSet(
-            new FormAction('doEmpty', 'Empty Cart'),
-            new FormAction('doUpdate', 'Update Cart'),
-            new FormAction('doCheckout', 'Proceed to Checkout')
+        $actions = new FieldList(
+            FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))->addExtraClass('commerce-button'),
+            FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))->addExtraClass('commerce-button'),
+            FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('commerce-button')
         );
         
         parent::__construct($controller, $name, $fields, $actions);
@@ -34,7 +36,11 @@ class CartForm extends Form {
      * @return string 
      */
     public function getCurrencySymbol() {
-        return (Subsite::currentSubsite()) ? Subsite::currentSubsite()->Currency()->HTMLNotation : false;
+        return (SiteConfig::current_site_config()->Currency()) ? SiteConfig::current_site_config()->Currency()->HTMLNotation : false;
+    }
+    
+    public function Link($action = null) {
+        return Controller::join_links(Director::baseURL(), Cart_Controller::$url_slug);
     }
     
     /**
@@ -47,45 +53,39 @@ class CartForm extends Form {
      * @param type $form 
      */
     public function doUpdate($data, $form) {
-        // Fist update cart contents
-        $old_cart = Session::get('Cart');
-        $new_cart = array();
-        unset($_SESSION['Cart']);
+        $cart = ShoppingCart::get();
         
-        foreach($old_cart as $cart_item) {
+        foreach($cart->Items() as $cart_item) {
             foreach($data as $key => $value) {
                 $sliced_key = explode("_", $key);
                 if($sliced_key[0] == "Quantity") {
-                    if(isset($cart_item) && ($cart_item['ID'] == $sliced_key[1])) {
+                    if(isset($cart_item) && ($cart_item->Product->ID == $sliced_key[1])) {
                         if($value > 0) {
-                            $cart_item['Quantity'] = $value;
-                            $cart_item['Total'] = $cart_item['Price'] * $value;
+                            $cart->update($cart_item->Product,$value);
                         } else
-                            unset($cart_item);
+                            $cart->remove($cart_item);
                     }
                 }
             }
-            
-            if(isset($cart_item))
-                $new_cart[] = $cart_item;
         }
         
-        Session::set("Cart",$new_cart);
+        $cart->save();
         
         // If set, update Postage
         if($data['Postage'])
             Session::set('PostageID', $data['Postage']);
         
-        Director::redirectBack();
+        $this->controller->redirectBack();
     }
     
     public function doCheckout($data, $form) {
-        Director::redirect(BASE_URL . '/' . Checkout_Controller::$url_segment);
+        $this->controller->redirect(BASE_URL . '/' . Checkout_Controller::$url_segment);
     }
     
     public function doEmpty() {
-        unset($_SESSION['Cart']);
-        Director::redirectBack();
+        $cart = ShoppingCart::get()->clear();
+        
+        return $this->controller->redirectBack();
     }
     
     /**
@@ -94,21 +94,19 @@ class CartForm extends Form {
      * 
      * @return DataObjectSet 
      */
-    public function getCart() { 
-        $cart = Session::get('Cart');
-        $items = new DataObjectSet();
-        
-        if(is_array($cart)) {
-            foreach($cart as $item) {
-                if($silencer = DataObject::get_one('TagColour', "Title = '{$item['Colour']}'" ))
-                    $item['Silencer'] = $silencer;
-                
-                $items->push(new ArrayData($item));
-            }
-
-            return $items;
-        } else
-            return false;
+    public function getCart() {
+        return ShoppingCart::get()->Items();
+    }
+    
+    
+    
+    /**
+     * Generate a total cost from all the items in the cart session.
+     * 
+     * @return Int 
+     */
+    public function getCartSubTotal() {
+        return ShoppingCart::get()->TotalPrice();
     }
     
     /**
@@ -117,15 +115,10 @@ class CartForm extends Form {
      * @return Int 
      */
     public function getCartTotal() {
-        $cart = Session::get('Cart');
-        $total = 0;
-        
-        foreach($cart as $item) {
-            $total += $item['Total'];
-        }
+        $total = $this->getCartSubTotal();
         
         if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0)
-            $total += DataObject::get_by_id('PostageArea', Session::get('PostageID'))->Cost;
+            $total += PostageArea::get()->byID(Session::get('PostageID'))->Cost;
         
         return money_format('%i',$total);
         

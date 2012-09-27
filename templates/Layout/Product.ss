@@ -18,6 +18,10 @@
 	    <div class="commerce-product-description">
 	        $Product.Description
         </div>
+        
+        <div class="commerce-product-addform">
+	        $AddItemForm
+        </div>
 	    
 	</div>
 </div>

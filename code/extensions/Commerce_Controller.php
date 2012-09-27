@@ -75,17 +75,24 @@ class Commerce_Controller extends Extension {
      * 
      * @return string URL to cart controller
      */
-    public function getCartLink(){
+    public function getShoppingCartLink(){
         return BASE_URL . '/' . Cart_Controller::$url_slug;
     }
     
     /**
-     * Return a URL to link to this controller
-     * 
-     * @return string URL to cart controller
+     * Return a list of all items in the shopping cart
+     *
      */
-    public function getCartItemsTotal(){
-        return Cart_Controller::TotalItems();
+    public function getShoppingCart() {
+        return ShoppingCart::get();
+    }
+    
+    /**
+     * Checks to see if the shopping cart functionality is enabled
+     *
+     */
+    public function ShoppingCartEnabled() {
+        return ShoppingCart::isEnabled();
     }
     
     /**

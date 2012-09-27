@@ -5,11 +5,16 @@
  * @author morven
  */
 class Cart_Controller extends Page_Controller {
-    public static $url_segment = 'cart/$Action/$ID';
+    public static $url_segment = 'cart/$Action/$ID/$Quantity';
     
     public static $url_slug = 'cart';
     
     public static $allowed_actions = array(
+        'add',
+        'remove',
+        'empty',
+        'clear',
+        'update',
         "CartForm"
     );
     
@@ -21,34 +26,40 @@ class Cart_Controller extends Page_Controller {
     }
     
     public function index() {
+        $cart_copy = (SiteConfig::current_site_config()->CartCopy) ? SiteConfig::current_site_config()->CartCopy : '';
+    
     	$vars = array(
 			'Title' => $this->getTitle(),
-			'Content' => Subsite::currentSubsite()->CartCopy
+			'Content' => $cart_copy
 		);
 		
         return $this->renderWith(array('Cart','Page'), $vars);
     }
     
-    public function CartForm() {
-        return new CartForm($this, 'CartForm');
+    public function Link($action = null) {
+        return Controller::join_links(Director::baseURL(), self::$url_slug);
     }
     
     /**
-     * Method to get the total number of items in a shopping cart
-     * 
-     * @return int total items in cart
+     * Remove a product from ShoppingCart Via its ID.
+     *
+     * @param ID product ID
      */
-    public function TotalItems() {
-        $cart = Session::get('Cart');
-        $total = 0;
+    public function remove($url_params) {
+        $all_params = $url_params->allParams();
         
-        if($cart) {
-            foreach($cart as $item) {
-                $total += $item['Quantity'];
-            }
+        if(!empty($all_params['ID'])) {
+            $product = Product::get()->byID($all_params['ID']);
+            $cart = ShoppingCart::get();
+            $cart->remove($product);
+            $cart->save();
         }
-        
-        return $total;
+    
+        return $this->redirectBack();
+    }
+    
+    public function CartForm() {
+        return new CartForm($this, 'CartForm');
     }
     
 	public function getTitle() {
