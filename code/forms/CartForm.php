@@ -94,7 +94,7 @@ class CartForm extends Form {
      * 
      * @return DataObjectSet 
      */
-    public function getCart() {
+    public function getCartItems() {
         $session_items = ShoppingCart::get()->Items();
         $items = new ArrayList();
         
@@ -108,10 +108,12 @@ class CartForm extends Form {
             )));
         }
         
-        return $items;
+        return $this->renderwith(array('CartItems'),array('Items' => $items));
     }
     
-    
+     public function getCart() {
+        return ShoppingCart::get()->Items();
+     }
     
     /**
      * Generate a total cost from all the items in the cart session.

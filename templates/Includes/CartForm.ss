@@ -1,6 +1,6 @@
 <% if $Cart %>
 <form $FormAttributes>
-    <fieldset>
+    <fieldset class="commerce-cart-items">
         $Fields.FieldByName(SecurityID)
         <table border="0" class="cart" cellpadding="0" cellspacing="0">
             <tr>
@@ -10,15 +10,7 @@
                 <th></th>
             </tr>
             
-            <% loop $Cart %><tr>
-                <td>
-                    <strong>$Title</strong><br/>
-                    $Description.FirstParagraph
-                </td>
-                <td class="quantity"><input name="Quantity_{$ID}" value="{$Quantity}" /></td>
-                <td class="total">{$Top.CurrencySymbol}{$Price}</td>
-                <td class="remove"><a href="{$Top.Link}/remove/{$ID}"><img src="commerce/images/delete_large.png" alt="remove" /></a></td>
-            </tr><% end_loop %>
+            $CartItems
             
             <tr class="subtotal">
                 <td colspan="2"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></td>

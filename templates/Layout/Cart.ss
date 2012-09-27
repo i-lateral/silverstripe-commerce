@@ -3,7 +3,7 @@
         <h1>$Title</h1>
         $Content
     </div>
-    <div class="form">
+    <div class="commerce-cart-form form">
         $CartForm
     </div>
 </div>
