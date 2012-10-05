@@ -79,7 +79,7 @@ class CartForm extends Form {
                             $cart->remove($cart_item);
                     }
                 }
-            }http://fc02.deviantart.net/fs45/f/2009/155/0/b/Halo_3__ODST_Concept_Wall_by_Dread_Kestrel.png
+            }
         }
         
         $cart->save();
@@ -92,6 +92,8 @@ class CartForm extends Form {
     }
     
     public function doCheckout($data, $form) {
+        Session::set('PaymentMethod', $data['PaymentMethod']);
+    
         $this->controller->redirect(BASE_URL . '/' . Checkout_Controller::$url_segment);
     }
     

@@ -5,7 +5,7 @@
  * @author morven
  */
 class Cart_Controller extends Page_Controller {
-    public static $url_segment = 'cart/$Action/$ID/$Quantity';
+    public static $url_segment = 'cart';
     
     public static $url_slug = 'cart';
     

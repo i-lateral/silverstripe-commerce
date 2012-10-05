@@ -11,7 +11,8 @@ class Payment_Controller extends Page_Controller {
     
     static $allowed_actions = array(
         'index',
-        'reponse'
+        'success',
+        'failer'
     );
     
     public function init() {
@@ -19,56 +20,110 @@ class Payment_Controller extends Page_Controller {
         
         // If current order has not been set, re-direct to homepage
         if(!Session::get('Order')) 
-            Director::redirect(BASE_URL);
+            $this->redirect(BASE_URL);
+
+        if(!Session::get('PaymentMethod'))
+            $this->redirect(BASE_URL . Cart_Controller::$url_segment);
     }
     
     public function index() {
-        return $this->renderWith(array('Summary','Page'));
+        return $this->renderWith(array('Payment','Page'));
     }
     
     public function getOrder() {
         return Session::get('Order');
     }
     
-    public function getCryptData() {        
-        return true;
+    public function getPaymentMethod() {
+        return CommercePaymentMethod::get()->byID(Session::get('PaymentMethod'));
     }
 
-
-    private function encryptAndEncode($strIn, $type = 'AES') {
-        $site = SiteConfig::current_site_config();
-	    $encyption_password = $site->SagePayPass;
-	
-	    if ($type=="XOR") {
-                //** XOR encryption with Base64 encoding **
-                return base64Encode(simpleXor($strIn,$encyption_password));
-            }
-	    else {
-                //** AES encryption, CBC blocking with PKCS5 padding then HEX encoding - DEFAULT **
-                //** use initialization vector (IV) set from $strEncryptionPassword
-                $strIV = $encyption_password;
-                //** add PKCS5 padding to the text to be encypted
-                $strIn = $this->addPKCS5Padding($strIn);
-
-                //** perform encryption with PHP's MCRYPT module
-                $strCrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $encyption_password, $strIn, MCRYPT_MODE_CBC, $strIV);
-
-                //** perform hex encoding and return
-                return "@" . bin2hex($strCrypt);
-	    }
+    // Get the existing gateway data from the relevent PaymentMethod object
+    public function getGatewayData() {
+        $payment_method = $this->getPaymentMethod();
+        
+        return $this->renderWith('GatewayData_' . $payment_method->ClassName, $payment_method->GatewayData());  
     }
     
-    //** PHP's mcrypt does not have built in PKCS5 Padding, so we use this
-    private function addPKCS5Padding($input) {
-       $blocksize = 16;
-       $padding = "";
+    // Get relevent payment gateway URL to use in HTML form
+    public function getGatewayURL() {
+        if(Director::isDev())
+            return $this->getPaymentMethod()->DevURL;
+        else
+            return $this->getPaymentMethod()->LiveURL;
+    }
+    
+    /*
+     * Method called when payement gateway returns the sucess URL
+     *
+     * @return array
+     */
+    public function success() {
+        $site = SiteConfig::current_site_config();
+        $order = $this->getOrder();
+        
+        if($order && $order->OrderNumber == $this->urlParams['ID']) {
+            $order->Status = 'paid';
+            $order->write();
+            
+            // Loop through each session cart item and add that item to the order
+            foreach(ShoppingCart::get()->Items() as $cart_item) {
+                $order_item = new OrderItem();
+                $order_item->Title      = $cart_item->Product->Title;
+                $order_item->Price      = $cart_item->Product->Price;
+                $order_item->Quantity   = $cart_item->Quantity;
 
-       // Pad input to an even block size boundary
-       $padlength = $blocksize - (strlen($input) % $blocksize);
-       for($i = 1; $i <= $padlength; $i++) {
-          $padding .= chr($padlength);
-       }
-
-       return $input . $padding;
+                $order->Items()->add($order_item);
+            }
+            
+            ShoppingCart::get()->clear();
+            
+            unset($_SESSION['Order']);
+            unset($_SESSION['PostageID']);
+            unset($_SESSION['PaymentMethod']);
+            
+            $content = $site->SuccessCopy;
+        } else
+            $content = _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match") . ".<br/><br/>" . _t('Commerce.ORDERCONTACT',"Please contact us with more details") . '.';
+            
+        $vars = array(
+            'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete'),
+            'Content'   => $content
+        );
+        
+        return $this->renderWith(array('Payment_Response','Page'), $vars);
+    }
+    
+    /*
+     * Method called when payement gateway returns the failer URL
+     *
+     * @return array
+     */
+    public function failer() {
+        $site = SiteConfig::current_site_config();
+        
+        $order = $this->getOrder();
+        
+        if($order && $order->OrderNumber == $this->urlParams['ID']) {
+            $order->Status = 'failed';
+            $order->write();
+            
+            ShoppingCart::get()->clear();
+            
+            unset($_SESSION['Order']);
+            unset($_SESSION['PostageID']);
+            unset($_SESSION['PaymentMethod']);
+            
+            $content = $site->FailerCopy;
+            
+        } else
+            $content = _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match") . ".<br/><br/>" . _t('Commerce.ORDERCONTACT',"Please contact us with more details") . '.';
+        
+        $vars = array(
+            'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
+            'Content'   => $content
+        );
+        
+        return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
 }

@@ -7,6 +7,7 @@ class SagePay extends CommercePaymentMethod {
 
     public static $db = array(
         'SendEmail'         => "Enum('0,1,2','1')",
+        'EmailRecipient'    => 'Varchar(100)',
         'GatewayMessage'	=> 'Text'
     );
     
@@ -21,8 +22,9 @@ class SagePay extends CommercePaymentMethod {
                 'Send only to vendor'
             );
             
-            $fields->addFieldToTab('Root.Payments', OptionsetField::create('SendEmail', 'How would you like SagePay to send emails?', $email_options));
-		    $fields->addFieldToTab('Root.Payments', TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
+            $fields->addFieldToTab('Root.Main', OptionsetField::create('SendEmail', 'How would you like SagePay to send emails?', $email_options));
+		    $fields->addFieldToTab('Root.Main', EmailField::create('EmailRecipient','Email address of user to recieve email'));
+		    $fields->addFieldToTab('Root.Main', TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
         }
         
         return $fields;
@@ -39,31 +41,31 @@ class SagePay extends CommercePaymentMethod {
         $strPost .= "&Amount=" . $order->getOrderTotal(); // Formatted to 2 decimal places with leading digit
         $strPost .= "&Currency=" . $site->Currency()->GatewayCode;
         // Up to 100 chars of free format description
-        $strPost .= "&Description=" . $site->GatewayMessage;
+        $strPost .= "&Description=" . $this->GatewayMessage;
 
         /* The SuccessURL is the page to which Form returns the customer if the transaction is successful 
         ** You can change this for each transaction, perhaps passing a session ID or state flag if you wish */
-        $strPost .= "&SuccessURL=" . Director::absoluteBaseURL() . "orderresponse/success/" . $order->OrderNumber;
+        $strPost .= "&SuccessURL=" . Director::absoluteBaseURL() . Payment_Controller::$url_segment . "/success/" . $order->OrderNumber;
 
         /* The FailureURL is the page to which Form returns the customer if the transaction is unsuccessful
         ** You can change this for each transaction, perhaps passing a session ID or state flag if you wish */
-        $strPost .= "&FailureURL=" . Director::absoluteBaseURL() . "orderresponse/failer/" . $order->OrderNumber;
+        $strPost .= "&FailureURL=" . Director::absoluteBaseURL() . Payment_Controller::$url_segment . "/failer/" . $order->OrderNumber;
 
         // This is an Optional setting. Here we are just using the Billing names given.
         $strPost .= "&CustomerName=" . $order->BillingFirstnames . " " . $order->BillingSurname;
 
         // Email settings:
-        $strPost=$strPost . "&SendEMail=" . $site->SagePaySendEmail;
+        $strPost=$strPost . "&SendEMail=" . $this->SendEmail;
 
         if($order->BillingEmail)
             $strPost .= "&CustomerEMail=" . $order->BillingEmail;  // This is an Optional setting
 
-        if($site->SagePayEmail)
-            $strPost .= "&VendorEMail=" . $site->SagePayEmail;  // This is an Optional setting
+        if($this->EmailRecipient)
+            $strPost .= "&VendorEMail=" . $this->EmailRecipient;  // This is an Optional setting
 
         // You can specify any custom message to send to your customers in their confirmation e-mail here
         // The field can contain HTML if you wish, and be different for each order.  This field is optional
-        $strPost .= "&eMailMessage=Thank you for your order from {$site->Title}.<br/> For your records, your order number is:<br/>" . $order->OrderNumber;
+        //$strPost .= "&eMailMessage=Thank you for your order from {$site->Title}.<br/> For your records, your order number is:<br/>" . $order->OrderNumber;
 
         // Billing Details:
         $strPost .= "&BillingFirstnames=" . $order->BillingFirstnames;
@@ -100,27 +102,30 @@ class SagePay extends CommercePaymentMethod {
         // Encrypt the plaintext string for inclusion in the hidden field
         $encrypted_data = $this->encryptAndEncode($strPost);
         
-        return $encrypted_data;
+        $vars = array(
+            'Data'      => $encrypted_data,
+            'Vendor'    => $this->AccountName
+        );
+        
+        // Send back variables to be rendered by the controller
+        return $vars;
     }
     
     
-    private function encryptAndEncode($strIn, $type = 'AES') {
-        $site = SiteConfig::current_site_config();
-	    $encyption_password = $site->SagePayPass;
-	
+    private function encryptAndEncode($strIn, $type = 'AES') {	
 	    if ($type=="XOR") {
                 //** XOR encryption with Base64 encoding **
-                return base64Encode(simpleXor($strIn,$encyption_password));
+                return base64Encode(simpleXor($strIn,$this->Password));
             }
 	    else {
                 //** AES encryption, CBC blocking with PKCS5 padding then HEX encoding - DEFAULT **
                 //** use initialization vector (IV) set from $strEncryptionPassword
-                $strIV = $encyption_password;
+                $strIV = $this->Password;
                 //** add PKCS5 padding to the text to be encypted
                 $strIn = $this->addPKCS5Padding($strIn);
 
                 //** perform encryption with PHP's MCRYPT module
-                $strCrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $encyption_password, $strIn, MCRYPT_MODE_CBC, $strIV);
+                $strCrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->Password, $strIn, MCRYPT_MODE_CBC, $strIV);
 
                 //** perform hex encoding and return
                 return "@" . bin2hex($strCrypt);

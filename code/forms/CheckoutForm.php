@@ -6,33 +6,82 @@
  */
 class CheckoutForm extends Form {
     public function __construct($controller, $name) {
-        $fields= new FieldSet(
-            new FieldGroup(
-                new HeaderField('BillingHeader', _t('Commerce.BILLINGDETAILS','Billing Details'), 2),
-                new TextField('BillingFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
-                new TextField('BillingSurname',_t('Commerce.SURNAME','Surname') . '*'),
-                new EmailField('BillingEmail',_t('Commerce.EMAIL','Email') . '*'),
-                new TextField('BillingPhone',_t('Commerce.PHONE','Phone Number')),
-                new TextField('BillingAddress1',_t('Commerce.ADDRESS1','Address Line 1') . '*'),
-                new TextField('BillingAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
-                new TextField('BillingCity',_t('Commerce.CITY','City') . '*'),
-                new TextField('BillingPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
-                new CountryDropdownField('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')
-            ),
-            new FieldGroup(
-                new HeaderField('DeliveryHeader', _t('Commerce.DELIVERYDETAILS','Delivery Details') . '(' . _t('Commerce.IFDIFFERENT','if different') . ')', 2),
-                new TextField('DeliveryFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)')),
-                new TextField('DeliverySurname',_t('Commerce.SURNAME','Surname')),
-                new TextField('DeliveryAddress1',_t('Commerce.ADDRESS1','Address Line 1')),
-                new TextField('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
-                new TextField('DeliveryCity',_t('Commerce.CITY','City')),
-                new TextField('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code')),
-                new CountryDropdownField('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')
+        // If cart is empty, re-direct to homepage
+        if(!ShoppingCart::get()->Items()) 
+            $this->redirect(BASE_URL);
+        
+        // Overwrite custom validation
+        Requirements::javascript("http://ajax.microsoft.com/ajax/jquery.validate/1.8/jquery.validate.min.js");
+        
+        Requirements::customScript('
+            (function($) {
+                $(document).ready(function() {
+                    jQuery.validator.messages.required = "";
+                    
+                    $("#CheckoutForm_CheckoutForm").validate({
+                        invalidHandler: function(e, validator) {
+                            var errors = validator.numberOfInvalids();
+                            if (errors) {
+                                $("p.message").html("' . _t('Commerce.ERRORMESSAGE',"Please complete all the required fields below") . '");
+                                $("p.message").show();
+                            } else {
+                                $("p.message").hide();
+                            }
+                        },
+                        submitHandler: function(form) {
+                            $("p.message").hide();
+                            form.submit();
+                        },
+                        rules: {
+                            BillingFirstnames: "required",
+                            BillingSurname: "required",
+                            BillingAddress1: "required",
+                            BillingCity: "required",
+                            BillingPostCode: "required",
+                            BillingCountry: "required",
+                            BillingEmail: {
+                                required: true,
+                                email: true
+                            }
+                        }
+                    });
+                });
+            })(jQuery);
+        ');
+    
+        $billing_fields = FieldGroup::create(
+                HeaderField::create('BillingHeader', _t('Commerce.BILLINGDETAILS','Billing Details'), 2),
+                TextField::create('BillingFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
+                TextField::create('BillingSurname',_t('Commerce.SURNAME','Surname') . '*'),
+                EmailField::create('BillingEmail',_t('Commerce.EMAIL','Email') . '*'),
+                TextField::create('BillingPhone',_t('Commerce.PHONE','Phone Number')),
+                TextField::create('BillingAddress1',_t('Commerce.ADDRESS1','Address Line 1') . '*'),
+                TextField::create('BillingAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
+                TextField::create('BillingCity',_t('Commerce.CITY','City') . '*'),
+                TextField::create('BillingPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
+                CountryDropdownField::create('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')
+            )->addExtraClass('billing_fields');
+            
+        $delivery_fields = FieldGroup::create(
+                HeaderField::create('DeliveryHeader', _t('Commerce.DELIVERYDETAILS','Delivery Details') . '(' . _t('Commerce.IFDIFFERENT','if different') . ')', 2),
+                TextField::create('DeliveryFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)')),
+                TextField::create('DeliverySurname',_t('Commerce.SURNAME','Surname')),
+                TextField::create('DeliveryAddress1',_t('Commerce.ADDRESS1','Address Line 1')),
+                TextField::create('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
+                TextField::create('DeliveryCity',_t('Commerce.CITY','City')),
+                TextField::create('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code')),
+                CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')
             )
+            ->addExtraClass('delivery_fields');
+            
+        $fields= new FieldList(
+            $billing_fields,
+            $delivery_fields
         );
         
-        $actions = new FieldSet(
-            new FormAction('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
+        $actions = new FieldList(
+            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Cart_Controller::$url_segment . '" class="action">' . _t('Commerce.BACK','Back') . '</a>'),
+            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
         );
         
         $validator = new RequiredFields(
@@ -53,7 +102,7 @@ class CheckoutForm extends Form {
         
         Session::set('Order',$order);
         
-        Director::redirect(BASE_URL . '/summary/');
+        $this->controller->redirect(BASE_URL . '/' . Payment_Controller::$url_segment);
     }
     
     /**
@@ -65,9 +114,8 @@ class CheckoutForm extends Form {
      */
     private function save_data_to_order($form) {
         // Work out if an order prefix string has been set in siteconfig
-        $site_config = SiteConfig::current_site_config();
-        $site = Subsite::currentSubsite();
-        $order_prefix = ($site->OrderPrefix) ? $site->OrderPrefix . '-' : '';
+        $config = SiteConfig::current_site_config();
+        $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
         
         // Check if delivery details are set. If not, set to billing details.
         $formData = $form->getData();
@@ -94,18 +142,15 @@ class CheckoutForm extends Form {
         $order->OrderNumber = $order_prefix . uniqid();
         $order->Status      = 'incomplete';
         $order->PostageID   = Session::get('PostageID');
+        $order->write();
             
         // Loop through each session cart item and add that item to the order
-        foreach(Session::get('Cart') as $cart_item) {
+        foreach(ShoppingCart::get()->Items() as $cart_item) {
             $order_item = new OrderItem();
-            $order_item->Type       = $cart_item['Type'];
-            $order_item->Quantity   = $cart_item['Quantity'];
-            $order_item->Price      = $cart_item['Price'];
-            $order_item->Colour     = $cart_item['Colour'];
-
-            // If tags data exists, add to item
-            $order_item->TagOne = ($cart_item['TagOne']) ? $cart_item['TagOne'] : '';
-            $order_item->TagTwo = ($cart_item['TagTwo']) ? $cart_item['TagTwo'] : '';
+            $order_item->Type       = $cart_item->Product->Type;
+            $order_item->Quantity   = $cart_item->Quantity;
+            $order_item->Price      = $cart_item->Product->Price;
+            $order_item->Colour     = $cart_item->Product->Colour;
 
             $order->Items()->add($order_item);
         }
