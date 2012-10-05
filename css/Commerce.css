@@ -52,17 +52,43 @@
         color: #000;
     }
     .commerce-cart .commerce-cart-postage select {
+        display: inline;
         font-size: 0.75em;
     }
     .commerce-cart .commerce-cart-postage .commerce-cart-total {
-        padding-right: 45px;
-        text-align: right;
+        text-align: center;
+        color: #fff;
+        font-size: 1.5em;
+        padding: 0.5em;
+        margin: 1em 0;
+        background: #95C902;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    }
+        .commerce-cart .commerce-cart-postage .commerce-cart-total strong {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+.commerce-cart .commerce-cart-payment {}
+    .commerce-cart .commerce-cart-payment .optionset {
+        padding-left: 0.4em;
+        margin-left: 0;
+        margin-top: 0.5em;
+    }
+    .commerce-cart .commerce-cart-payment .optionset li {
+        font-size: 1em;
+        color: #000;
     }
 
-.commerce-cart .commerce-cart-form .commerce-cart-actions {
+.commerce-cart .commerce-cart-actions {
     padding: 10px 40px 10px 0;
     text-align: right;
 }
+    .commerce-cart .commerce-cart-actions .action {
+        display: inline;
+    }
 
 
 /* Checkout Page
@@ -71,31 +97,26 @@
     display: block;
 }
 
-#CheckoutForm_CheckoutForm fieldset div.field {
-    width: 47%;
+#CheckoutForm_CheckoutForm fieldset div.billing_fields {
     float: left;
-    margin-right: 10px;
+    width: 49%;
 }
-
-#CheckoutForm_CheckoutForm .Actions {
-    text-align: right;
-    padding-right: 8%;
-}
-
-#CheckoutForm_CheckoutForm .action {
-    color: #fff;
-    background: #ec2028 url("../images/arrow-red.gif") no-repeat 98% 50%;
+#CheckoutForm_CheckoutForm fieldset div.delivery_fields {
+    float: right;
+    width: 49%;
 }
 
 #CheckoutForm_CheckoutForm .message {
     font-weight: bold;
-    width: 90%;
     color: #fff !important;
     padding: 5px;
     background-color: #ec2028 !important;
     font-size: 12pt !important;
 }
 
+#CheckoutForm_CheckoutForm .error {
+    border: 1px solid #ec2028 ;
+}
 
 /* Order Summary
 ----------------------------------------- */
@@ -105,8 +126,4 @@
 
 .summary .back {
     float: left;
-}
-
-#SagePayForm {
-    clear: both;
 }

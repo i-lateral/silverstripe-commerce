@@ -19,8 +19,13 @@
         </table>
     </fieldset>
     
+    <fieldset class="commerce-cart-actions Actions">
+        $Actions.FieldByName(action_doEmpty)
+        $Actions.FieldByName(action_doUpdate)
+    </fieldset>
+    
     <fieldset class="commerce-cart-postage">
-        <h2>Postage</h2>
+        $Fields.FieldByName(PostageHeading)
         <div class="Field postage">
             <label class="left" for="{$FormName}_Postage"><% _t('Commerce.CARTLOCATION','Please choose the location to post to') %></label>
             $Fields.FieldByName(Postage)
@@ -33,8 +38,16 @@
         </p>
     </fieldset>
     
+    <fieldset class="commerce-cart-payment">
+        $Fields.FieldByName(PaymentHeading)
+        <div class="Field payment">
+            <label for="{$FormName}_PaymentMethod"><% _t('Commerce.PAYMENTSELECTION', 'Please choose how you would like to pay') %></label>
+            $Fields.FieldByName(PaymentMethod)
+        </div>
+    </fieldset>
+    
     <fieldset class="commerce-cart-actions Actions">
-        $Actions 
+        $Actions.FieldByName(action_doCheckout)
     </fieldset>
 </form>
 

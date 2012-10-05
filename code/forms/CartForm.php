@@ -11,9 +11,22 @@ class CartForm extends Form {
         
         $postage_value = Session::get('PostageID');
         
+        // Find all current payment methods
+        $payment_methods = SiteConfig::current_site_config()->PaymentMethods()->map('ID','Summary');
+        
+        // Find the default payment method
+        $payment_value = SiteConfig::current_site_config()->PaymentMethods()->filter('Default',1)->first()->ID;
+        
         $fields = new FieldList(
-            new DropdownField('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map, $postage_value)
+            // Postage
+            HeaderField::create('PostageHeading', _t('Commerce.POSTAGE', 'Postage'), 2),
+            DropdownField::create('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map, $postage_value),
+            
+            // Payment Gateways
+            HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payments'), 2),
+            OptionsetField::create('PaymentMethod', _t('Commerce.PAYMENTSELECTION', 'Please choose how you would like to pay'), $payment_methods, $payment_value)
         );
+        
         $actions = new FieldList(
             FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))->addExtraClass('commerce-button'),
             FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))->addExtraClass('commerce-button'),
@@ -66,7 +79,7 @@ class CartForm extends Form {
                             $cart->remove($cart_item);
                     }
                 }
-            }
+            }http://fc02.deviantart.net/fs45/f/2009/155/0/b/Halo_3__ODST_Concept_Wall_by_Dread_Kestrel.png
         }
         
         $cart->save();
