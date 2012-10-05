@@ -5,24 +5,22 @@
  * @author morven
  */
 class Commerce_SiteConfig extends DataExtension {
-    public function extraStatics($class = null, $extension = null) {
-        return array(
-            'db' => array(
-                // Commerce Configs
-                'SuccessCopy'       => 'Text',
-                'FailerCopy'        => 'Text',
-                'OrderPrefix'       => 'Varchar(9)',
-                'CartCopy'          => 'HTMLText'
-            ),
-            'has_one' => array(
-                'Currency'          => 'CommerceCurrency'
-            ),
-            'has_many' => array(
-                'PostageAreas'      => 'PostageArea',
-                'PaymentMethods'    => 'CommercePaymentMethod'
-            )
-        );
-    }
+    public static $db = array(
+        // Commerce Configs
+        'SuccessCopy'       => 'Text',
+        'FailerCopy'        => 'Text',
+        'OrderPrefix'       => 'Varchar(9)',
+        'CartCopy'          => 'HTMLText'
+    );
+    
+    public static $has_one = array(
+        'Currency'          => 'CommerceCurrency'
+    );
+    
+    public static $has_many = array(
+        'PostageAreas'      => 'PostageArea',
+        'PaymentMethods'    => 'CommercePaymentMethod'
+    );
     
     public function updateCMSFields(FieldList $fields) {
         // Ecommerce Fields
