@@ -9,7 +9,7 @@ class ProductCategory extends DataObject {
 	);
 	
 	public static $has_one = array(
-		'Parent'	=> 'Category'
+		'Parent'	=> 'ProductCategory'
 	);
 	
 	public static $many_many = array(
