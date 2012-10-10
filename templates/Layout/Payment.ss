@@ -37,14 +37,6 @@
         
         <div class="commerce-clear"></div>
         
-        <form action="$GatewayURL" method="POST"> 
-            $GatewayData
-            
-            <fieldset class="commerce-actions Actions">
-                <a href="javascript:history.go(-1)" class="action"><% _t('Commerce.BACK','Back') %></a>
-                <input type="submit" class="action highlight" value="<% _t('Commerce.CONFIRMPAY','Confirm and Pay') %>" />
-            </fieldset>
-        </form>
-        
+        $GatewayForm
     </div>
 </div>

@@ -50,13 +50,14 @@ class Order extends DataObject {
     );
     
     public static $summary_fields = array(
-        'OrderNumber'       => 'Order #',
-        'BillingFirstnames' => 'First Name',
-        'BillingSurname'    => 'Surname',
-        'BillingAddress'    => 'Billing Address',
-        'DeliveryAddress'   => 'Delivery Address',
-        'BillingEmail'      => 'Email',
-        'Status'            => 'Status'
+        'OrderNumber',
+        'BillingFirstnames',
+        'BillingSurname',
+        'BillingAddress',
+        'DeliveryAddress',
+        'BillingEmail',
+        'Status',
+        'ID'
     );
     
     public function getCMSFields() {

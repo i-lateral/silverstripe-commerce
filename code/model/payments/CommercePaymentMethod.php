@@ -16,19 +16,12 @@ class CommercePaymentMethod extends DataObject {
      */
     public $Title;
     
-    /**
-     * Summary that will appear when the user enters their details
-     *
-     */
-    public $Summary;
-    
     public static $db = array(        
         // Payment Gateway config
+        'Summary'           => 'Text',
         'LiveURL'           => 'Varchar(100)',
         'DevURL'            => 'Varchar(100)',
-        'AccountName'       => 'Varchar(100)',
-        'UserName'          => 'Varchar(100)',
-        'Password'          => 'Varchar(100)',
+        'GatewayMessage'	=> 'Text',
         'Default'           => 'Boolean'
     );
     
@@ -37,9 +30,9 @@ class CommercePaymentMethod extends DataObject {
     ); 
     
     public static $summary_fields = array(
-        'Title'     => 'Title',
-        'Summary'   => 'Summary',
-        'Default'   => 'Default payment method'
+        'Title',
+        'Summary',
+        'Default'
     );
     
     public function getCMSFields() {
@@ -59,21 +52,50 @@ class CommercePaymentMethod extends DataObject {
 	    $fields->addFieldToTab('Root.Main', $classname_field);
 	    
 	    if($this->ID) {
+            $fields->addFieldToTab('Root.Main', TextField::create('Summary', 'Summary message to appear on website'));
             $fields->addFieldToTab('Root.Main', TextField::create('LiveURL', 'Live payment URL'));
             $fields->addFieldToTab('Root.Main', TextField::create('DevURL', 'Development payment URL'));
-            $fields->addFieldToTab('Root.Main', TextField::create('AccountName', 'Account name'));
-            $fields->addFieldToTab('Root.Main', TextField::create('UserName', 'Account UserName (if different)'));
-            $fields->addFieldToTab('Root.Main', PasswordField::create('Password', 'Password'));
             $fields->addFieldToTab('Root.Main', CheckboxField::create('Default', 'Default payment method?'));
+		    $fields->addFieldToTab('Root.Main', TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
         } else {
             $fields->removeByName('LiveURL');
             $fields->removeByName('DevURL');
-            $fields->removeByName('AccountName');
-            $fields->removeByName('UserName');
-            $fields->removeByName('Password');
         }
         
         return $fields;
+    }
+    
+    // Get relevent payment gateway URL to use in HTML form
+    public function GatewayURL() {
+        if(Director::isDev())
+            return $this->DevURL;
+        else
+            return $this->LiveURL;
+    }
+    
+    /**
+     * Return a form that will be loaded into the Payment template and will post
+     * to the payment gateway provider.
+     *
+     * @return Form
+     */
+    public function getGatewayFields() {
+        user_error('You have not added a GatewayFields() method on your PaymentMethod Class');
+    }
+    
+    /**
+     * Return a form that will be loaded into the Payment template and will post
+     * to the payment gateway provider.
+     *
+     * @return Form
+     */
+    public function getGatewayActions() {
+        $actions = new FieldList(
+            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Checkout_Controller::$url_segment . '" class="action">' . _t('Commerce.BACK','Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+        );
+        
+        return $actions;
     }
     
     /**

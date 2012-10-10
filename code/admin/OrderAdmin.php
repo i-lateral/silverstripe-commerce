@@ -22,4 +22,28 @@ class OrderAdmin extends ModelAdmin {
         
         Requirements::javascript(Director::absoluteBaseURL() . 'commerce/js/OrderAdmin.js');
     }
+    
+    public function getEditForm($id = null, $fields = null) {
+    	$form = parent::getEditForm($id, $fields);
+		
+		if($this->modelClass == 'Order') {
+			$fields = $form->Fields();
+			$gridField = $fields->fieldByName('Order');
+			
+			// Enable selectable
+			$gridField->setAttribute('data-selectable', true);
+            $gridField->setAttribute('data-multiselect', true);
+            
+            // Add dispatch button
+			$field_config = $gridField->getConfig();
+			$field_config
+	            ->removeComponentsByType('GridFieldExportButton')
+				->addComponents(
+				    new GridField_DispatchedButton(),
+				    new GridField_EditSelectable()
+				);
+		}
+		
+        return $form;
+    }
 }

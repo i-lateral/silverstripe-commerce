@@ -45,12 +45,19 @@ class Payment_Controller extends Page_Controller {
         return $this->renderWith('GatewayData_' . $payment_method->ClassName, $payment_method->GatewayData());  
     }
     
+    public function GatewayForm() {
+        $payment = $this->getPaymentMethod();
+        
+        $form = new Form($this, $payment->Title . 'Form', $payment->getGatewayFields(), $payment->getGatewayActions());
+        $form->setFormMethod('POST');
+        $form->setFormAction($payment->GatewayURL());
+        
+        return $form;
+    }
+    
     // Get relevent payment gateway URL to use in HTML form
     public function getGatewayURL() {
-        if(Director::isDev())
-            return $this->getPaymentMethod()->DevURL;
-        else
-            return $this->getPaymentMethod()->LiveURL;
+        return $this->getPaymentMethod()->GatewayURL();
     }
     
     /*
@@ -125,5 +132,14 @@ class Payment_Controller extends Page_Controller {
         );
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
+    }
+    
+    /*
+     *
+     *
+     *
+     */
+    public function post($data, $form) {
+        
     }
 }

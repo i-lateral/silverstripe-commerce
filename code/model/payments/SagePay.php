@@ -2,14 +2,14 @@
 
 class SagePay extends CommercePaymentMethod {
     public $Title = 'SagePay';
-    
-    public $Summary = "Pay with credit/debit card securely via SagePay";
 
     public static $db = array(
         'SendEmail'         => "Enum('0,1,2','1')",
         'EmailRecipient'    => 'Varchar(100)',
-        'GatewayMessage'	=> 'Text'
+        'VendorName'        => 'Varchar(100)',
+        'EncryptedPassword' => 'Varchar(100)'
     );
+    
     
     public function getCMSFields() {
         $fields = parent::getCMSFields();
@@ -22,13 +22,40 @@ class SagePay extends CommercePaymentMethod {
                 'Send only to vendor'
             );
             
+            $fields->addFieldToTab('Root.Main', TextField::create('VendorName', 'Vendor name'));
+            $fields->addFieldToTab('Root.Main', PasswordField::create('EncryptedPassword', 'Password'));
+            
             $fields->addFieldToTab('Root.Main', OptionsetField::create('SendEmail', 'How would you like SagePay to send emails?', $email_options));
 		    $fields->addFieldToTab('Root.Main', EmailField::create('EmailRecipient','Email address of user to recieve email'));
-		    $fields->addFieldToTab('Root.Main', TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
         }
         
         return $fields;
     }
+    
+    
+    public function onBeforeWrite() {
+        parent::onBeforeWrite();     
+    
+        if(!$this->Summary)
+            $this->Summary = "Pay with credit/debit card securely via SagePay";
+            
+        if(!$this->GatewayMessage)
+            $this->GatewayMessage = "Thank you for your order from: " . SiteConfig::current_site_config()->Title;
+    }
+    
+    
+    public function getGatewayFields() {
+        $fields = new FieldList(
+            HiddenField::create('navigate'),
+            HiddenField::create('VPSProtocol',null,'2.23'),
+            HiddenField::create('TxType', null, 'PAYMENT'),
+            HiddenField::create('Vendor', null, $this->VendorName),
+            HiddenField::create('Crypt', null, $this->GatewayData())
+        );
+        
+        return $fields;
+    }
+    
     
     public function GatewayData() {
         $order = Session::get('Order');
@@ -102,30 +129,25 @@ class SagePay extends CommercePaymentMethod {
         // Encrypt the plaintext string for inclusion in the hidden field
         $encrypted_data = $this->encryptAndEncode($strPost);
         
-        $vars = array(
-            'Data'      => $encrypted_data,
-            'Vendor'    => $this->AccountName
-        );
-        
         // Send back variables to be rendered by the controller
-        return $vars;
+        return $encrypted_data;
     }
     
     
     private function encryptAndEncode($strIn, $type = 'AES') {	
 	    if ($type=="XOR") {
                 //** XOR encryption with Base64 encoding **
-                return base64Encode(simpleXor($strIn,$this->Password));
+                return base64Encode(simpleXor($strIn,$this->EncryptedPassword));
             }
 	    else {
                 //** AES encryption, CBC blocking with PKCS5 padding then HEX encoding - DEFAULT **
                 //** use initialization vector (IV) set from $strEncryptionPassword
-                $strIV = $this->Password;
+                $strIV = $this->EncryptedPassword;
                 //** add PKCS5 padding to the text to be encypted
                 $strIn = $this->addPKCS5Padding($strIn);
 
                 //** perform encryption with PHP's MCRYPT module
-                $strCrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->Password, $strIn, MCRYPT_MODE_CBC, $strIV);
+                $strCrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->EncryptedPassword, $strIn, MCRYPT_MODE_CBC, $strIV);
 
                 //** perform hex encoding and return
                 return "@" . bin2hex($strCrypt);
