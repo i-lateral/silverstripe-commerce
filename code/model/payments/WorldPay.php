@@ -25,7 +25,7 @@ class WorldPay extends CommercePaymentMethod {
             // Account details
             HiddenField::create('instId', null, $this->InstallID),
             HiddenField::create('cartId', null, $order->OrderNumber),
-            HiddenField::create('MC_callback', null, Director::absoluteBaseURL() . Payment_Controller::$url_segment . "/post/"),
+            HiddenField::create('MC_callback', null, Director::absoluteBaseURL() . Payment_Controller::$url_segment),
             
             // Amount and Currency details
             HiddenField::create('amount', null, $order->getOrderTotal()),

@@ -14,7 +14,7 @@ class Checkout_Controller extends Page_Controller {
     
     public function index() {
         return array(
-            'ClassName' => "CheckoutController",
+            'ClassName' => "Checkout",
             'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
             'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
         );

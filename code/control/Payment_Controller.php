@@ -27,7 +27,13 @@ class Payment_Controller extends Page_Controller {
     }
     
     public function index() {
-        return $this->renderWith(array('Payment','Page'));
+        $vars = array(
+            'ClassName' => "Payment",
+            'Title'     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            'MetaTitle' => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+        );
+    
+        return $this->renderWith(array('Payment','Page'), $vars);
     }
     
     public function getOrder() {
@@ -132,14 +138,5 @@ class Payment_Controller extends Page_Controller {
         );
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
-    }
-    
-    /*
-     *
-     *
-     *
-     */
-    public function post($data, $form) {
-        
     }
 }
