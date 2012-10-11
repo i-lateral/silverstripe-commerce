@@ -33,7 +33,6 @@ class GridField_DispatchedButton implements GridField_HTMLProvider, GridField_Ac
 			null
 		);
 		$button->addExtraClass('gridfield-button-dispatch');
-		$button->addExtraClass('no-ajax');
 		
 		return array(
 			$this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>', 

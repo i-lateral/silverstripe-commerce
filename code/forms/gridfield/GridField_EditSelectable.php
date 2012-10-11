@@ -23,7 +23,12 @@ class GridField_EditSelectable implements GridField_HTMLProvider {
 	/**
 	 * return an empty array 
 	 */
-	public function getHTMLFragments($gridField) {		
-		return array();
+	public function getHTMLFragments($gridField) {
+		
+		$checkbox_field = CheckboxField::create('selection', 'Disable Selection');
+		
+		return array(
+			'after' => $checkbox_field->SmallFieldHolder(), 
+		);
 	}
 }
