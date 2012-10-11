@@ -80,8 +80,8 @@ class CheckoutForm extends Form {
         );
         
         $actions = new FieldList(
-            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Cart_Controller::$url_segment . '" class="action">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
+            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Cart_Controller::$url_segment . '" class="action commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))->addExtraClass('commerce-action-next')
         );
         
         $validator = new RequiredFields(

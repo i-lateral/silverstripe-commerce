@@ -1,9 +1,44 @@
+/* Generic Selectors
+----------------------------------------- */
+.commerce-clear {
+    clear: both;
+}
+
 /* Catalog
 ----------------------------------------- */
 .commerce-list-children .commerce-list-child {
     float: left;
 }
 
+.commerce-form-quantity label.left,
+.commerce-form-quantity div.middleColumn,
+#Form_AddItemForm fieldset,
+#Form_AddItemForm div.clear,
+#Form_AddItemForm div.Actions {
+    float: left;
+    clear: none;
+    margin: 0;
+}
+
+.commerce-form-quantity label.left,
+.commerce-form-quantity div.middleColumn,
+#Form_AddItemForm div.clear,
+#Form_AddItemForm div.Actions {
+    margin: 0.5em 1em 0.5em 0;
+}
+
+.commerce-form-quantity label.left {
+    line-height: 2.5em;
+}
+
+.commerce-form-quantity div.middleColumn input {
+    width: 4em;
+}
+
+ {
+    clear: none;
+    float: left;
+}
 
 /* Shopping Cart
 ----------------------------------------- */
@@ -118,12 +153,33 @@
     border: 1px solid #ec2028 ;
 }
 
-/* Order Summary
------------------------------------------ */
-.summary div {
-    width: 45%;
-}
-
-.summary .back {
+#CheckoutForm_CheckoutForm .commerce-action-back {
     float: left;
 }
+#CheckoutForm_CheckoutForm .commerce-action-next {
+    float: right;
+}
+
+/* Order Summary
+----------------------------------------- */
+.Payment .commerce-summary {
+    padding: 1em 0 0 0;
+}
+    .Payment .commerce-summary .commerce-summary-billing {
+        float: left;
+        width: 49%;
+        padding: 0 0 1em 0;
+    }
+    .Payment .commerce-summary .commerce-summary-delivery {
+        float: right;
+        width: 49%;
+        padding: 0 0 1em 0;
+    }
+
+.Payment .commerce-action-back {
+    float: left;
+}
+.Payment .commerce-action-next {
+    float: right;
+}
+
