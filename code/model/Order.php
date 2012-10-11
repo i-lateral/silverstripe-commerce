@@ -144,34 +144,15 @@ class Order extends DataObject {
         parent::onAfterWrite();
         
         // Deal with sending the status email
-        if(($this->Status == 'dispatched') && !($this->EmailDispatchSent)) {
+        if(($this->Status == 'dispatched') && !($this->EmailDispatchSent)) {      
             $siteconfig = SiteConfig::current_site_config();
+              
+            $vars = array(
+                'Order' => $this,
+                'SiteConfig' => $siteconfig
+            );
             
-            $body = "
-Thank you for ordering from armydogtags.co.uk. Your order ({$this->OrderNumber})
-has been received and will be despatched to the following address:
-
-{$this->DeliveryAddress1},
-{$this->DeliveryAddress2},
-{$this->DeliveryCity},
-{$this->DeliveryPostCode},
-{$this->DeliveryCountry}
-
-If you have any queries, please contact us by:
-
-Phone: {$siteconfig->ContactPhone}
-Email: {$siteconfig->ContactEmail}
-
-Please check your tags carefully when they arrive, and contact us as soon as
-possible if there are any problems.
-
-Many Thanks,
-
-Rhodri
-{$siteconfig->Title}
-
-Visit our facebook page: www.facebook.com/armydogtags
-            ";
+            $body = $this->renderWith('Email_Dispatch', $vars);
             
             $email = new Email(
                 $siteconfig->EmailFrom,
