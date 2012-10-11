@@ -75,6 +75,11 @@ class Payment_Controller extends Page_Controller {
         $site = SiteConfig::current_site_config();
         $order = $this->getOrder();
         
+        // Quick Fix: Remove all items on existing order
+        foreach($order->Items() as $item) {
+            $order->Items()->remove($item);
+        } 
+        
         if($order && $order->OrderNumber == $this->urlParams['ID']) {
             $order->Status = 'paid';
             $order->write();
@@ -114,8 +119,12 @@ class Payment_Controller extends Page_Controller {
      */
     public function failer() {
         $site = SiteConfig::current_site_config();
-        
         $order = $this->getOrder();
+        
+        // Quick Fix: Remove all items on existing order
+        foreach($order->Items() as $item) {
+            $order->Items()->remove($item);
+        }
         
         if($order && $order->OrderNumber == $this->urlParams['ID']) {
             $order->Status = 'failed';
