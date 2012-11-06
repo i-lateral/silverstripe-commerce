@@ -7,6 +7,8 @@ class Product extends DataObject {
 		'Price'         => 'Decimal',
 		'Description'	=> 'HTMLText',
 		'Quantity'		=> 'Int',
+		'PackSize'      => 'Varchar',
+		'Weight'        => 'Int',
 		'StockID'		=> 'Varchar(99)'
 	);
 	

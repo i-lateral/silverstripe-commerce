@@ -15,9 +15,13 @@
 	    
 	    <p class="commerce-product-price">{$SiteConfig.Currency.HTMLNotation.RAW}{$Product.Price}</p>
 	    
-	    <div class="commerce-product-description">
+	    <% if $Product.PackSize %><p class="commerce-product-packsize">Per: {$Product.PackSize}</p><% end_if %>
+	    
+	    <% if $Product.Weight %><p class="commerce-product-weight">Weight: {$Product.Weight}</p><% end_if %>
+	    
+	    <% if $Product.Description %><div class="commerce-product-description">
 	        $Product.Description
-        </div>
+        </div><% end_if %>
         
         <div class="commerce-product-addform">
 	        $AddItemForm
