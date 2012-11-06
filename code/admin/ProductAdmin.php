@@ -3,6 +3,7 @@
  * ProductAdmin creates an admin area that allows editing of products
  * and Product Categories
  * 
+  * @package Commerce
  */
 
 class ProductAdmin extends ModelAdmin {

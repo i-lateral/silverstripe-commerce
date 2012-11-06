@@ -2,7 +2,7 @@
  /**
   * Add interface to manage orders through the CMS
   * 
-  * @package OrderAdmin
+  * @package Commerce
   */
 class OrderAdmin extends ModelAdmin {
     public static $url_segment = 'orders';
