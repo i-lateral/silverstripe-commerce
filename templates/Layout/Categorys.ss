@@ -13,7 +13,7 @@
                     <% else_if Images %>
                         <div class="commerce-list-image"><a href="$Link">$Images.First.CroppedImage(230,190)</a></div>
                     <% else %>
-                        <div class="commerce-noimage"></div>
+                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
                     <% end_if %>
                     
                     <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>

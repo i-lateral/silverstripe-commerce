@@ -14,6 +14,7 @@ class Commerce_SiteConfig extends DataExtension {
     );
     
     public static $has_one = array(
+        'NoProductImage'    => 'Image',
         'Currency'          => 'CommerceCurrency',
         'Weight'            => 'ProductWeight'
     );
@@ -29,6 +30,7 @@ class Commerce_SiteConfig extends DataExtension {
         $fields->addFieldToTab('Root.Commerce', HtmlEditorField::create('CartCopy', 'Copy to appear above shopping cart')->setRows(10));
         $fields->addFieldToTab('Root.Commerce', TextAreaField::create('SuccessCopy', 'Content to appear on order success page')->setRows(3));
         $fields->addFieldToTab('Root.Commerce', TextAreaField::create('FailerCopy', 'Content to appear on order failer page')->setRows(3));
+		$fields->addFieldToTab('Root.Commerce', UploadField::create('NoProductImage','Overwrite default "image unavailable" image'));
 		
     	// Add dropdown to manage currency relations
 		$currency_map = CommerceCurrency::get()->map();
@@ -51,5 +53,20 @@ class Commerce_SiteConfig extends DataExtension {
         $payment_table = GridField::create('PaymentMethods','CommercePaymentMethod',$this->owner->PaymentMethods(), GridFieldConfig_RecordEditor::create());
 		
         $fields->addFieldToTab('Root.Payments', $payment_table);
+    }
+    
+    public function requireDefaultRecords() {
+    
+        // If "no product image" is not in DB, add it
+        if(!Image::get()->filter('Name','no-image.png')->first()) {
+            $image = new Image();
+            $image->Name = 'no-image.png';
+            $image->Title = 'No Image';
+            $image->Filename = 'commerce/images/no-image.png';
+            $image->ShowInSearch = 0;
+            $image->write();
+        
+			DB::alteration_message('No image file added to DB', 'created');
+        }
     }
 }

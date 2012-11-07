@@ -43,6 +43,24 @@ class Product extends DataObject {
         return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $cat_url . $this->URLVariable;
     }
     
+    /**
+     * Overwrite default image and load a not found image if not found
+     *
+     */
+    public function getImages() {
+        Debus::show('here');
+    
+        if($this->Images()->exists())
+            $images = $this->Images();
+        else {
+            $images = new Image();
+            $images->Title = "No Image Available";
+            $images->FileName = BASE_URL . '/commerce/images/no-image.png';
+        }
+        
+        return $images;
+    }
+    
 	public function getCategoriesList() {
 	    $list = '';
 	    

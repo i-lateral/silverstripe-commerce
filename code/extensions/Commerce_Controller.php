@@ -96,6 +96,20 @@ class Commerce_Controller extends Extension {
     }
     
     /**
+     * Get the 'no-product' image from the DB
+     *
+     */
+    public function getCommerceNoImage() {
+        $config = SiteConfig::current_site_config();
+        if($config->NoProductImageID) // If image attached via the CMS
+            return $config->NoProductImage();
+        elseif($image = Image::get()->filter('Name','no-image.png')->first()) // Else see if image exists in database
+            return $image;
+        else
+            return false;
+    }
+    
+    /**
      * Determin if you should show the Subsites Menu
      * 
      * @return boolean
