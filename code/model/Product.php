@@ -13,7 +13,8 @@ class Product extends DataObject {
 	);
 	
 	public static $has_many = array(
-		'Images'		=> 'ProductImage'
+		'Images'		=> 'ProductImage',
+		'Features'      => 'ProductFeature'
 	);
 	
 	public static $belongs_many_many = array(
@@ -47,9 +48,7 @@ class Product extends DataObject {
      * Overwrite default image and load a not found image if not found
      *
      */
-    public function getImages() {
-        Debus::show('here');
-    
+    public function getImages() {    
         if($this->Images()->exists())
             $images = $this->Images();
         else {
@@ -83,10 +82,15 @@ class Product extends DataObject {
 		
 		$fields->addFieldToTab('Root.Main', $url_field, 'Price');
 		
+		// Deal with product images
 		$upload_field = new UploadField('Images');
 		$upload_field->setFolderName('products');
 		
 		$fields->addFieldToTab('Root.Images', $upload_field);
+		
+		// Deal with product features
+		$features_field = StackedTableField::create('Features', 'ProductFeature', null, array('Title' => 'TextField', 'Content' => 'TextField'));
+		$fields->addFieldToTab('Root.Features', $features_field);		
 		
 		return $fields;
 	}

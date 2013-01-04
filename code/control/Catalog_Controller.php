@@ -73,10 +73,8 @@ class Catalog_Controller extends Page_Controller {
         return $return;
 	}
 	
-    public function index() {    
-        if(!$this->request->Param('ID'))
-            return new SS_HTTPResponse(null, 404);
-		elseif($this->request->Param('ID') && $this->request->Param('ProductID'))
+    public function index() {
+		if($this->request->Param('ID') && $this->request->Param('ProductID'))
         	return $this->renderWith(array('Product', 'Page'));
 		else
         	return $this->renderWith(array('Categorys', 'Page'));
