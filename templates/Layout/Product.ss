@@ -9,7 +9,7 @@
             <% else_if Category.Thumbnail %>
                 Category.Thumbnail.CroppedImage(500,500)
             <% else %>
-                <div class="commerce-noimage">>$Top.CommerceNoImage.CroppedImage(500,500)</div>
+                <div class="commerce-noimage">$Top.CommerceNoImage.CroppedImage(500,500)</div>
             <% end_if %>
 	    </div>
 	    
