@@ -38,10 +38,14 @@ class Product extends DataObject {
      * @return string URL to cart controller
      */
     public function Link(){
-        $cat_url = (Controller::curr()->request->Param('ID')) ? Controller::curr()->request->Param('ID') : $this->Categories()->First()->URLVariable;
-        $cat_url .= '/';
+        if(Controller::curr()->request->Param('ID'))
+            $cat_url = Controller::curr()->request->Param('ID');
+        elseif($this->Categories()->First())
+            $cat_url = $this->Categories()->First()->URLVariable;
+        else
+            $cat_url = 'product';
         
-        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $cat_url . $this->URLVariable;
+        return Controller::join_links(BASE_URL , Catalog_Controller::$url_slug , $cat_url , $this->URLVariable);
     }
     
     /**

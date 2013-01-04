@@ -13,15 +13,35 @@ class Catalog_Controller extends Page_Controller {
 		Requirements::themedCSS("Commerce","commerce");
 	}
 	
+    public function index() {
+		if($this->request->Param('ID') && $this->request->Param('ProductID'))
+        	return $this->renderWith(array('Product', 'Page'));
+		else
+        	return $this->renderWith(array('Categorys', 'Page'));
+    }
+	
 	/**
 	 * Find the current category via its URL
 	 *
 	 */
 	public static function get_current_category() {
-	    if(Controller::curr() instanceof Catalog_Controller)
+	    // Currently a category return it
+	    if(Controller::curr() instanceof Catalog_Controller && Controller::curr()->request->Param('ID'))
 	        return ProductCategory::get()->filter('URLVariable', Controller::curr()->request->Param('ID'))->First();
-        else
-            return false;
+        // If not, create a fake one and return that with a map of all products
+        else {
+            $category = ProductCategory::create();
+            $category->Title = _t('Commerce.CATALOGTITlE', 'Catalog');
+            
+            // If there are any categories, add as children
+            if(ProductCategory::get()->exists()) {
+                foreach(ProductCategory::get() as $category) {
+                    $category->Children()->add($category);
+                }
+            }         
+            
+            return $category;
+        }
 	}
 	
 	/**
@@ -69,16 +89,11 @@ class Catalog_Controller extends Page_Controller {
 	        $return = $category->Children();
         elseif($category->Products()->exists())
             $return = $category->Products();
+        elseif($category->ID == 0)
+            $return = Product::get(); 
             
         return $return;
 	}
-	
-    public function index() {
-		if($this->request->Param('ID') && $this->request->Param('ProductID'))
-        	return $this->renderWith(array('Product', 'Page'));
-		else
-        	return $this->renderWith(array('Categorys', 'Page'));
-    }
     
     public function AddItemForm() {
         if(ShoppingCart::isEnabled()) {
