@@ -14,7 +14,8 @@ class Product extends DataObject {
 	
 	public static $has_many = array(
 		'Images'		=> 'ProductImage',
-		'Features'      => 'ProductFeature'
+		'Colours'       => 'ProductColour',
+		'Attributes'    => 'ProductAttribute'
 	);
 	
 	public static $belongs_many_many = array(
@@ -86,6 +87,22 @@ class Product extends DataObject {
 		
 		$fields->addFieldToTab('Root.Main', $url_field, 'Price');
 		
+		$fields->removeByName('Quantity');
+		$fields->removeByName('PackSize');
+		$fields->removeByName('Weight');
+		$fields->removeByName('StockID');
+		
+		$additional_field = ToggleCompositeField::create('AdditionalData', 'Additional Data',
+			array(
+				NumericField::create("Quantity", $this->fieldLabel('Quantity')),
+				TextField::create("PackSize", $this->fieldLabel('PackSize')),
+				TextField::create("Weight", $this->fieldLabel('Weight')),
+				TextField::create("StockID", $this->fieldLabel('StockID'))
+			)
+		)->setHeadingLevel(4);
+		
+		$fields->addFieldToTab('Root.Main', $additional_field);
+		
 		// Deal with product images
 		$upload_field = new UploadField('Images');
 		$upload_field->setFolderName('products');
@@ -93,8 +110,11 @@ class Product extends DataObject {
 		$fields->addFieldToTab('Root.Images', $upload_field);
 		
 		// Deal with product features
-		$features_field = StackedTableField::create('Features', 'ProductFeature', null, array('Title' => 'TextField', 'Content' => 'TextField'));
-		$fields->addFieldToTab('Root.Features', $features_field);		
+		$attributes_field = new StackedTableField('Attributes', 'ProductAttribute', null, array('Title' => 'TextField', 'Content' => 'TextField'));
+		$colours_field = new StackedTableField('Colours', 'ProductColour', null, array('Title' => 'TextField', 'ColourCode' => 'ColorField', 'Quantity' => 'TextField'));
+		
+		$fields->addFieldToTab('Root.Attributes', $attributes_field);
+		$fields->addFieldToTab('Root.Colours', $colours_field);
 		
 		return $fields;
 	}
