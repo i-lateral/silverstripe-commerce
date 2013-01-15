@@ -59,6 +59,7 @@ class ProductAdmin extends ModelAdmin {
 			// Don't allow navigating into children nodes on filtered lists
 			$fields = array(
 				'Title' => 'Title',
+				'URLSegment' => 'URLSegement'
 			);
 
 			if(!$params) {
@@ -66,13 +67,21 @@ class ProductAdmin extends ModelAdmin {
 			}
 	
 			$columns->setDisplayFields($fields);
-			$columns->setFieldCasting(array('Title' => 'HTMLText'));
+			$columns->setFieldCasting(array('Title' => 'HTMLText', 'URLSegment' => 'Text'));
 
 			$controller = $this;
 			$columns->setFieldFormatting(array(
 			    'Title' => function($value, &$item) use($controller) {
 					return sprintf(
 						'<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->Title . '</a>',
+						$controller->Link(),
+						$item->ID,
+						null
+					);
+				},
+			    'URLSegment' => function($value, &$item) use($controller) {
+					return sprintf(
+						'<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->URLSegment . '</a>',
 						$controller->Link(),
 						$item->ID,
 						null

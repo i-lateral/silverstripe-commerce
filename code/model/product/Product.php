@@ -3,7 +3,7 @@
 class Product extends DataObject {
 	public static $db = array(
 		'Title'			=> 'Varchar',
-		'URLVariable'	=> 'Varchar',
+		'URLSegment'	=> 'Varchar',
 		'Price'         => 'Decimal',
 		'Description'	=> 'HTMLText',
 		'Quantity'		=> 'Int',
@@ -28,6 +28,7 @@ class Product extends DataObject {
 	
 	public static $summary_fields = array(
 	    'Title'         => 'Title',
+	    'URLSegment'    => 'URLSegment',
 	    'StockID'       => 'Stock Number', 
 	    'Price'         => 'Price',
 	    'CategoriesList'=> 'Categories'
@@ -42,11 +43,11 @@ class Product extends DataObject {
         if(Controller::curr()->request->Param('ID'))
             $cat_url = Controller::curr()->request->Param('ID');
         elseif($this->Categories()->First())
-            $cat_url = $this->Categories()->First()->URLVariable;
+            $cat_url = $this->Categories()->First()->URLSegment;
         else
             $cat_url = 'product';
         
-        return Controller::join_links(BASE_URL , Catalog_Controller::$url_slug , $cat_url , $this->URLVariable);
+        return Controller::join_links(BASE_URL , Catalog_Controller::$url_slug , $cat_url , $this->URLSegment);
     }
     
     /**
@@ -81,7 +82,7 @@ class Product extends DataObject {
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$url_field = TextField::create('URLVariable')
+		$url_field = TextField::create('URLSegment')
 		    ->setReadonly(true)
 		    ->performReadonlyTransformation();
 		
@@ -122,7 +123,24 @@ class Product extends DataObject {
 	public function onBeforeWrite() {
 	    parent::onBeforeWrite();
 	    
-	    $this->URLVariable = Convert::raw2url($this->Title);
+	    // Only call on first creation, ir if title is changed
+	    if(($this->ID = 0) || $this->isChanged('Title')) {
+	        // Set the URL Segment, so it can be accessed via the controller
+            $filter = URLSegmentFilter::create();
+		    $t = $filter->filter($this->Title);
+		
+		    // Fallback to generic name if path is empty (= no valid, convertable characters)
+		    if(!$t || $t == '-' || $t == '-1') $t = "category-{$this->ID}";
+	        
+	        // Ensure that this object has a non-conflicting URLSegment value.
+	        $existing_cats = ProductCategory::get()->filter('URLSegment',$t)->count();
+	        $existing_products = Product::get()->filter('URLSegment',$t)->count();
+	        $existing_pages = (class_exists('SiteTree')) ? SiteTree::get()->filter('URLSegment',$t)->count() : 0;
+	        
+	        $count = (int)$existing_cats + (int)$existing_products + (int)$existing_pages;
+	        
+	        $this->URLSegment = ($count) ? $t . '-' . ($count + 1) : $t;
+	    }
 	}
 	
     public function canView($member = false) {

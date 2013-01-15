@@ -3,7 +3,7 @@
 class ProductCategory extends DataObject {
 	public static $db = array(
 		'Title'         => 'Varchar',
-		'URLVariable'   => 'Varchar',
+		'URLSegment'   => 'Varchar',
 		'ListOrGrid'    => "Enum('Grid,List','Grid')",
 		'Sort'	        => 'Int'
 	);
@@ -20,13 +20,18 @@ class ProductCategory extends DataObject {
 		"Hierarchy"
 	);
 	
+	public static $summary_fields = array(
+	    'Title' => 'Title',
+	    'URLSegment' => 'URLSegment'
+	);
+	
 	/**
      * Return a URL to link to this catagory (via Catalog_Controller)
      * 
      * @return string URL to cart controller
      */
     public function Link(){
-        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $this->URLVariable;
+        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $this->URLSegment;
     }
 
     /**
@@ -68,7 +73,7 @@ class ProductCategory extends DataObject {
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$url_field = TextField::create('URLVariable')
+		$url_field = TextField::create('URLSegment')
 		    ->setReadonly(true)
 		    ->performReadonlyTransformation();
 		
@@ -88,8 +93,24 @@ class ProductCategory extends DataObject {
 	public function onBeforeWrite() {
 	    parent::onBeforeWrite();
 	    
-	    $this->URLVariable = Convert::raw2url($this->Title);
-	    
+	    // Only call on first creation, ir if title is changed
+	    if(($this->ID = 0) || $this->isChanged('Title')) {
+	        // Set the URL Segment, so it can be accessed via the controller
+            $filter = URLSegmentFilter::create();
+		    $t = $filter->filter($this->Title);
+		
+		    // Fallback to generic name if path is empty (= no valid, convertable characters)
+		    if(!$t || $t == '-' || $t == '-1') $t = "category-{$this->ID}";
+	        
+	        // Ensure that this object has a non-conflicting URLSegment value.
+	        $existing_cats = ProductCategory::get()->filter('URLSegment',$t)->count();
+	        $existing_products = Product::get()->filter('URLSegment',$t)->count();
+	        $existing_pages = (class_exists('SiteTree')) ? SiteTree::get()->filter('URLSegment',$t)->count() : 0;
+	        
+	        $count = (int)$existing_cats + (int)$existing_products + (int)$existing_pages;
+	        
+	        $this->URLSegment = ($count) ? $t . '-' . ($count + 1) : $t;
+	    }
 	}
 	
 	public function onBeforeDelete() {
