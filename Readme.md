@@ -1,5 +1,11 @@
 Dependancies:
+#############
 
-SilverStripe 2.4.*
-DataObjectManager
-Subsites
+SilverStripe Framework 3.0.x
+SilverStripe Colorpicker
+
+Also Integrates With:
+#####################
+
+Silverstripe CMS
+Silverstripe Subsites
