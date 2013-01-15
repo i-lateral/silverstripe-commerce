@@ -1,5 +1,5 @@
 ---
-Name: Catalog Routes
+Name: catalogroutes
 After: framework/routes#rootroutes
 ---
 Director:
@@ -8,3 +8,11 @@ Director:
     'cart/$Action/$ID/$Quantity': 'Cart_Controller'
     'checkout/$Action/$ID': 'Checkout_Controller'
     'payment/$Action/$ID': 'Payment_Controller'
+---
+Name: modelascontrollerroutes
+After: cms/routes#modelascontrollerroutes
+---
+Director:
+  rules:
+    '': 'RootURLController'
+    '$URLSegment//$Action/$ID/$OtherID': 'CommerceURLController'
