@@ -32,7 +32,6 @@ class Product_Controller extends Page_Controller {
             
             $fields = new FieldList(
                 HiddenField::create('ProductID')->setValue($productID),
-                $colours,
                 NumericField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-quantity')
             );
             

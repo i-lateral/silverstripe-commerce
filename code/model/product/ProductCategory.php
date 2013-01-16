@@ -94,7 +94,7 @@ class ProductCategory extends DataObject {
 	    parent::onBeforeWrite();
 	    
 	    // Only call on first creation, ir if title is changed
-	    if(($this->ID = 0) || $this->isChanged('Title')) {
+	    if(($this->ID == 0) || $this->isChanged('Title')) {
 	        // Set the URL Segment, so it can be accessed via the controller
             $filter = URLSegmentFilter::create();
 		    $t = $filter->filter($this->Title);

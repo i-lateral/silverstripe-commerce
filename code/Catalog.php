@@ -137,13 +137,6 @@ class Catalog_Controller extends Page_Controller {
 	    return self::get_current_product();
 	}
 	
-	public function getTitle() {
-	    if($this->isProduct())
-	        return $this->getProduct()->Title;
-        else
-	        return $this->getCategory()->Title;
-	}
-	
 	/**
 	 * Create an array list of either current category children or products
 	 *
