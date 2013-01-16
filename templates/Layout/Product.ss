@@ -23,6 +23,15 @@
 	        $Product.Description
         </div><% end_if %>
         
+        <% if $Product.Attributes %>
+            <h2>Attributes</h2>    
+            <ul class="commerce-product-features">
+                <% loop $Product.Attributes %><li class="commerce-product-feature">
+                    <span class="commerce-strong">$Title:</span> $Content
+                </li><% end_loop %>
+            </ul>
+        <% end_if %>
+        
         <div class="commerce-product-addform">
 	        $AddItemForm
         </div>

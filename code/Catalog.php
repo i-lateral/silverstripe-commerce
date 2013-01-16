@@ -1,5 +1,58 @@
 <?php
 
+/**
+ * This class is only used if the CMS is installed, it ensures that the catalog
+ * URL is mapped via a page in the CMS
+ */
+class Catalog extends Page {
+    public static $icon = "commerce/images/product.png";
+    
+    public static $db = array(
+        'Display'   => "Enum('Categories,Category,Products','Categories')"
+    );
+    
+    public static $has_one = array(
+        'Category' => 'ProductCategory'
+    );
+    
+    public function CommerceChildren() {
+        return ProductCategory::get();
+    }
+    
+    public function getCMSFields() {
+        $fields = parent::getCMSFields();
+        
+        $display_types = array(
+            'Categories'    => 'All Root Categories',
+            'Category'      => 'One Categories Children',
+            'Products'      => 'All Products'
+        );
+        
+        $fields->addFieldToTab('Root.Main', DropDownField::create('Display', 'What will this catalog display?', $display_types), 'Content');
+        
+        if($this->Display == 'Category') $fields->addFieldToTab('Root.Main', TreeDropdownField::create("CategoryID", "Choose a category:", "ProductCategory"), 'Content');
+        
+        $fields->removeByName('Content');
+        
+        return $fields;
+    }
+    
+    public function requireDefaultRecords() {
+        parent::requireDefaultRecords();
+        
+        if(!Catalog::get()->first()) {
+            $catalog = new Catalog();
+            $catalog->Title = "Product Catalog";
+            $catalog->URLSegment = "catalog";
+			$catalog->Sort = 4;
+            $catalog->write();
+			$catalog->publish('Stage', 'Live');
+			$catalog->flushCache();
+			DB::alteration_message('Product Catalog created', 'created');
+        }
+    }
+}
+
 class Catalog_Controller extends Page_Controller {
     public static $url_slug = 'catalog';
     
@@ -13,13 +66,27 @@ class Catalog_Controller extends Page_Controller {
 		Requirements::themedCSS("Commerce","commerce");
 	}
 	
+	public function getRootCategories() {
+	    return ProductCategory::get()->filter('ParentID', 0);
+	}
+	
+	public function getAllProducts() {
+	    return Product::get();
+	}
+	
+	public function getCategoryChildren() {
+	    $category = ProductCategory::get()->filter('ID', $this->CategoryID)->first();
+	    
+	    return ($category) ? $category->ChildrenOrProducts() : false;
+	}
+	/*
     public function index() {
 		if($this->request->Param('ID') && $this->request->Param('ProductID'))
         	return $this->renderWith(array('Product', 'Page'));
 		else
         	return $this->renderWith(array('Categorys', 'Page'));
     }
-	
+	*/
 	/**
 	 * Find the current category via its URL
 	 *
@@ -94,33 +161,4 @@ class Catalog_Controller extends Page_Controller {
             
         return $return;
 	}
-    
-    public function AddItemForm() {
-        if(ShoppingCart::isEnabled()) {
-            $productID = ($this->getProduct()) ? $this->getProduct()->ID : 0;
-            $fields = new FieldList(
-                HiddenField::create('ProductID')->setValue($productID),
-                NumericField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-quantity')
-            );
-            
-            $actions = new FieldList(
-                FormAction::create('doAddItemToCart', 'Add to Cart')->addExtraClass('commerce-button')
-            );
-            
-            return new Form($this, 'AddItemForm', $fields, $actions);
-        } else
-            return false;
-    }
-    
-    public function doAddItemToCart($data, $form) {
-        $product = Product::get()->byID($data['ProductID']);
-        
-        if($product) {
-            $cart = ShoppingCart::get();
-            $cart->add($product, $data['Quantity']);
-            $cart->save();
-        }
-        
-        return $this->redirectBack();
-    }
 }

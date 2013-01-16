@@ -10,25 +10,17 @@
     float: left;
 }
 
+.commerce-form-colour label.left,
+.commerce-form-colour div.middleColumn,
 .commerce-form-quantity label.left,
-.commerce-form-quantity div.middleColumn,
-#Form_AddItemForm fieldset,
-#Form_AddItemForm div.clear,
-#Form_AddItemForm div.Actions {
+.commerce-form-quantity div.middleColumn {
     float: left;
-    clear: none;
-    margin: 0;
-}
-
-.commerce-form-quantity label.left,
-.commerce-form-quantity div.middleColumn,
-#Form_AddItemForm div.clear,
-#Form_AddItemForm div.Actions {
     margin: 0.5em 1em 0.5em 0;
 }
 
+.commerce-form-colour label.left,
 .commerce-form-quantity label.left {
-    line-height: 2.5em;
+    line-height: 2.25em;
 }
 
 .commerce-form-quantity div.middleColumn input {

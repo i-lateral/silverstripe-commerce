@@ -47,7 +47,7 @@ class Product extends DataObject {
         else
             $cat_url = 'product';
         
-        return Controller::join_links(BASE_URL , Catalog_Controller::$url_slug , $cat_url , $this->URLSegment);
+        return Controller::join_links(BASE_URL , $this->URLSegment);
     }
     
     /**

@@ -1,6 +1,8 @@
 <div class="commerce-content-container typography">	
 	<h1>$Title</h1>
 	
+	<% if $Content %>$Content<% end_if %>
+	
 	<div class="commerce-list commerce-list-children">
 	
         <% if CategoriesOrProducts %>

@@ -8,25 +8,36 @@
  * @subpackage control
  */
 class CommerceURLController extends Controller {
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
-	    // If CMS is installed
-	    if(class_exists('ModelAsController')) {
-		    $this->setDataModel($model);
-		
-		    $this->pushCurrent();
-		    $this->init();
+    public function init() {
+        parent::init();
+    }
 
-		    $controller = new ModelAsController();
-		    $result     = $controller->handleRequest($request, $model);
-		    
-		    $this->popCurrent();
-		    
-		    return $result;
-	    } else {
-	        /**
-	         *  @todo, implement something to do if CMS is not installed
-	         */
-	    }
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	    $this->request = $request;
+		$this->setDataModel($model);
 		
+		$this->pushCurrent();
+
+		// Create a response just in case init() decides to redirect
+		$this->response = new SS_HTTPResponse();
+
+		$this->init();
+	    
+	    $urlsegment = $request->param('URLSegment');
+	    
+	    // First check products against URL segment
+        if(Product::get()->filter('URLSegment',$urlsegment)->first()) {
+            $controller = new Product_Controller();
+        } elseif(ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
+            $controller = new Catalog_Controller();
+	    } else {
+	        // If CMS is installed
+	        if(class_exists('ModelAsController'))
+		        $controller = new ModelAsController();
+        }
+        
+        $result = $controller->handleRequest($request, $model);
+        
+        return $result;
 	}
 }

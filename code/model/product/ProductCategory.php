@@ -31,7 +31,7 @@ class ProductCategory extends DataObject {
      * @return string URL to cart controller
      */
     public function Link(){
-        return BASE_URL . '/' . Catalog_Controller::$url_slug . '/' . $this->URLSegment;
+        return Controller::join_links(BASE_URL , $this->URLSegment);
     }
 
     /**
@@ -132,12 +132,13 @@ class ProductCategory extends DataObject {
 		parent::populateDefaults();
 	}
 	
-	public function getChildren() {
-		if($this->getChildren()->exists()) {
-			return 1;
-		} else {
-			return 0;
-		}
+	public function ChildrenOrProducts() {
+		if($this->Children()->exists())
+			return $this->Children();
+		elseif($this->Products()->exists())
+			return $this->Products();
+		else
+		    return false;
 	}
 
     public function canView($member = false) {
