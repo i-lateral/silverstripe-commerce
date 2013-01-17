@@ -66,6 +66,18 @@ class Product extends DataObject {
         return $images;
     }
     
+    /**
+     * Determin if the product has more than one image
+     *
+     * return Boolean
+     */
+    public function HasMultipleImages() {
+        if($this->Images()->exists() && $this->Images()->count() > 1)
+            return true;
+        else
+            return false;
+    }
+    
 	public function getCategoriesList() {
 	    $list = '';
 	    

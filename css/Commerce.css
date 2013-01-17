@@ -8,7 +8,14 @@
 ----------------------------------------- */
 .commerce-list-children .commerce-list-child {
     float: left;
+    padding: 0 10px;
 }
+    .commerce-list-children .commerce-list-child h2 {
+        float: left;
+    }
+    .commerce-list-children .commerce-list-child .commerce-list-price {
+        float: right;
+    }
 
 .commerce-form-colour label.left,
 .commerce-form-colour div.middleColumn,
@@ -27,10 +34,25 @@
     width: 4em;
 }
 
- {
-    clear: none;
+
+/* Product
+----------------------------------------- */
+.commerce-product .commerce-product-images {
+    width: 49%;
     float: left;
 }
+    .commerce-product .commerce-product-images .commerce-product-thumbs {
+        padding-top: 0.75em;
+    }
+
+.commerce-product .commerce-product-summary {
+    width: 49%;
+    float: right;
+}
+.commerce-product .commerce-product-details {
+    padding-top: 1.5em;
+}
+
 
 /* Shopping Cart
 ----------------------------------------- */

@@ -7,8 +7,6 @@
 	    <% if $Display = 'Categories' %>
 	        <% loop RootCategories %>
 	            <div class="commerce-list-child site-float-left">
-                    <h2><a href="$Link">$Title</a></h2>
-
                     <% if Thumbnail %>
                         <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
                     <% else_if Images %>
@@ -17,6 +15,7 @@
                         <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
                     <% end_if %>
                     
+                    <h2><a href="$Link">$Title</a></h2>
                     <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>
                 </div>
 	        <% end_loop %>
@@ -24,8 +23,6 @@
         <% else_if $Display = 'Category' %>
             <% loop CategoryChildren %>
 	            <div class="commerce-list-child site-float-left">
-                    <h2><a href="$Link">$Title</a></h2>
-
                     <% if Thumbnail %>
                         <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
                     <% else_if Images %>
@@ -34,6 +31,7 @@
                         <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
                     <% end_if %>
                     
+                    <h2><a href="$Link">$Title</a></h2>
                     <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>
                 </div>
             <% end_loop %>
@@ -41,8 +39,6 @@
         <% else_if $Display = 'Products' %>
             <% loop AllProducts %>
 	            <div class="commerce-list-child site-float-left">
-                    <h2><a href="$Link">$Title</a></h2>
-
                     <% if Thumbnail %>
                         <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
                     <% else_if Images %>
@@ -51,6 +47,7 @@
                         <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
                     <% end_if %>
                     
+                    <h2><a href="$Link">$Title</a></h2>
                     <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>
                 </div>
             <% end_loop %>
