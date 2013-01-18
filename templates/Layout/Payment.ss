@@ -1,6 +1,6 @@
 <div class="typography">
     <div id="Content">
-        <h2><% _t('Commerce.SUMMARY','Summary') %></h2>
+        <h1><% _t('Commerce.SUMMARY','Summary') %></h1>
         <p><% _t('Commerce.SUMMARYCOPY','Please review your personal information before proceeding and entering your payment details') %>.</p>
         
         <div class="commerce-summary">

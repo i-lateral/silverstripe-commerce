@@ -1,6 +1,6 @@
 <div class="typography">
     <div id="Content">
-        <h2>$Title</h2>
+        <h1>$Title</h1>
         $Content
         $CheckoutForm
     </div>
