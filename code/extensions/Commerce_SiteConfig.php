@@ -45,12 +45,33 @@ class Commerce_SiteConfig extends DataExtension {
     	$fields->addFieldToTab('Root.Commerce', DropdownField::create('WeightID', 'Weight to use', $weights_map, $this->owner->WeightID));
 		
 		// Postage
-        $postage_table = GridField::create('PostageAreas','PostageArea',$this->owner->PostageAreas(), GridFieldConfig_RecordEditor::create());
+		$postage_config = GridFieldConfig::create()->addComponents(
+            new GridFieldToolbarHeader(),
+            new GridFieldAddNewButton('toolbar-header-right'),
+            new GridFieldSortableHeader(),
+            new GridFieldDataColumns(),
+            new GridFieldPaginator(20),
+            new GridFieldEditButton(),
+            new GridFieldDeleteAction(),
+            new GridFieldDetailForm()
+        );
+		
+        $postage_table = GridField::create('PostageAreas','PostageArea',$this->owner->PostageAreas(), $postage_config);
 		
         $fields->addFieldToTab('Root.Postage', $postage_table);
         
 		// Payment Methods
-        $payment_table = GridField::create('PaymentMethods','CommercePaymentMethod',$this->owner->PaymentMethods(), GridFieldConfig_RecordEditor::create());
+		$payment_config = GridFieldConfig::create()->addComponents(
+            new GridFieldToolbarHeader(),
+            new GridFieldAddNewButton('toolbar-header-right'),
+            new GridFieldSortableHeader(),
+            new GridFieldDataColumns(),
+            new GridFieldPaginator(20),
+            new GridFieldEditButton(),
+            new GridFieldDeleteAction(),
+            new GridFieldDetailForm()
+        );
+        $payment_table = GridField::create('PaymentMethods','CommercePaymentMethod',$this->owner->PaymentMethods(), $payment_config);
 		
         $fields->addFieldToTab('Root.Payments', $payment_table);
     }
