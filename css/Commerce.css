@@ -4,6 +4,28 @@
     clear: both;
 }
 
+/* Add Item Form
+----------------------------------------- */
+.commerce-form-additem {
+    padding: 0;
+}
+    .commerce-form-additem .field {
+        clear: both;
+        padding-bottom: 0.5em;
+    }
+    .commerce-form-additem .commerce-form-additem-quantity label.left {
+        line-height: 2em;
+        padding-right: 1em;
+        float: left;
+    }
+    .commerce-form-additem .commerce-form-additem-quantity input {
+        width: 3.5em;
+        float: left;
+    }
+    .commerce-form-additem .Actions {
+        text-align: right;
+    }
+
 /* Catalog
 ----------------------------------------- */
 .commerce-list-children .commerce-list-child {
@@ -17,23 +39,6 @@
         float: right;
     }
 
-.commerce-form-colour label.left,
-.commerce-form-colour div.middleColumn,
-.commerce-form-quantity label.left,
-.commerce-form-quantity div.middleColumn {
-    float: left;
-    margin: 0.5em 1em 0.5em 0;
-}
-
-.commerce-form-colour label.left,
-.commerce-form-quantity label.left {
-    line-height: 2.25em;
-}
-
-.commerce-form-quantity div.middleColumn input {
-    width: 4em;
-}
-
 
 /* Product
 ----------------------------------------- */
@@ -41,8 +46,11 @@
     width: 49%;
     float: left;
 }
-    .commerce-product .commerce-product-images .commerce-product-thumbs {
+    .commerce-product .commerce-product-images .thumbs {
         padding-top: 0.75em;
+    }
+    .commerce-product .commerce-product-images img {
+        border: 1px solid #c3c3c3;
     }
 
 .commerce-product .commerce-product-summary {

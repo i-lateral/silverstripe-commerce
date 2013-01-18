@@ -26,8 +26,8 @@ class CommerceURLController extends Controller {
 	    $urlsegment = $request->param('URLSegment');
 	    
 	    // First check products against URL segment
-        if(Product::get()->filter('URLSegment',$urlsegment)->first()) {
-            $controller = new Product_Controller();
+        if($product = Product::get()->filter('URLSegment',$urlsegment)->first()) {
+            $controller = new Product_Controller($product);
         } elseif(ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
             $controller = new Catalog_Controller();
 	    } else {
@@ -37,6 +37,8 @@ class CommerceURLController extends Controller {
         }
         
         $result = $controller->handleRequest($request, $model);
+        
+		$this->popCurrent();
         
         return $result;
 	}

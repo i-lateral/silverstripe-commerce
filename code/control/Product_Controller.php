@@ -1,6 +1,7 @@
 <?php
 
-class Product_Controller extends Page_Controller {    
+class Product_Controller extends Page_Controller {
+	
     public static $allowed_actions = array(
         'AddItemForm'
     );
@@ -8,6 +9,15 @@ class Product_Controller extends Page_Controller {
     public function init() {
         parent::init();
     }
+    
+	public function __construct($dataRecord = null) {
+	    $this->dataRecord = $dataRecord;
+		$this->failover = $this->dataRecord;
+		
+	    $this->Title = $this->dataRecord->Title;
+		
+		parent::__construct();
+	}
     
     /**
 	 * Find the current product via its URL
@@ -22,25 +32,40 @@ class Product_Controller extends Page_Controller {
     
     public function AddItemForm() {
         if(ShoppingCart::isEnabled()) {
-            $product = ($this->getProduct()) ? $this->getProduct() : false;
+            $product = (self::getProduct()) ? self::getProduct() : false;
             $productID = ($product) ? $product->ID : 0;
             
-            if($product && $product->Colours()->exists())
-                $colours = DropdownField::create('Color','Colour',$product->Colours()->map())->addExtraClass('commerce-form-colour');
-            else
-                $colours = null;
+            $quantity_fields = NumericField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-additem-quantity');
             
-            $fields = new FieldList(
-                HiddenField::create('ProductID')->setValue($productID),
-                NumericField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-quantity')
-            );
+            $fields = FieldList::create(HiddenField::create('ProductID')->setValue($productID));
             
-            $actions = new FieldList(
+            // If product colour customisations are set, add them to the item form 
+            if($product && $product->Customisations()->exists()) {
+                foreach($product->Customisations() as $customisation) {
+                    switch($customisation->DisplayAs) {
+                        case 'Dropdown':
+                            $field = DropdownField::create(Convert::raw2url($customisation->Title),$customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            break;
+                        case 'Radio':
+                            $field = OptionSetField::create(Convert::raw2url($customisation->Title),$customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            break;
+                        case 'Checkboxes':
+                            $field = CheckboxSetField::create(Convert::raw2url($customisation->Title),$customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            break;
+                    }
+                    $fields->add($field);
+                }
+            }
+            
+            $fields->add($quantity_fields);
+            
+            $actions = FieldList::create(
                 FormAction::create('doAddItemToCart', 'Add to Cart')->addExtraClass('commerce-button')
             );
             
-            $form = new Form($this, 'AddItemForm', $fields, $actions);
-            $form->setFormAction(Controller::join_links(BASE_URL, Controller::curr()->request->param('URLSegment'), 'AddItemForm'));
+            $form = Form::create($this, 'AddItemForm', $fields, $actions)
+                ->addExtraClass('commerce-form-additem')
+                ->setFormAction(Controller::join_links(BASE_URL, Controller::curr()->request->param('URLSegment'), 'AddItemForm'));
             
             return $form;
         } else
