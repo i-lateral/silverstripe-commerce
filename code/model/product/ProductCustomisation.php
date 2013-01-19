@@ -103,7 +103,7 @@ class ProductCustomisationOption extends DataObject {
         
         $return = $this->Title;
         $return .= ($this->Detail) ? ': ' . $this->Detail : '';
-        $return .= ($this->ModifyPrice > 0) ? ' (' . $config->Currency()->HTMLNotation . $this->ModifyPrice . ')' : '';
+        $return .= ($this->ModifyPrice != 0) ? ' (' . $config->Currency()->HTMLNotation . $this->ModifyPrice . ')' : '';
         
         return $return;
     }

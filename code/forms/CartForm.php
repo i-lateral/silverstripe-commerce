@@ -129,7 +129,7 @@ class CartForm extends Form {
                 'Customised'    => $item->Customised,
                 'Weight'        => $item->Weight,
                 'CurrencySymbol'=> SiteConfig::current_site_config()->Currency()->HTMLNotation,
-                'Price'         => $item->Price,
+                'Price'         => money_format('%i',$item->Price),
                 'Image'         => ($item->ImageID) ? Image::get()->byID($item->ImageID) : false,
                 'Quantity'      => $item->Quantity
             );

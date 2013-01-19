@@ -81,6 +81,7 @@ class ShoppingCart extends ViewableData {
         // If no update was sucessfull, update records
         if(!$added) {
             $custom_data = new ArrayList();
+            $price = $add_item->Price;
 
             foreach($customise as $custom_key => $custom_value) {
                 $custom_item = ProductCustomisationOption::get()->byID($custom_value);
@@ -90,6 +91,9 @@ class ShoppingCart extends ViewableData {
                     'Value' => $custom_item->Title,
                     'ModifyPrice' => $custom_item->ModifyPrice
                 )));
+                
+                // If a customisation modifies price, adjust the price
+                if($custom_item->ModifyPrice) $price = (float)$price + (float)$custom_item->ModifyPrice;
             }
 
             $this->items->add(new ArrayData(array(
@@ -98,7 +102,7 @@ class ShoppingCart extends ViewableData {
                 'Title'         => $add_item->Title,
                 'Description'   => $add_item->Description,
                 'Weight'        => $add_item->Weight,
-                'Price'         => $add_item->Price,
+                'Price'         => $price,
                 'Customised'    => ($custom_data) ? $custom_data : '',
                 'ImageID'       => ($add_item->Images()->exists()) ? $add_item->Images()->first()->ID : null,
                 'Quantity'      => $quantity

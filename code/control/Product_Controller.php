@@ -58,6 +58,7 @@ class Product_Controller extends Page_Controller {
                 }
             }
             
+            // Add quantity, so it appears at the end of the fields
             $fields->add($quantity_fields);
             
             $actions = FieldList::create(
