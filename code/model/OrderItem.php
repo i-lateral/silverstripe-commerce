@@ -18,16 +18,39 @@ class OrderItem extends DataObject {
         'Parent'    => 'Order'
     );
     
+    public static $casting = array(
+        'CustomDetails'    => 'HTMLText'
+    );
+    
     public static $summary_fields = array(
         'Title',
         'SKU',
-        'Customisation',
+        'CustomDetails',
         'Quantity',
         'Total'
     );
     
     public function getTotal() {
         return $this->Quantity * $this->Price;
+    }
+
+    /**
+     * Unserialise the list of customisations and rendering into a basic HTML
+     * string
+     *
+     */
+    public function getCustomDetails() {
+        $return = "";
+        
+        if($this->Customisation) {
+            $customisations = unserialize($this->Customisation);
+            
+            foreach($customisations as $custom) {
+                $return .= $custom->Title . ': ' . $custom->Value . ";\n";
+            }
+        }
+        
+        return $return;
     }
 
     public function canCreate($member = null) {
