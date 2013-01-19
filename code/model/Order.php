@@ -51,6 +51,7 @@ class Order extends DataObject {
     
     public static $summary_fields = array(
         'OrderNumber',
+        'Created',
         'BillingFirstnames',
         'BillingSurname',
         'BillingAddress',
@@ -59,26 +60,97 @@ class Order extends DataObject {
         'Status',
         'ID'
     );
+
+	static $default_sort = "Created DESC";
     
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         
-        // Structure order details
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingFirstnames', 'First Name(s)'));
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingSurname', 'Surname'));
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingAddress1', 'Address 1'));
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingAddress2', 'Address 2'));
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingCity', 'City'));
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingPostCode', 'Post Code'));
-        $fields->addFieldToTab('Root.Billing', new TextField('BillingCountry', 'Country'));
+        // Remove defailt item admin
+        $fields->removeByName('Items');
         
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliveryFirstnames', 'First Name(s)'));
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliverySurname', 'Surname'));
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliveryAddress1', 'Address 1'));
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliveryAddress2', 'Address 2'));
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliveryCity', 'City'));
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliveryPostCode', 'Post Code'));
-        $fields->addFieldToTab('Root.Delivery', new TextField('DeliveryCountry', 'Country'));
+        // Remove Billing Details
+        $fields->removeByName('BillingFirstnames');
+        $fields->removeByName('BillingSurname');
+        $fields->removeByName('BillingAddress1');
+        $fields->removeByName('BillingAddress2');
+        $fields->removeByName('BillingCity');
+        $fields->removeByName('BillingPostCode');
+        $fields->removeByName('BillingCountry');
+        
+        // Remove Delivery Details
+        $fields->removeByName('DeliveryFirstnames');
+        $fields->removeByName('DeliverySurname');
+        $fields->removeByName('DeliveryAddress1');
+        $fields->removeByName('DeliveryAddress2');
+        $fields->removeByName('DeliveryCity');
+        $fields->removeByName('DeliveryPostCode');
+        $fields->removeByName('DeliveryCountry');
+        
+		// Add non-editable order number
+		$ordernum_field = TextField::create('OrderNumber')
+		    ->setReadonly(true)
+		    ->performReadonlyTransformation();
+
+		$fields->addFieldToTab('Root.Main', $ordernum_field, 'BillingEmail');
+        
+		// Display the created and last edited dates
+		$lastedited_field = TextField::create('LastEdited', 'Last time order was saved')
+		    ->setReadonly(true)
+		    ->performReadonlyTransformation();
+		
+		$created_field = TextField::create('Created')
+		    ->setReadonly(true)
+		    ->performReadonlyTransformation();
+		
+		$fields->addFieldToTab('Root.Main', $created_field, 'EmailDispatchSent');
+		$fields->addFieldToTab('Root.Main', $lastedited_field, 'EmailDispatchSent');
+		
+		// Load basic list of items
+		$item_config = GridFieldConfig::create()->addComponents(
+		    new GridFieldSortableHeader(),
+		    new GridFieldDataColumns(),
+		    new GridFieldFooter()
+	    );
+		
+        $item_field = ToggleCompositeField::create('OrderItems', 'Order Items',
+			array(
+                GridField::create('Items',null,$this->Items(), $item_config)
+			)
+		)->setHeadingLevel(4);
+        
+        $fields->addFieldToTab('Root.Main', $item_field);
+		
+        // Structure billing details
+        $billing_fields = ToggleCompositeField::create('BillingDetails', 'Billing Details',
+			array(
+                TextField::create('BillingFirstnames', 'First Name(s)'),
+                TextField::create('BillingSurname', 'Surname'),
+                TextField::create('BillingAddress1', 'Address 1'),
+                TextField::create('BillingAddress2', 'Address 2'),
+                TextField::create('BillingCity', 'City'),
+                TextField::create('BillingPostCode', 'Post Code'),
+                TextField::create('BillingCountry', 'Country')
+			)
+		)->setHeadingLevel(4);
+        
+        $fields->addFieldToTab('Root.Main', $billing_fields);
+        
+        // Structure delivery details
+        $delivery_fields = ToggleCompositeField::create('DeliveryDetails', 'Delivery Details',
+			array(
+                TextField::create('DeliveryFirstnames', 'First Name(s)'),
+                TextField::create('DeliverySurname', 'Surname'),
+                TextField::create('DeliveryAddress1', 'Address 1'),
+                TextField::create('DeliveryAddress2', 'Address 2'),
+                TextField::create('DeliveryCity', 'City'),
+                TextField::create('DeliveryPostCode', 'Post Code'),
+                TextField::create('DeliveryCountry', 'Country')
+			)
+		)->setHeadingLevel(4);
+        
+        $fields->addFieldToTab('Root.Main', $delivery_fields);
+        
         
         return $fields;
     }
@@ -138,6 +210,15 @@ class Order extends DataObject {
         }
         
         return $total;
+    }
+    
+    public function onBeforeDelete() {
+        // Delete all items attached to this order
+        foreach($this->Items() as $item) {
+            $item->delete();
+        }
+        
+        parent::onBeforeDelete();
     }
     
     public function onAfterWrite() {

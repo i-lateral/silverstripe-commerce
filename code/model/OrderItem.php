@@ -6,11 +6,12 @@
  */
 class OrderItem extends DataObject {
     public static $db = array(
-        'Title'     => 'Varchar',
-        'StockID'   => 'Varchar(100)',
-        'Type'      => 'Varchar',
-        'Quantity'  => 'Int',
-        'Price'     => 'Currency'
+        'Title'         => 'Varchar',
+        'SKU'           => 'Varchar(100)',
+        'Type'          => 'Varchar',
+        'Customisation' => 'Text',
+        'Quantity'      => 'Int',
+        'Price'         => 'Currency'
     );
     
     public static $has_one = array(
@@ -18,10 +19,11 @@ class OrderItem extends DataObject {
     );
     
     public static $summary_fields = array(
-        'Title'     => 'Title',
-        'StockID'   => 'Varchar(100)',
-        'Type'      => 'Type',
-        'Quantity'  => 'Qty'
+        'Title',
+        'SKU',
+        'Customisation',
+        'Quantity',
+        'Total'
     );
     
     public function getTotal() {
