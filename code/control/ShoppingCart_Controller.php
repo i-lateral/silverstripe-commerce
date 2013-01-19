@@ -4,7 +4,7 @@
  *
  * @author morven
  */
-class Cart_Controller extends Page_Controller {
+class ShoppingCart_Controller extends Page_Controller {
     public static $url_segment = 'cart';
     
     public static $url_slug = 'cart';
@@ -33,7 +33,7 @@ class Cart_Controller extends Page_Controller {
 			'Content' => $cart_copy
 		);
 		
-        return $this->renderWith(array('Cart','Page'), $vars);
+        return $this->renderWith(array('ShoppingCart','Page'), $vars);
     }
     
     public function Link($action = null) {

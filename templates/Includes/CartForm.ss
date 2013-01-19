@@ -1,20 +1,21 @@
-<% if $Cart %>
+<% if $Cart.Items %>
 <form class="commerce-cart-form" $FormAttributes>
     <fieldset class="commerce-cart-items">
         $Fields.FieldByName(SecurityID)
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
+                <th class="image"></th>
                 <th class="description"><% _t('Commerce.CARTPRODUCTDESCRIPTION','Product Description') %></th>
                 <th class="quantity"><% _t('Commerce.CARTQTY','Qty') %></th>
                 <th class="price"><% _t('Commerce.CARTCOST','Item Cost') %></th>
-                <th></th>
+                <th class="actions"></th>
             </tr>
             
             $CartItems
             
             <tr class="subtotal">
-                <th colspan="2"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></th>
-                <td colspan="2">{$Top.CurrencySymbol}$CartSubTotal</td>
+                <th colspan="3"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></th>
+                <td colspan="2">{$Top.CurrencySymbol}$Cart.TotalPrice</td>
             </tr>
         </table>
     </fieldset>

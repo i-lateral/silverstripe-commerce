@@ -76,7 +76,7 @@ class Commerce_Controller extends Extension {
      * @return string URL to cart controller
      */
     public function getShoppingCartLink(){
-        return BASE_URL . '/' . Cart_Controller::$url_slug;
+        return BASE_URL . '/' . ShoppingCart_Controller::$url_slug;
     }
     
     /**

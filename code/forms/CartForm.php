@@ -5,7 +5,12 @@
  * @author morven
  */
 class CartForm extends Form {
+    protected $cart;
+
     public function __construct($controller, $name) {
+        // Set shopping cart
+        $this->cart = ShoppingCart::get();
+    
         $postage_map = (SiteConfig::current_site_config()->PostageAreas()) ? SiteConfig::current_site_config()->PostageAreas()->map('ID','Location') : '';
         $postage_map->unshift(0, _t('Commerce.PLEASESELECT','Please Select'));
         
@@ -43,6 +48,10 @@ class CartForm extends Form {
         ));
     }
     
+    public function getCart() {
+        return $this->cart;
+    }
+    
     /**
      * Get the currency for the current sub site
      * 
@@ -53,7 +62,7 @@ class CartForm extends Form {
     }
     
     public function Link($action = null) {
-        return Controller::join_links(Director::baseURL(), Cart_Controller::$url_slug);
+        return Controller::join_links(Director::baseURL(), ShoppingCart_Controller::$url_slug);
     }
     
     /**
@@ -66,23 +75,21 @@ class CartForm extends Form {
      * @param type $form 
      */
     public function doUpdate($data, $form) {
-        $cart = ShoppingCart::get();
-        
-        foreach($cart->Items() as $cart_item) {
+        foreach($this->cart->Items() as $cart_item) {
             foreach($data as $key => $value) {
                 $sliced_key = explode("_", $key);
                 if($sliced_key[0] == "Quantity") {
-                    if(isset($cart_item) && ($cart_item->Product->ID == $sliced_key[1])) {
+                    if(isset($cart_item) && ($cart_item->Key == $sliced_key[1])) {
                         if($value > 0) {
-                            $cart->update($cart_item->Product,$value);
+                            $this->cart->update($cart_item->Key,$value);
                         } else
-                            $cart->remove($cart_item);
+                            $this->cart->remove($cart_item->Key);
                     }
                 }
             }
         }
         
-        $cart->save();
+        $this->cart->save();
         
         // If set, update Postage
         if($data['Postage'])
@@ -98,7 +105,7 @@ class CartForm extends Form {
     }
     
     public function doEmpty() {
-        $cart = ShoppingCart::get()->clear();
+        $this->cart->clear();
         
         return $this->controller->redirectBack();
     }
@@ -110,33 +117,26 @@ class CartForm extends Form {
      * @return DataObjectSet 
      */
     public function getCartItems() {
-        $session_items = ShoppingCart::get()->Items();
-        $items = new ArrayList();
+        $controller = Controller::curr();
+        $return = "";
         
-        foreach($session_items as $item) {
-            $items->add(new ArrayData(array(
-                'ID'            => $item->Product->ID,
-                'Title'         => $item->Product->Title,
-                'Description'   => $item->Product->Description,
-                'Price'         => $item->Product->Price,
+        foreach($this->cart->Items() as $item) {
+            $vars = array(
+                'Key'           => $item->Key,
+                'ProductID'     => $item->ID,
+                'Title'         => $item->Title,
+                'Description'   => ($item->Description) ? $item->Description : false,
+                'Weight'        => $item->Weight,
+                'CurrencySymbol'=> SiteConfig::current_site_config()->Currency()->HTMLNotation,
+                'Price'         => $item->Price,
+                'Image'         => ($item->ImageID) ? Image::get()->byID($item->ImageID) : false,
                 'Quantity'      => $item->Quantity
-            )));
+            );
+            
+            $return .= $controller->renderwith(array('ShoppingCartItem'), $vars);
         }
         
-        return $this->renderwith(array('CartItems'),array('Items' => $items));
-    }
-    
-     public function getCart() {
-        return ShoppingCart::get()->Items();
-     }
-    
-    /**
-     * Generate a total cost from all the items in the cart session.
-     * 
-     * @return Int 
-     */
-    public function getCartSubTotal() {
-        return ShoppingCart::get()->TotalPrice();
+        return $return;
     }
     
     /**
@@ -145,7 +145,8 @@ class CartForm extends Form {
      * @return Int 
      */
     public function getCartTotal() {
-        $total = $this->getCartSubTotal();
+        $total = $this->cart->TotalPrice();
+        
         
         if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0)
             $total += PostageArea::get()->byID(Session::get('PostageID'))->Cost;

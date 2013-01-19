@@ -17,7 +17,7 @@ class ShoppingCart extends ViewableData {
     protected $items;
     
     public function __construct(ArrayList $items) {
-        $this->items = $items;
+        $this->items = (Session::get('commerce-shoppingcart')) ? Session::get('commerce-shoppingcart') : new ArrayList();
     }
     
     /**
@@ -44,10 +44,7 @@ class ShoppingCart extends ViewableData {
      * @return ShoppingCart
      */ 
     public static function get() {
-        // Check for existing session, or set empty list if none
-        $session = (Session::get('commerce-shoppingcart')) ? Session::get('commerce-shoppingcart') : new ArrayList();
-        
-        return new ShoppingCart($session);
+        return new ShoppingCart();
     }
     
     /**
@@ -63,13 +60,21 @@ class ShoppingCart extends ViewableData {
      *
      * @param Item Product Object you wish to add
      * @param Quantity number of this item to add
+     * @param Customise array of custom options for this product
      */
-    public function add(Product $add_item, $quantity = 1) {
-        $added = false;  
+    public function add(Product $add_item, $quantity = 1, $customise = array()) {
+        $added = false;
+        
+        // Make a string to match id's against ones already in the cart
+        if (!$option)
+      		$key = (int)$add_item->ID;
+    	else
+      		$key = (int)$add_item->ID . ':' . base64_encode(serialize($customise));
+        
         foreach($this->items as $item) {
             // If an instance of this is already in the shopping basket, increase
-            if($item->Product->ID == $add_item->ID) {
-                $this->update($item->Product, ($item->Quantity + $quantity));
+            if($item->Key == $key) {
+                $this->update($item->Key, ($item->Quantity + $quantity));
                 $added = true;
             } 
         }
@@ -77,8 +82,15 @@ class ShoppingCart extends ViewableData {
         // If no update was sucessfull, update records
         if(!$added) {
             $this->items->add(new ArrayData(array(
-                'Product'   => $add_item,
-                'Quantity'  => $quantity
+                'Key'           => $key,
+                'ProductID'     => $add_item->ID,
+                'Title'         => $add_item->Title,
+                'Description'   => $add_item->Description,
+                'Weight'        => $add_item->Weight,
+                'Price'         => $add_item->Price,
+                'Customised'    => ($customise) ? $customise : '',
+                'ImageID'         => ($add_item->Images()->exists()) ? $add_item->Images()->first()->ID : null,
+                'Quantity'      => $quantity
             )));
         }
     }
@@ -89,9 +101,9 @@ class ShoppingCart extends ViewableData {
      * @param Item 
      * @param Quantity
      */ 
-    public function update(Product $update_item, $quantity) {
+    public function update($item_key, $quantity) {
         foreach($this->items as $item) {
-			if ($item->Product->ID === $update_item->ID) {
+			if ($item->Key === $item_key) {
 				$item->Quantity = $quantity;
 				return;
 			}
@@ -103,9 +115,9 @@ class ShoppingCart extends ViewableData {
      *
      * @param Item Product Object you wish to remove
      */
-    public function remove(Product $remove_item) {
+    public function remove($item_key) {
         foreach($this->items as $item) {
-            if($item->Product->ID == $remove_item->ID)
+            if($item->Key == $item_key)
                 $this->items->remove($item);
         }
     }
@@ -152,10 +164,10 @@ class ShoppingCart extends ViewableData {
         $total = 0;
         
         foreach($this->Items() as $item) {
-            $total = $total + ($item->Quantity * $item->Product->Price);
+            $total = $total + ($item->Quantity * $item->Price);
         }
         
-        return $total;
+        return  money_format('%i',$total);
     }
     
     /**
