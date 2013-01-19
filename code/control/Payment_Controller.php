@@ -23,7 +23,7 @@ class Payment_Controller extends Page_Controller {
             $this->redirect(BASE_URL);
 
         if(!Session::get('PaymentMethod'))
-            $this->redirect(BASE_URL . Cart_Controller::$url_segment);
+            $this->redirect(BASE_URL . ShoppingCart_Controller::$url_segment);
     }
     
     public function index() {
@@ -87,8 +87,8 @@ class Payment_Controller extends Page_Controller {
             // Loop through each session cart item and add that item to the order
             foreach(ShoppingCart::get()->Items() as $cart_item) {
                 $order_item = new OrderItem();
-                $order_item->Title      = $cart_item->Product->Title;
-                $order_item->Price      = $cart_item->Product->Price;
+                $order_item->Title      = $cart_item->Title;
+                $order_item->Price      = $cart_item->Price;
                 $order_item->Quantity   = $cart_item->Quantity;
 
                 $order->Items()->add($order_item);
@@ -100,7 +100,7 @@ class Payment_Controller extends Page_Controller {
             unset($_SESSION['PostageID']);
             unset($_SESSION['PaymentMethod']);
             
-            $content = $site->SuccessCopy;
+            $content = ($site->SuccessCopy) ? $site->SuccessCopy : false;
         } else
             $content = _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match") . ".<br/><br/>" . _t('Commerce.ORDERCONTACT',"Please contact us with more details") . '.';
             
@@ -136,7 +136,7 @@ class Payment_Controller extends Page_Controller {
             unset($_SESSION['PostageID']);
             unset($_SESSION['PaymentMethod']);
             
-            $content = $site->FailerCopy;
+            $content = ($site->SuccessCopy) ? $site->SuccessCopy : false;
             
         } else
             $content = _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match") . ".<br/><br/>" . _t('Commerce.ORDERCONTACT',"Please contact us with more details") . '.';

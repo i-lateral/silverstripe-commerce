@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of Cart_Controller
+ * Description of ShoppingCart_Controller
  *
  * @author morven
  */

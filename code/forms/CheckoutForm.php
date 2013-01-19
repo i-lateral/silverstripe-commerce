@@ -80,7 +80,7 @@ class CheckoutForm extends Form {
         );
         
         $actions = new FieldList(
-            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Cart_Controller::$url_segment . '" class="action commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . ShoppingCart_Controller::$url_segment . '" class="action commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
             FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))->addExtraClass('commerce-action-next')
         );
         
@@ -147,10 +147,10 @@ class CheckoutForm extends Form {
         // Loop through each session cart item and add that item to the order
         foreach(ShoppingCart::get()->Items() as $cart_item) {
             $order_item = new OrderItem();
-            $order_item->Type       = $cart_item->Product->Type;
-            $order_item->Quantity   = $cart_item->Quantity;
-            $order_item->Price      = $cart_item->Product->Price;
-            $order_item->Colour     = $cart_item->Product->Colour;
+            $order_item->Type           = $cart_item->Type;
+            $order_item->Quantity       = $cart_item->Quantity;
+            $order_item->Price          = $cart_item->Price;
+            $order_item->Customisations = $cart_item->Customised;
 
             $order->Items()->add($order_item);
         }
