@@ -76,6 +76,7 @@
 .commerce-cart .commerce-cart-items table {
     width: 100%;
     border: 0;
+    margin-bottom: 2em;
 }
     .commerce-cart .commerce-cart-items th {
         font-weight: bold;
@@ -117,6 +118,8 @@
     }
     .commerce-cart .commerce-cart-postage select {
         display: inline;
+        width: 15em;
+        margin-right: 1em;
     }
     .commerce-cart .commerce-cart-postage .commerce-cart-total {
         text-align: center;

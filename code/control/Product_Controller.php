@@ -28,7 +28,6 @@ class Product_Controller extends Page_Controller {
         
         return ($product) ? $product : false;
 	}
-	
     
     public function AddItemForm() {
         if(ShoppingCart::isEnabled()) {
@@ -42,15 +41,17 @@ class Product_Controller extends Page_Controller {
             // If product colour customisations are set, add them to the item form 
             if($product && $product->Customisations()->exists()) {
                 foreach($product->Customisations() as $customisation) {
+                    $name = 'customise_' . Convert::raw2url($customisation->Title);
+
                     switch($customisation->DisplayAs) {
                         case 'Dropdown':
-                            $field = DropdownField::create(Convert::raw2url($customisation->Title),$customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            $field = DropdownField::create($name, $customisation->Title, $customisation->Options()->map('ID','ItemSummary'))->setEmptyString('Please Select');
                             break;
                         case 'Radio':
-                            $field = OptionSetField::create(Convert::raw2url($customisation->Title),$customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            $field = OptionSetField::create($name, $customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
                             break;
                         case 'Checkboxes':
-                            $field = CheckboxSetField::create(Convert::raw2url($customisation->Title),$customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            $field = CheckboxSetField::create($name, $customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
                             break;
                     }
                     $fields->add($field);
@@ -74,13 +75,19 @@ class Product_Controller extends Page_Controller {
 
     public function doAddItemToCart($data, $form) {
         $product = Product::get()->byID($data['ProductID']);
+        $customisations = array();
         
+        foreach($data as $key => $value) {
+            if(!(strpos($key, 'customise') === false))
+                $customisations[str_replace('customise_','',$key)] = $value;
+        }
+
         if($product) {
             $cart = ShoppingCart::get();
-            $cart->add($product, $data['Quantity']);
+            $cart->add($product, $data['Quantity'], $customisations);
             $cart->save();
         }
-        
+
         return $this->redirectBack();
     }
 }

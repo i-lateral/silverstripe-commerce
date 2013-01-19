@@ -45,13 +45,12 @@ class ShoppingCart_Controller extends Page_Controller {
      *
      * @param ID product ID
      */
-    public function remove($url_params) {
-        $all_params = $url_params->allParams();
+    public function remove() {
+        $key = $this->request->param('ID');
         
-        if(!empty($all_params['ID'])) {
-            $product = Product::get()->byID($all_params['ID']);
+        if(!empty($key)) {
             $cart = ShoppingCart::get();
-            $cart->remove($product);
+            $cart->remove($key);
             $cart->save();
         }
     

@@ -126,6 +126,7 @@ class CartForm extends Form {
                 'ProductID'     => $item->ID,
                 'Title'         => $item->Title,
                 'Description'   => ($item->Description) ? $item->Description : false,
+                'Customised'    => $item->Customised,
                 'Weight'        => $item->Weight,
                 'CurrencySymbol'=> SiteConfig::current_site_config()->Currency()->HTMLNotation,
                 'Price'         => $item->Price,

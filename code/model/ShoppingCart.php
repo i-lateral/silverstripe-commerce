@@ -66,30 +66,41 @@ class ShoppingCart extends ViewableData {
         $added = false;
         
         // Make a string to match id's against ones already in the cart
-        if (!$option)
-      		$key = (int)$add_item->ID;
-    	else
-      		$key = (int)$add_item->ID . ':' . base64_encode(serialize($customise));
+        $product_key = ($customise) ? (int)$add_item->ID . ':' . base64_encode(serialize($customise)) : (int)$add_item->ID;
         
+        // Check if the add call is trying to add an item already in the cart,
+        // if so update the current quantity 
         foreach($this->items as $item) {
             // If an instance of this is already in the shopping basket, increase
-            if($item->Key == $key) {
+            if($item->Key == $product_key) {
                 $this->update($item->Key, ($item->Quantity + $quantity));
                 $added = true;
-            } 
+            }
         }
         
         // If no update was sucessfull, update records
         if(!$added) {
+            $custom_data = new ArrayList();
+
+            foreach($customise as $custom_key => $custom_value) {
+                $custom_item = ProductCustomisationOption::get()->byID($custom_value);
+
+                $custom_data->add(new ArrayData(array(
+                    'Title' => $custom_key,
+                    'Value' => $custom_item->Title,
+                    'ModifyPrice' => $custom_item->ModifyPrice
+                )));
+            }
+
             $this->items->add(new ArrayData(array(
-                'Key'           => $key,
+                'Key'           => $product_key,
                 'ProductID'     => $add_item->ID,
                 'Title'         => $add_item->Title,
                 'Description'   => $add_item->Description,
                 'Weight'        => $add_item->Weight,
                 'Price'         => $add_item->Price,
-                'Customised'    => ($customise) ? $customise : '',
-                'ImageID'         => ($add_item->Images()->exists()) ? $add_item->Images()->first()->ID : null,
+                'Customised'    => ($custom_data) ? $custom_data : '',
+                'ImageID'       => ($add_item->Images()->exists()) ? $add_item->Images()->first()->ID : null,
                 'Quantity'      => $quantity
             )));
         }
@@ -105,9 +116,11 @@ class ShoppingCart extends ViewableData {
         foreach($this->items as $item) {
 			if ($item->Key === $item_key) {
 				$item->Quantity = $quantity;
-				return;
+				return true;
 			}
 		}
+		
+		return false;
      }
     
     /**
