@@ -18,6 +18,23 @@ class ProductAdmin extends ModelAdmin {
     public function init() {
         parent::init();
     }
+    
+    public function getList() {
+        $list = parent::getList();
+        
+        // Filter categories
+        if($this->modelClass == 'ProductCategory') {
+            $list
+			    ->where("ParentID = {$this->currentCategoryID()}")
+			    ->sort('Sort','DESC');
+        }
+        
+        // Filter all results by the current subsite, if enabled
+        if(class_exists('Subsite'))
+            $list->where("SubsiteID = '" . Subsite::currentSubsiteID() . "'");
+        
+        return $list;
+    }
 	
 	public function getEditForm($id = null, $fields = null) {
     	$form = parent::getEditForm($id, $fields);
@@ -43,16 +60,6 @@ class ProductAdmin extends ModelAdmin {
 					GridFieldLevelup::create($this->currentCategoryID())->setLinkSpec('admin/products/ProductCategory/?ParentID=%d')
 				);
 				
-			
-			// Get GridField list
-			$categories = ProductCategory::get();
-			$categories
-				->where("ParentID = {$this->currentCategoryID()}")
-				->sort('Sort','DESC');
-			
-			// Update list
-			$gridField->setList($categories);
-			
 			// Find data colums, so we can add link to view children
 			$columns = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
 

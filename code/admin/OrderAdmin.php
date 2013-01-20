@@ -23,6 +23,16 @@ class OrderAdmin extends ModelAdmin {
         Requirements::javascript(Director::absoluteBaseURL() . 'commerce/js/OrderAdmin.js');
     }
     
+    public function getList() {
+        $list = parent::getList();
+        
+        // Filter all results by the current subsite, if enabled
+        if(class_exists('Subsite'))
+            $list->where("SubsiteID = '" . Subsite::currentSubsiteID() . "'");
+        
+        return $list;
+    }
+    
     public function getEditForm($id = null, $fields = null) {
     	$form = parent::getEditForm($id, $fields);
 		

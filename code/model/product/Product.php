@@ -177,7 +177,7 @@ class Product extends DataObject {
         }
         
         // Delete all customisations when this opbect is deleted    
-        foreach($this->Cusomisations() as $cusomisation) {
+        foreach($this->Customisations() as $cusomisation) {
             $cusomisation->delete();
         }
         

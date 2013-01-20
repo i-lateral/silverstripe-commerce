@@ -8,6 +8,13 @@ if(class_exists('ContentController'))
 else
     Object::add_extension('Controller', 'Commerce_Controller');
     
+// If subsites is installed
+if(class_exists('Subsite')) {
+    Object::add_extension('Product', 'Subsites_CommerceObject');
+    Object::add_extension('ProductCategory', 'Subsites_CommerceObject');
+    Object::add_extension('Order', 'Subsites_CommerceObject');
+}
+
 Object::add_extension('LeftAndMain', 'Commerce_LeftAndMain');
 
 // Register Reports
