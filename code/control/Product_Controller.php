@@ -38,23 +38,29 @@ class Product_Controller extends Page_Controller {
             
             $fields = FieldList::create(HiddenField::create('ProductID')->setValue($productID));
             
+            $requirements = new RequiredFields();
+            
             // If product colour customisations are set, add them to the item form 
             if($product && $product->Customisations()->exists()) {
                 foreach($product->Customisations() as $customisation) {
                     $name = 'customise_' . Convert::raw2url($customisation->Title);
+                    $title = ($customisation->Required) ? $customisation->Title . ' *' : $customisation->Title;
 
                     switch($customisation->DisplayAs) {
                         case 'Dropdown':
-                            $field = DropdownField::create($name, $customisation->Title, $customisation->Options()->map('ID','ItemSummary'))->setEmptyString('Please Select');
+                            $field = DropdownField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'))->setEmptyString('Please Select');
                             break;
                         case 'Radio':
-                            $field = OptionSetField::create($name, $customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            $field = OptionSetField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'));
                             break;
                         case 'Checkboxes':
-                            $field = CheckboxSetField::create($name, $customisation->Title, $customisation->Options()->map('ID','ItemSummary'));
+                            $field = CheckboxSetField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'));
                             break;
                     }
                     $fields->add($field);
+                    
+                    // Check if field required
+                    if($customisation->Required) $requirements->addRequiredField($name);
                 }
             }
             
@@ -65,7 +71,7 @@ class Product_Controller extends Page_Controller {
                 FormAction::create('doAddItemToCart', 'Add to Cart')->addExtraClass('commerce-button')
             );
             
-            $form = Form::create($this, 'AddItemForm', $fields, $actions)
+            $form = Form::create($this, 'AddItemForm', $fields, $actions, $requirements)
                 ->addExtraClass('commerce-form-additem')
                 ->setFormAction(Controller::join_links(BASE_URL, Controller::curr()->request->param('URLSegment'), 'AddItemForm'));
             
