@@ -34,11 +34,11 @@ class Product_Controller extends Page_Controller {
             $product = (self::getProduct()) ? self::getProduct() : false;
             $productID = ($product) ? $product->ID : 0;
             
-            $quantity_fields = NumericField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-additem-quantity');
+            $quantity_fields = QuantityField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-additem-quantity');
             
             $fields = FieldList::create(HiddenField::create('ProductID')->setValue($productID));
             
-            $requirements = new RequiredFields();
+            $requirements = new RequiredFields('Quantity');
             
             // If product colour customisations are set, add them to the item form 
             if($product && $product->Customisations()->exists()) {
