@@ -26,10 +26,6 @@ class OrderAdmin extends ModelAdmin {
     public function getList() {
         $list = parent::getList();
         
-        // Filter all results by the current subsite, if enabled
-        if(class_exists('Subsite'))
-            $list->where("SubsiteID = '" . Subsite::currentSubsiteID() . "'");
-        
         return $list;
     }
     

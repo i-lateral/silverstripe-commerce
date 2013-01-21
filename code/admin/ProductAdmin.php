@@ -29,10 +29,6 @@ class ProductAdmin extends ModelAdmin {
 			    ->sort('Sort','DESC');
         }
         
-        // Filter all results by the current subsite, if enabled
-        if(class_exists('Subsite'))
-            $list->where("SubsiteID = '" . Subsite::currentSubsiteID() . "'");
-        
         return $list;
     }
 	
