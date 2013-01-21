@@ -28,8 +28,8 @@ class CommerceURLController extends Controller {
 	    // First check products against URL segment
         if($product = Product::get()->filter('URLSegment',$urlsegment)->first()) {
             $controller = new Product_Controller($product);
-        } elseif(ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
-            $controller = new Catalog_Controller();
+        } elseif($category = ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
+            $controller = new Category_Controller($category);
 	    } else {
 	        // If CMS is installed
 	        if(class_exists('ModelAsController'))
