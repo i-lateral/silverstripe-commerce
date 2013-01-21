@@ -32,6 +32,9 @@
     float: left;
     padding: 0 10px;
 }
+    .commerce-list-children .commerce-list-child img {
+        border: 1px solid #c3c3c3;
+    }
     .commerce-list-children .commerce-list-child h2 {
         float: left;
     }

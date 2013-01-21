@@ -8,11 +8,11 @@
 	        <% loop RootCategories %>
 	            <div class="commerce-list-child site-float-left">
                     <% if Thumbnail %>
-                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
+                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.PaddedImage(190,190)</a></div>
                     <% else_if Images %>
-                        <div class="commerce-list-image"><a href="$Link">$Images.First.CroppedImage(230,190)</a></div>
+                        <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
                     <% else %>
-                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
+                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
                     <% end_if %>
                     
                     <h2><a href="$Link">$Title</a></h2>
@@ -24,11 +24,11 @@
             <% loop CategoryChildren %>
 	            <div class="commerce-list-child site-float-left">
                     <% if Thumbnail %>
-                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
+                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.PaddedImage(190,190)</a></div>
                     <% else_if Images %>
-                        <div class="commerce-list-image"><a href="$Link">$Images.First.CroppedImage(230,190)</a></div>
+                        <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
                     <% else %>
-                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
+                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
                     <% end_if %>
                     
                     <h2><a href="$Link">$Title</a></h2>
@@ -40,11 +40,11 @@
             <% loop AllProducts %>
 	            <div class="commerce-list-child site-float-left">
                     <% if Thumbnail %>
-                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.CroppedImage(230,190)</a></div>
+                        <div class="commerce-list-image"><a href="$Link">$Thumbnail.PaddedImage(190,190)</a></div>
                     <% else_if Images %>
-                        <div class="commerce-list-image"><a href="$Link">$Images.First.CroppedImage(230,190)</a></div>
+                        <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
                     <% else %>
-                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.CroppedImage(230,190)</a></div>
+                        <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
                     <% end_if %>
                     
                     <h2><a href="$Link">$Title</a></h2>

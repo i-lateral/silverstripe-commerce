@@ -12,7 +12,7 @@
                     <% else_if $Top.Category.Thumbnail %>
                         $Top.Category.Thumbnail.PaddedImage(400,400)
                     <% else %>
-                        <div class="commerce-noimage">$Top.CommerceNoImage.PaddedImage(500,500)</div>
+                        <div class="commerce-noimage">$Top.CommerceNoImage.PaddedImage(400,400)</div>
                     <% end_if %>
                 </div>
                 
