@@ -8,18 +8,18 @@
 	        <div class="commerce-product-images">
 	            <div class="firstimage">
 	                <% if $Images %>
-	                    <a href="$Images.First.SetRatioSize(900,550).Link">$Images.First.CroppedImage(400,400)</a>
+	                    <a href="$Images.First.SetRatioSize(900,550).Link">$Images.First.PaddedImage(400,400)</a>
                     <% else_if $Top.Category.Thumbnail %>
-                        $Top.Category.Thumbnail.CroppedImage(400,400)
+                        $Top.Category.Thumbnail.PaddedImage(400,400)
                     <% else %>
-                        <div class="commerce-noimage">$Top.CommerceNoImage.CroppedImage(500,500)</div>
+                        <div class="commerce-noimage">$Top.CommerceNoImage.PaddedImage(500,500)</div>
                     <% end_if %>
                 </div>
                 
                 <% if $HasMultipleImages %>
                     <div class="thumbs">
                         <% loop $Images %>
-                            <% if not $First %><a href="$SetRatioSize(900,550).Link">$CroppedImage(75,75)</a><% end_if %>
+                            <% if not $First %><a href="$SetRatioSize(900,550).Link">$PaddedImage(75,75)</a><% end_if %>
                         <% end_loop %>
                     </div>
                 <% end_if %>
