@@ -34,7 +34,7 @@ class Product_Controller extends Page_Controller {
             $product = (self::getProduct()) ? self::getProduct() : false;
             $productID = ($product) ? $product->ID : 0;
             
-            $quantity_fields = QuantityField::create('Quantity')->setValue('1')->addExtraClass('commerce-form-additem-quantity');
+            $quantity_fields = QuantityField::create('Quantity', _t('Commerce.CARTQTY','Qty'))->setValue('1')->addExtraClass('commerce-form-additem-quantity');
             
             $fields = FieldList::create(HiddenField::create('ProductID')->setValue($productID));
             
@@ -48,7 +48,7 @@ class Product_Controller extends Page_Controller {
 
                     switch($customisation->DisplayAs) {
                         case 'Dropdown':
-                            $field = DropdownField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'))->setEmptyString('Please Select');
+                            $field = DropdownField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'))->setEmptyString(_t('Commerce.PLEASESELECT','Please Select'));
                             break;
                         case 'Radio':
                             $field = OptionSetField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'));
@@ -68,7 +68,7 @@ class Product_Controller extends Page_Controller {
             $fields->add($quantity_fields);
             
             $actions = FieldList::create(
-                FormAction::create('doAddItemToCart', 'Add to Cart')->addExtraClass('commerce-button')
+                FormAction::create('doAddItemToCart', _t('Commerce.ADDTOCART','Add to Cart'))->addExtraClass('commerce-button')
             );
             
             $form = Form::create($this, 'AddItemForm', $fields, $actions, $requirements)

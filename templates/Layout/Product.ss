@@ -26,15 +26,15 @@
 	        </div>
 
             <div class="commerce-product-summary">
-	            <p class="price"><strong>Price:</strong> {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p>
-                <% if $PackSize %><p class="packsize"><strong>Pack Size:</strong> {$PackSize}</p><% end_if %>
-                <% if $Weight %><p class="weight"><strong>Weight:</strong> {$Weight}</p><% end_if %>
+	            <p class="price"><strong><% _t('Commerce.PRICE','Price') %>:</strong> {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p>
+                <% if $PackSize %><p class="packsize"><strong><% _t('Commerce.PACKSIZE','Pack Size') %>:</strong> {$PackSize}</p><% end_if %>
+                <% if $Weight %><p class="weight"><strong><% _t('Commerce.WEIGHT','Weight') %>:</strong> {$Weight}</p><% end_if %>
                 
                 <% if $Description %>
 	                <div class="description">
 	                    <p>
 	                        $Description.Summary(50)
-	                        <a href="#commerce-product-description" title="Read more about {$Title}">Read More</a>
+	                        <a href="#commerce-product-description" title="<% _t('Commerce.READMORE','Read More') %>: {$Title}"><% _t('Commerce.READMORE','Read More') %></a>
                         </p>
                     </div>
                 <% end_if %>
@@ -47,14 +47,14 @@
 	        <div class="commerce-product-details">
 	            <% if $Description %>
 	                <div id="commerce-product-description" class="description">
-                        <h2>Description</h2>
+                        <h2><% _t('Commerce.DESCRIPTION','Description') %></h2>
 	                    $Description
                     </div>
                 <% end_if %>
                 
                 <% if $Attributes %>
 	                <div class="attributes">
-                        <h2>Attributes</h2>
+                        <h2><% _t('Commerce.ATTRIBUTES','Attributes') %></h2>
                         <ul>
                             <% loop $Attributes %><li class="feature">
                                 <strong>$Title:</strong> $Content
