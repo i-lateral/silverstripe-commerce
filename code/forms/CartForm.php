@@ -17,7 +17,7 @@ class CartForm extends Form {
         $postage_value = Session::get('PostageID');
         
         // Find all current payment methods
-        $payment_methods = SiteConfig::current_site_config()->PaymentMethods()->map('ID','Summary');
+        $payment_methods = SiteConfig::current_site_config()->PaymentMethods()->map('ID','Label');
         
         // Find the default payment method
         $payment_value = SiteConfig::current_site_config()->PaymentMethods()->filter('Default',1)->first()->ID;

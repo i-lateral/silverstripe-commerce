@@ -16,6 +16,12 @@ class CommercePaymentMethod extends DataObject {
      */
     public $Title;
     
+    /**
+     * Route to icon that is associated with this provider 
+     *
+     */
+    public $Icon;
+    
     public static $db = array(        
         // Payment Gateway config
         'Summary'           => 'Text',
@@ -28,6 +34,10 @@ class CommercePaymentMethod extends DataObject {
     
     public static $has_one = array(
         'ParentConfig'  => 'SiteConfig'
+    );
+    
+    public static $casting = array(
+        'Label' => 'Text'
     ); 
     
     public static $summary_fields = array(
@@ -35,6 +45,15 @@ class CommercePaymentMethod extends DataObject {
         'Summary',
         'Default'
     );
+    
+    /*
+     * Combine this objects summary and it's icon, if it has one.
+     *
+     * @return String
+     */
+    public function getLabel() {
+        return ($this->Icon) ? '<img class="payment-icon" src="'. $this->Icon .'" /> <span>' . $this->Summary . '</span>' : "<span>{$this->Summary}</span>'"; 
+    }
     
     public function getCMSFields() {
         $fields = parent::getCMSFields();
