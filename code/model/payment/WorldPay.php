@@ -51,50 +51,33 @@ class WorldPay extends CommercePaymentMethod {
         return $fields;
     }
     
-    public function ProcessCallback($order = null, $data = null) {    
+    public function ProcessCallback($data = null) {
         // Check if CallBack data exists and install id matches the saved ID
         if(
-            (isset($data) && isset($order)) && // Data and order are set
-            (isset($data['instId']) && isset($data['cartId']) && isset($data['transStatus'])) && // required post variables exist 
+            isset($data) && // Data and order are set
+            (isset($data['instId']) && isset($data['cartId']) && isset($data['transStatus'])) && // required$
             $this->InstallID == $data['instId'] // The current install ID matches the postback ID
         ) {
-            $order_id = $data['cartId'];
+            $order = Order::get()->filter('OrderNumber',$data['cartId'])->first();
             $order_status = $data['transStatus'];
-            
-            
-            // Quick Fix: Remove all items on existing order
-            foreach($order->Items() as $item) {
-                $order->Items()->remove($item);
-            } 
-            
-            if(((isset($order) && $order) && $order->OrderNumber == $order_id)) {
+
+            if($order) {
                 $order->Status = ($order_status == 'Y') ? 'paid' : 'failed';
                 $order->write();
                 
-                // Loop through each session cart item and add that item to the order
-                foreach(ShoppingCart::get()->Items() as $cart_item) {
-                    $order_item = new OrderItem();
-                    $order_item->Title          = $cart_item->Title;
-                    $order_item->Price          = $cart_item->Price;
-                    $order_item->Customisation  = serialize($cart_item->Customised);
-                    $order_item->Quantity       = $cart_item->Quantity;
-                    $order_item->write();
-
-                    $order->Items()->add($order_item);
-                }
-                
-                ShoppingCart::get()->clear();
-                unset($_SESSION['Order']);
-                unset($_SESSION['PostageID']);
-                unset($_SESSION['PaymentMethod']);
+                return true;
             }
-            
+
         }
+        
+        return false;
     }
     
     public function onBeforeWrite() {
         parent::onBeforeWrite();     
-    
+        
+        $this->CallBackSlug = (!$this->CallBackSlug) ? 'worldpay' : $this->CallBackSlug;
+        
         if(!$this->Summary)
             $this->Summary = "Pay with credit/debit card securely via WorldPay";
     }

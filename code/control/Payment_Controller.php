@@ -23,8 +23,8 @@ class Payment_Controller extends Page_Controller {
         //if(!Session::get('Order')) 
         //    $this->redirect(BASE_URL);
 
-        if(!Session::get('PaymentMethod'))
-            $this->redirect(Controller::join_links(BASE_URL , ShoppingCart_Controller::$url_segment));
+        //if(!Session::get('PaymentMethod'))
+        //    $this->redirect(Controller::join_links(BASE_URL , ShoppingCart_Controller::$url_segment));
     }
     
     public function index() {
@@ -42,7 +42,14 @@ class Payment_Controller extends Page_Controller {
     }
     
     public function getPaymentMethod() {
-        return CommercePaymentMethod::get()->byID(Session::get('PaymentMethod'));
+        // First check session
+        if($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))
+            return $method;
+        // Then check if payment slug is set and that corresponds to a payment
+        elseif($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
+            return $method;
+        else
+            return false;
     }
 
     // Get the existing gateway data from the relevent PaymentMethod object
@@ -73,8 +80,24 @@ class Payment_Controller extends Page_Controller {
      *
      */
     public function callback() {
-        if($this->request->postVars())
-            $this->getPaymentMethod()->ProcessCallback($this->getOrder(), $this->request->postVars());
+        if($this->request->postVars()) {
+            $callback = $this->getPaymentMethod()->ProcessCallback($this->request->postVars());
+      
+            if($callback) {
+                $vars = array(
+                    'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete')
+                );
+        
+                return $this->renderWith(array('Payment_Response','Page'), $vars);
+            } else
+                $result = false;
+            
+            
+        } else
+            $result = false;
+        
+        if($result == false)
+            $this->httpError(500);
     }
     
     /*
