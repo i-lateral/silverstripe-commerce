@@ -30,7 +30,7 @@ class ProductCategory extends DataObject {
      * 
      * @return string URL to cart controller
      */
-    public function Link(){
+    public function Link(){    
         return Controller::join_links(BASE_URL , $this->URLSegment);
     }
 
@@ -94,7 +94,7 @@ class ProductCategory extends DataObject {
 	    parent::onBeforeWrite();
 	    
 	    // Only call on first creation, ir if title is changed
-	    if(($this->ID == 0) || $this->isChanged('Title')) {
+	    if(($this->ID == 0) || $this->isChanged('Title') || !($this->URLSegment)) {
 	        // Set the URL Segment, so it can be accessed via the controller
             $filter = URLSegmentFilter::create();
 		    $t = $filter->filter($this->Title);
