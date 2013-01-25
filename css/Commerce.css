@@ -60,6 +60,10 @@
     width: 49%;
     float: right;
 }
+    .commerce-product .commerce-product-summary .price {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
 .commerce-product .commerce-product-details {
     padding-top: 1.5em;
 }

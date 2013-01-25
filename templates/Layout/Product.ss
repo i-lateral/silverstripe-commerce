@@ -3,7 +3,7 @@
 	
 	    <h1>$Title</h1>
 	    
-	    <% loop $Product %>
+	    <% with $Product %>
 	
 	        <div class="commerce-product-images">
 	            <div class="firstimage">
@@ -63,7 +63,7 @@
                     </div>
                 <% end_if %>
             </div>
-        <% end_loop %>
+        <% end_with %>
 	    
 	</div>
 </div>
