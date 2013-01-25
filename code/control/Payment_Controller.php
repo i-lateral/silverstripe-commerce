@@ -122,22 +122,6 @@ class Payment_Controller extends Page_Controller {
             foreach($session_order->Items() as $item) {
                 $session_order->Items()->remove($item);
             }
-            
-            $order = Order::get()->filter('OrderNumber', $session_order->OrderNumber)->first();
-            
-            if($order->Status == 'paid') {
-                // Loop through each session cart item and add that item to the order
-                foreach(ShoppingCart::get()->Items() as $cart_item) {
-                    $order_item = new OrderItem();
-                    $order_item->Title          = $cart_item->Title;
-                    $order_item->Price          = $cart_item->Price;
-                    $order_item->Customisation  = serialize($cart_item->Customised);
-                    $order_item->Quantity       = $cart_item->Quantity;
-                    $order_item->write();
-
-                    $order->Items()->add($order_item);
-                }
-            }
         }
         
         $this->ClearSessionData();
