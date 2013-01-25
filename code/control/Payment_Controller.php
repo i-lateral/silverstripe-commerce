@@ -37,11 +37,11 @@ class Payment_Controller extends Page_Controller {
     }
     
     public function getPaymentMethod() {
-        // First check session
-        if($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))
+        // Check if payment slug is set and that corresponds to a payment
+        if($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
             return $method;
-        // Then check if payment slug is set and that corresponds to a payment
-        elseif($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
+        // Then check session
+        elseif($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))
             return $method;
         else
             return false;
@@ -85,15 +85,24 @@ class Payment_Controller extends Page_Controller {
      *
      */
     public function callback() {
-        if($this->request->postVars()) {
-            $callback = $this->getPaymentMethod()->ProcessCallback($this->request->postVars());
-      
-            if($callback) {
-                $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'success'));
-            } else
-                $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
-        } else
-            $result = false;
+        $result = false;
+        
+        // See if data has been passed via the request
+        if($this->request->postVars())
+            $data = $this->request->postVars();
+        elseif(count($this->request->getVars()) > 1)
+            $data = $this->request->getVars();
+        else
+            $data = false;
+    
+        if($data) {
+            $callback = $this->getPaymentMethod()->ProcessCallback($data);
+
+            if($callback)
+                return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'success'));
+            else
+                return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
+        }
         
         if($result == false)
             $this->httpError(500);
