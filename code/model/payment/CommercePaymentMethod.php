@@ -106,4 +106,14 @@ class CommercePaymentMethod extends DataObject {
     public function GatewayData() {
         user_error('You have not added a GatewayData() method on your PaymentMethod Class');
     }
+    
+    /**
+     * Process the call back from the payment provider
+     *
+     * @param order the order stored in the session
+     * @param data post data from the form
+     */
+    public function ProcessCallback($order = null, $data = null) {
+        user_error('You have not added a ProcessCallback() method on your PaymentMethod Class');
+    }
 }

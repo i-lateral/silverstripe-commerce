@@ -12,18 +12,19 @@ class Payment_Controller extends Page_Controller {
     static $allowed_actions = array(
         'index',
         'success',
-        'failer'
+        'failer',
+        'callback'
     );
     
     public function init() {
         parent::init();
         
         // If current order has not been set, re-direct to homepage
-        if(!Session::get('Order')) 
-            $this->redirect(BASE_URL);
+        //if(!Session::get('Order')) 
+        //    $this->redirect(BASE_URL);
 
         if(!Session::get('PaymentMethod'))
-            $this->redirect(BASE_URL . ShoppingCart_Controller::$url_segment);
+            $this->redirect(Controller::join_links(BASE_URL , ShoppingCart_Controller::$url_segment));
     }
     
     public function index() {
@@ -66,6 +67,16 @@ class Payment_Controller extends Page_Controller {
         return $this->getPaymentMethod()->GatewayURL();
     }
     
+    /**
+     * This method takes any post data submitted via a payment provider and
+     * sends it to the relevent gateway class for processing
+     *
+     */
+    public function callback() {
+        if($this->request->postVars())
+            $this->getPaymentMethod()->ProcessCallback($this->getOrder(), $this->request->postVars());
+    }
+    
     /*
      * Method called when payement gateway returns the sucess URL
      *
@@ -78,7 +89,7 @@ class Payment_Controller extends Page_Controller {
         // Quick Fix: Remove all items on existing order
         foreach($order->Items() as $item) {
             $order->Items()->remove($item);
-        } 
+        }
         
         if($order && $order->OrderNumber == $this->urlParams['ID']) {
             $order->Status = 'paid';
@@ -101,10 +112,10 @@ class Payment_Controller extends Page_Controller {
             unset($_SESSION['PostageID']);
             unset($_SESSION['PaymentMethod']);
             
-            $content = ($site->SuccessCopy) ? $site->SuccessCopy : false;
-        } else
-            $content = _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match") . ".<br/><br/>" . _t('Commerce.ORDERCONTACT',"Please contact us with more details") . '.';
-            
+        }
+        
+        $content = ($site->SuccessCopy) ? $site->SuccessCopy : false;    
+        
         $vars = array(
             'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete'),
             'Content'   => $content
@@ -136,11 +147,9 @@ class Payment_Controller extends Page_Controller {
             unset($_SESSION['Order']);
             unset($_SESSION['PostageID']);
             unset($_SESSION['PaymentMethod']);
-            
-            $content = ($site->SuccessCopy) ? $site->SuccessCopy : false;
-            
-        } else
-            $content = _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match") . ".<br/><br/>" . _t('Commerce.ORDERCONTACT',"Please contact us with more details") . '.';
+        }
+                
+        $content = ($site->FailerCopy) ? $site->FailerCopy : false;
         
         $vars = array(
             'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
