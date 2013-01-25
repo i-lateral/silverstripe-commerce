@@ -4,6 +4,7 @@
  * to the final payment gateway.
  *
  * @author morven
+ * @package commerce
  */
 
 class Payment_Controller extends Page_Controller {
@@ -13,18 +14,12 @@ class Payment_Controller extends Page_Controller {
         'index',
         'success',
         'failer',
+        'error',
         'callback'
     );
     
     public function init() {
         parent::init();
-        
-        // If current order has not been set, re-direct to homepage
-        //if(!Session::get('Order')) 
-        //    $this->redirect(BASE_URL);
-
-        //if(!Session::get('PaymentMethod'))
-        //    $this->redirect(Controller::join_links(BASE_URL , ShoppingCart_Controller::$url_segment));
     }
     
     public function index() {
@@ -75,6 +70,16 @@ class Payment_Controller extends Page_Controller {
     }
     
     /**
+     * Method to clear any existing sessions related to commerce module
+     */    
+    public function ClearSessionData() {
+        ShoppingCart::get()->clear();
+        unset($_SESSION['Order']);
+        unset($_SESSION['PostageID']);
+        unset($_SESSION['PaymentMethod']);
+    }
+    
+    /**
      * This method takes any post data submitted via a payment provider and
      * sends it to the relevent gateway class for processing
      *
@@ -84,15 +89,9 @@ class Payment_Controller extends Page_Controller {
             $callback = $this->getPaymentMethod()->ProcessCallback($this->request->postVars());
       
             if($callback) {
-                $vars = array(
-                    'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete')
-                );
-        
-                return $this->renderWith(array('Payment_Response','Page'), $vars);
+                $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'success'));
             } else
-                $result = false;
-            
-            
+                $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
         } else
             $result = false;
         
@@ -107,41 +106,36 @@ class Payment_Controller extends Page_Controller {
      */
     public function success() {
         $site = SiteConfig::current_site_config();
-        $order = $this->getOrder();
+        $session_order = $this->getOrder();
         
-        // Quick Fix: Remove all items on existing order
-        foreach($order->Items() as $item) {
-            $order->Items()->remove($item);
-        }
-        
-        if($order && $order->OrderNumber == $this->urlParams['ID']) {
-            $order->Status = 'paid';
-            $order->write();
-            
-            // Loop through each session cart item and add that item to the order
-            foreach(ShoppingCart::get()->Items() as $cart_item) {
-                $order_item = new OrderItem();
-                $order_item->Title          = $cart_item->Title;
-                $order_item->Price          = $cart_item->Price;
-                $order_item->Customisation  = serialize($cart_item->Customised);
-                $order_item->Quantity       = $cart_item->Quantity;
-
-                $order->Items()->add($order_item);
+        if($session_order && $session_order->OrderNumber) {   
+            // Quick Fix: Remove all items on existing order
+            foreach($session_order->Items() as $item) {
+                $session_order->Items()->remove($item);
             }
             
-            ShoppingCart::get()->clear();
+            $order = Order::get()->filter('OrderNumber', $session_order->OrderNumber)->first();
             
-            unset($_SESSION['Order']);
-            unset($_SESSION['PostageID']);
-            unset($_SESSION['PaymentMethod']);
-            
+            if($order->Status == 'paid') {
+                // Loop through each session cart item and add that item to the order
+                foreach(ShoppingCart::get()->Items() as $cart_item) {
+                    $order_item = new OrderItem();
+                    $order_item->Title          = $cart_item->Title;
+                    $order_item->Price          = $cart_item->Price;
+                    $order_item->Customisation  = serialize($cart_item->Customised);
+                    $order_item->Quantity       = $cart_item->Quantity;
+                    $order_item->write();
+
+                    $order->Items()->add($order_item);
+                }
+            }
         }
         
-        $content = ($site->SuccessCopy) ? $site->SuccessCopy : false;    
+        $this->ClearSessionData();
         
         $vars = array(
             'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete'),
-            'Content'   => $content
+            'Content'   => ($site->SuccessCopy) ? $site->SuccessCopy : false
         );
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
@@ -154,31 +148,36 @@ class Payment_Controller extends Page_Controller {
      */
     public function failer() {
         $site = SiteConfig::current_site_config();
-        $order = $this->getOrder();
         
-        // Quick Fix: Remove all items on existing order
-        foreach($order->Items() as $item) {
-            $order->Items()->remove($item);
+        if($order = $this->getOrder()) {
+            // Quick Fix: Remove all items on existing order
+            foreach($order->Items() as $item) {
+                $order->Items()->remove($item);
+            }
         }
         
-        if($order && $order->OrderNumber == $this->urlParams['ID']) {
-            $order->Status = 'failed';
-            $order->write();
-            
-            ShoppingCart::get()->clear();
-            
-            unset($_SESSION['Order']);
-            unset($_SESSION['PostageID']);
-            unset($_SESSION['PaymentMethod']);
-        }
-                
-        $content = ($site->FailerCopy) ? $site->FailerCopy : false;
+        $this->ClearSessionData();
         
         $vars = array(
             'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
-            'Content'   => $content
+            'Content'   => ($site->FailerCopy) ? $site->FailerCopy : false
         );
         
+        return $this->renderWith(array('Payment_Response','Page'), $vars);
+    }
+    
+    /*
+     * Represents an error in the in all stages of the payment process
+     *
+     */
+    public function error() {
+        $this->ClearSessionData();
+        
+        $vars = array(
+            'Title'     => _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match"),
+            'Content' => _t('Commerce.ORDERCONTACT',"Please contact us with more details")
+        );
+    
         return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
 }

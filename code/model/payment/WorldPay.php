@@ -67,7 +67,6 @@ class WorldPay extends CommercePaymentMethod {
                 
                 return true;
             }
-
         }
         
         return false;
