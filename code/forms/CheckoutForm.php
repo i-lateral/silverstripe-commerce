@@ -147,10 +147,11 @@ class CheckoutForm extends Form {
         // Loop through each session cart item and add that item to the order
         foreach(ShoppingCart::get()->Items() as $cart_item) {
             $order_item = new OrderItem();
-            $order_item->Type           = $cart_item->Type;
-            $order_item->Quantity       = $cart_item->Quantity;
+            $order_item->Title          = $cart_item->Title;
             $order_item->Price          = $cart_item->Price;
-            $order_item->Customisations = $cart_item->Customised;
+            $order_item->Customisation  = serialize($cart_item->Customised);
+            $order_item->Quantity       = $cart_item->Quantity;
+            $order_item->write();
 
             $order->Items()->add($order_item);
         }
