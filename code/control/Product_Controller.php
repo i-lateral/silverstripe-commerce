@@ -6,6 +6,17 @@ class Product_Controller extends Page_Controller {
         'AddItemForm'
     );
     
+	/**
+	 * Find the current product via its URL
+	 *
+	 */
+	public static function get_current_product() {
+	    if(Controller::curr()->request->param('URLSegment'))
+	        return Product::get()->filter('URLVariable', Controller::curr()->request->param('URLSegment'))->first();
+        else
+            return false;
+	}
+    
     public function init() {
         parent::init();
     }

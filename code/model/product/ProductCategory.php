@@ -40,7 +40,7 @@ class ProductCategory extends DataObject {
 	 * @return bool
 	 */
 	public function isCurrent() {
-		return ($this->ID && Catalog_Controller::get_current_category()) ? $this->ID == Catalog_Controller::get_current_category()->ID : $this === Catalog_Controller::get_current_category();
+		return ($this->ID && Category_Controller::get_current_category()) ? $this->ID == Category_Controller::get_current_category()->ID : $this === Category_Controller::get_current_category();
 	}
 	
 	/**
@@ -50,7 +50,7 @@ class ProductCategory extends DataObject {
 	 */
 	public function isSection() {
 		return $this->isCurrent() || (
-			Catalog_Controller::get_current_category() instanceof ProductCategory && in_array($this->ID, Catalog_Controller::get_current_category()->getAncestors()->column())
+			Category_Controller::get_current_category() instanceof ProductCategory && in_array($this->ID, Category_Controller::get_current_category()->getAncestors()->column())
 		);
 	}
 

@@ -85,42 +85,7 @@ class Catalog_Controller extends Page_Controller {
         	return $this->renderWith(array('Product', 'Page'));
 		else
         	return $this->renderWith(array('Categorys', 'Page'));
-    }
-	*/
-	/**
-	 * Find the current category via its URL
-	 *
-	 */
-	public static function get_current_category() {
-	    // Currently a category return it
-	    if(Controller::curr() instanceof Catalog_Controller && Controller::curr()->request->Param('ID'))
-	        return ProductCategory::get()->filter('URLVariable', Controller::curr()->request->Param('ID'))->First();
-        // If not, create a fake one and return that with a map of all products
-        else {
-            $category = ProductCategory::create();
-            $category->Title = _t('Commerce.CATALOGTITlE', 'Catalog');
-            
-            // If there are any categories, add as children
-            if(ProductCategory::get()->exists()) {
-                foreach(ProductCategory::get() as $category) {
-                    $category->Children()->add($category);
-                }
-            }         
-            
-            return $category;
-        }
-	}
-	
-	/**
-	 * Find the current product via its URL
-	 *
-	 */
-	public static function get_current_product() {
-	    if(Controller::curr() instanceof Catalog_Controller)
-	        return Product::get()->filter('URLVariable', Controller::curr()->request->Param('ProductID'))->First();
-        else
-            return false;
-	}
+    }*/
 	
 	public function isProduct() {
 	    if(Controller::curr()->request->Param('ProductID'))
