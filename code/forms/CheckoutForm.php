@@ -59,7 +59,7 @@ class CheckoutForm extends Form {
                 TextField::create('BillingAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
                 TextField::create('BillingCity',_t('Commerce.CITY','City') . '*'),
                 TextField::create('BillingPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
-                CountryDropdownField::create('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')
+                CountryDropdownField::create('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')->addExtraClass('btn')
             )->addExtraClass('billing_fields');
             
         $delivery_fields = FieldGroup::create(
@@ -70,18 +70,18 @@ class CheckoutForm extends Form {
                 TextField::create('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
                 TextField::create('DeliveryCity',_t('Commerce.CITY','City')),
                 TextField::create('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code')),
-                CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')
+                CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')->addExtraClass('btn')
             )
             ->addExtraClass('delivery_fields');
             
-        $fields= new FieldList(
+        $fields= FieldList::create(
             $billing_fields,
             $delivery_fields
         );
         
-        $actions = new FieldList(
-            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . ShoppingCart_Controller::$url_segment . '" class="action commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))->addExtraClass('commerce-action-next')
+        $actions = FieldList::create(
+            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . ShoppingCart_Controller::$url_segment . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))->addExtraClass('btn')->addExtraClass('commerce-action-next')
         );
         
         $validator = new RequiredFields(

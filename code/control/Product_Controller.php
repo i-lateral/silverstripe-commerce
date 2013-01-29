@@ -59,7 +59,9 @@ class Product_Controller extends Page_Controller {
 
                     switch($customisation->DisplayAs) {
                         case 'Dropdown':
-                            $field = DropdownField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'))->setEmptyString(_t('Commerce.PLEASESELECT','Please Select'));
+                            $field = DropdownField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'))
+                                        ->setEmptyString(_t('Commerce.PLEASESELECT','Please Select')
+                            );
                             break;
                         case 'Radio':
                             $field = OptionSetField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'));
@@ -79,7 +81,7 @@ class Product_Controller extends Page_Controller {
             $fields->add($quantity_fields);
             
             $actions = FieldList::create(
-                FormAction::create('doAddItemToCart', _t('Commerce.ADDTOCART','Add to Cart'))->addExtraClass('commerce-button')
+                FormAction::create('doAddItemToCart', _t('Commerce.ADDTOCART','Add to Cart'))->addExtraClass('commerce-button')->addExtraClass('btn')
             );
             
             $form = Form::create($this, 'AddItemForm', $fields, $actions, $requirements)

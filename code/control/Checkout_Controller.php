@@ -21,6 +21,6 @@ class Checkout_Controller extends Page_Controller {
     }
     
     public function CheckoutForm() {
-        return new CheckoutForm($this, 'CheckoutForm');
+        return CheckoutForm::create($this, 'CheckoutForm')->addExtraClass('forms')->addExtraClass('columnar');
     }
 }

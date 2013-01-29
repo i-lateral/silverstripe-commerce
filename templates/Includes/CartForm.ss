@@ -14,7 +14,7 @@
             $CartItems
             
             <tr class="subtotal">
-                <th colspan="3"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></th>
+                <td class="right" colspan="3"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></td>
                 <td colspan="2">{$Top.CurrencySymbol}$Cart.TotalPrice</td>
             </tr>
         </table>
@@ -34,7 +34,7 @@
         </div>
         
         <p class="commerce-cart-total">
-            <strong><% _t('Commerce.CARTTOTAL','Total') %></strong>
+            <strong class="uppercase bold"><% _t('Commerce.CARTTOTAL','Total') %></strong>
             {$Top.CurrencySymbol}{$CartTotal}
         </p>
     </fieldset>

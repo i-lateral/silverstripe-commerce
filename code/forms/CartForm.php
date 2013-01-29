@@ -25,7 +25,7 @@ class CartForm extends Form {
         $fields = new FieldList(
             // Postage
             HeaderField::create('PostageHeading', _t('Commerce.POSTAGE', 'Postage'), 2),
-            DropdownField::create('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map, $postage_value),
+            DropdownField::create('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map, $postage_value)->addExtraClass('btn'),
             
             // Payment Gateways
             HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payments'), 2),
@@ -33,9 +33,9 @@ class CartForm extends Form {
         );
         
         $actions = new FieldList(
-            FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))->addExtraClass('commerce-button'),
-            FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))->addExtraClass('commerce-button'),
-            FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('commerce-button')
+            FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))->addExtraClass('btn'),
+            FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))->addExtraClass('btn'),
+            FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('btn')
         );
         
         parent::__construct($controller, $name, $fields, $actions);

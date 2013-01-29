@@ -3,6 +3,12 @@
 .commerce-clear {
     clear: both;
 }
+commerce-action-back {
+    float: left;
+}
+.commerce-action-next {
+    float: right;
+}
 
 /* Add Item Form
 ----------------------------------------- */
@@ -71,51 +77,23 @@
 
 /* Shopping Cart
 ----------------------------------------- */
-.commerce-cart .commerce-cart-form {
-    padding: 0;
-}
-    .commerce-cart .commerce-cart-form .commerce-cart-items,
-    .commerce-cart .commerce-cart-form .commerce-cart-postage,
-    .commerce-cart .commerce-cart-form .commerce-cart-actions {
-        padding: 0;
-    }
-
 .commerce-cart .commerce-cart-items table {
     width: 100%;
-    border: 0;
-    margin-bottom: 2em;
 }
     .commerce-cart .commerce-cart-items th {
         font-weight: bold;
-        font-size: 1.1em;
-        padding-bottom: 0.5em;
-    }
-    .commerce-cart .commerce-cart-items .subtotal th {
-        border-top: 1px solid #ccc;
-        text-align: right;
-        padding: 1em 1em 1em 0;
     }
     .commerce-cart .commerce-cart-items .image {
         width: 12%;
     }
     .commerce-cart .commerce-cart-items .description {
-        width: 65%;
+        width: 63%;
     }
-    
-    .commerce-cart .commerce-cart-items td {
-        padding: 1em 0;
-        border: 0;
-        border-top: 1px solid #ccc;
-    }
-
     .commerce-cart .commerce-cart-items input {
         width: 30px;
-        padding: 2px 3px;
-        margin-right: 1em;
-        border: 2px solid #ccc;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
+    }
+    .commerce-cart .commerce-cart-items .subtotal strong {
+        text-align: right;
     }
     
 .commerce-cart .commerce-cart-postage {}
@@ -126,37 +104,22 @@
     .commerce-cart .commerce-cart-postage select {
         display: inline;
         width: 15em;
-        margin-right: 1em;
+        margin: 0 0.5em;
+        padding: 3px;
     }
     .commerce-cart .commerce-cart-postage .commerce-cart-total {
         text-align: center;
         color: #fff;
         font-size: 1.5em;
         padding: 0.5em;
-        margin: 1em 0;
+        margin: 1.5em 0;
         background: #95C902;
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         border-radius: 5px;
     }
-        .commerce-cart .commerce-cart-postage .commerce-cart-total strong {
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-.commerce-cart .commerce-cart-payment {}
-    .commerce-cart .commerce-cart-payment .optionset {
-        padding-left: 0.4em;
-        margin-left: 0;
-        margin-top: 0.5em;
-    }
-    .commerce-cart .commerce-cart-payment .optionset li {
-        font-size: 1em;
-        color: #000;
-    }
 
 .commerce-cart .commerce-cart-actions {
-    padding: 10px 40px 10px 0;
     text-align: right;
 }
     .commerce-cart .commerce-cart-actions .action {
@@ -166,8 +129,19 @@
 
 /* Checkout Page
 ----------------------------------------- */
-#CheckoutForm_CheckoutForm label { 
-    display: block;
+#CheckoutForm_CheckoutForm .fieldgroup-field {
+    clear: both;
+    padding-bottom: 0.5em;
+}
+#CheckoutForm_CheckoutForm .fieldgroup-field label { 
+    width: 26%;
+}
+#CheckoutForm_CheckoutForm .fieldgroup-field input { 
+    width: 55%;
+}
+#CheckoutForm_CheckoutForm .fieldgroup-field select {
+    width: 56%;
+    padding: 3px;
 }
 
 #CheckoutForm_CheckoutForm fieldset div.billing_fields {
@@ -181,21 +155,7 @@
 
 #CheckoutForm_CheckoutForm .message {
     font-weight: bold;
-    color: #fff !important;
-    padding: 5px;
-    background-color: #ec2028 !important;
-    font-size: 12pt !important;
-}
-
-#CheckoutForm_CheckoutForm .error {
-    border: 1px solid #ec2028 ;
-}
-
-#CheckoutForm_CheckoutForm .commerce-action-back {
-    float: left;
-}
-#CheckoutForm_CheckoutForm .commerce-action-next {
-    float: right;
+    font-size: 1.1em !important;
 }
 
 /* Order Summary
@@ -213,11 +173,3 @@
         width: 49%;
         padding: 0 0 1em 0;
     }
-
-.Payment .commerce-action-back {
-    float: left;
-}
-.Payment .commerce-action-next {
-    float: right;
-}
-

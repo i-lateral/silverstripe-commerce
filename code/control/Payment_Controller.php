@@ -57,7 +57,8 @@ class Payment_Controller extends Page_Controller {
     public function GatewayForm() {
         $payment = $this->getPaymentMethod();
         
-        $form = new Form($this, $payment->Title . 'Form', $payment->getGatewayFields(), $payment->getGatewayActions());
+        $form = Form::create($this, $payment->Title . 'Form', $payment->getGatewayFields(), $payment->getGatewayActions());
+        $form->addExtraClass('forms');
         $form->setFormMethod('POST');
         $form->setFormAction($payment->GatewayURL());
         
