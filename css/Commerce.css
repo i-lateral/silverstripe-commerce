@@ -119,6 +119,21 @@ commerce-action-back {
         border-radius: 5px;
     }
 
+.commerce-cart .commerce-cart-payment {}
+    .commerce-cart .commerce-cart-payment .optionset {
+        padding-left: 0.4em;
+        margin-left: 0;
+        margin-top: 0.5em;
+    }
+        .commerce-cart .commerce-cart-payment .optionset li {
+            font-size: 1em;
+            color: #000;
+        }
+        .commerce-cart .commerce-cart-payment .optionset label img {
+            float: left;
+            margin-right: 1em;
+        }
+
 .commerce-cart .commerce-cart-actions {
     text-align: right;
 }
