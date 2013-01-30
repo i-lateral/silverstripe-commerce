@@ -119,7 +119,7 @@ class CommercePaymentMethod extends DataObject {
     public function getGatewayActions() {
         $actions = new FieldList(
             LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Checkout_Controller::$url_segment . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))->addExtraClass('btn')->addExtraClass('commerce-action-next')
+            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))->addExtraClass('btn')->addExtraClass('highlight')->addExtraClass('commerce-action-next')
         );
         
         return $actions;

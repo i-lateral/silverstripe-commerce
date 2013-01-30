@@ -35,7 +35,7 @@ class CartForm extends Form {
         $actions = new FieldList(
             FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))->addExtraClass('btn'),
             FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))->addExtraClass('btn'),
-            FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('btn')
+            FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('btn')->addExtraClass('highlight')
         );
         
         parent::__construct($controller, $name, $fields, $actions);

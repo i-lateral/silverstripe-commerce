@@ -81,7 +81,10 @@ class CheckoutForm extends Form {
         
         $actions = FieldList::create(
             LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . ShoppingCart_Controller::$url_segment . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))->addExtraClass('btn')->addExtraClass('commerce-action-next')
+            FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
+                ->addExtraClass('btn')
+                ->addExtraClass('commerce-action-next')
+                ->addExtraClass('highlight')
         );
         
         $validator = new RequiredFields(
