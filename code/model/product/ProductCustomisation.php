@@ -36,7 +36,9 @@ class ProductCustomisation extends DataObject {
                 'Detail'        => 'TextField',
                 'Quantity'      => 'NumericField',
                 'ModifyPrice'   => 'TextField',
-                'ModifyWeight'  => 'TextField'
+                'ModifyWeight'  => 'TextField',
+                'Default'  		=> 'CheckboxField',
+                'ImageID'       => 'NumericField',
             );
             
 		    $options_field = new StackedTableField('Options', 'ProductCustomisationOption', null, $field_types);
@@ -46,6 +48,42 @@ class ProductCustomisation extends DataObject {
         }
         return $fields;
     }
+    
+    public function DefaultOptions() {
+		return $this->Options()->filter('Default', 1);
+	}
+    
+    /**
+	 * Method that turns this object into a field type, to be loaded into a form
+	 * 
+	 * @return FormField
+	 */
+	public function Field() {
+		if($this->Title && $this->DisplayAs) {
+			$name = 'customise_' . Convert::raw2url($this->Title);
+			$title = ($this->Required) ? $this->Title . ' *' : $this->Title;
+			$options = $this->Options()->map('ID','ItemSummary');
+			$defaults = $this->DefaultOptions();
+			$default = ($defaults->first()) ? $defaults->first()->ID : 0;
+			
+			switch($this->DisplayAs) {
+				case 'Dropdown':
+					$field = DropdownField::create($name, $title, $options, $default)
+								->setEmptyString(_t('Commerce.PLEASESELECT','Please Select')
+					);
+					break;
+				case 'Radio':
+					$field = OptionSetField::create($name, $title, $options, $default);
+					break;
+				case 'Checkboxes':
+					$field = CheckboxSetField::create($name, $title, $options, $defaults->column('ID'));
+					break;
+			}
+			
+			return $field;
+		} else
+			return false;
+	}
     
     public function onBeforeDelete() {
         // Delete all options when this opbect is deleted
@@ -80,6 +118,8 @@ class ProductCustomisationOption extends DataObject {
         'Quantity'      => 'Int',
         'ModifyPrice'   => 'Decimal',
         'ModifyWeight'  => 'Decimal',
+        'Default'		=> 'Boolean',
+        'ImageID'       => 'Int'
     );
     
     public static $has_one = array(
@@ -95,15 +135,17 @@ class ProductCustomisationOption extends DataObject {
         'Detail',
         'Quantity',
         'ModifyPrice',
-        'ModifyWeight'
+        'ModifyWeight',
+        'Default',
+        'ImageID'
     );
     
     public function getItemSummary() {
         $config = SiteConfig::current_site_config();
         
         $return = $this->Title;
-        $return .= ($this->Detail) ? ': ' . $this->Detail : '';
-        $return .= ($this->ModifyPrice != 0) ? ' (' . $config->Currency()->HTMLNotation . $this->ModifyPrice . ')' : '';
+        $return .= ($this->Detail) ? ' <span class="detail">' . $this->Detail : '</span>';
+        $return .= ($this->ModifyPrice != 0) ? ' <span class="modify-price">(' . $config->Currency()->HTMLNotation . $this->ModifyPrice . ')</span>' : '';
         
         return $return;
     }

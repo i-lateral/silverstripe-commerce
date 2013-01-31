@@ -54,26 +54,11 @@ class Product_Controller extends Page_Controller {
             // If product colour customisations are set, add them to the item form 
             if($product && $product->Customisations()->exists()) {
                 foreach($product->Customisations() as $customisation) {
-                    $name = 'customise_' . Convert::raw2url($customisation->Title);
-                    $title = ($customisation->Required) ? $customisation->Title . ' *' : $customisation->Title;
-
-                    switch($customisation->DisplayAs) {
-                        case 'Dropdown':
-                            $field = DropdownField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'))
-                                        ->setEmptyString(_t('Commerce.PLEASESELECT','Please Select')
-                            );
-                            break;
-                        case 'Radio':
-                            $field = OptionSetField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'));
-                            break;
-                        case 'Checkboxes':
-                            $field = CheckboxSetField::create($name, $title, $customisation->Options()->map('ID','ItemSummary'));
-                            break;
-                    }
+					$field = $customisation->Field();
                     $fields->add($field);
                     
                     // Check if field required
-                    if($customisation->Required) $requirements->addRequiredField($name);
+                    if($customisation->Required) $requirements->addRequiredField($field->getName());
                 }
             }
             
