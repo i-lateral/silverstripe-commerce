@@ -37,8 +37,7 @@ class ProductCustomisation extends DataObject {
                 'Quantity'      => 'NumericField',
                 'ModifyPrice'   => 'TextField',
                 'ModifyWeight'  => 'TextField',
-                'Default'  		=> 'CheckboxField',
-                'ImageID'       => 'NumericField',
+                'Default'  		=> 'CheckboxField'
             );
             
 		    $options_field = new StackedTableField('Options', 'ProductCustomisationOption', null, $field_types);
@@ -118,8 +117,7 @@ class ProductCustomisationOption extends DataObject {
         'Quantity'      => 'Int',
         'ModifyPrice'   => 'Decimal',
         'ModifyWeight'  => 'Decimal',
-        'Default'		=> 'Boolean',
-        'ImageID'       => 'Int'
+        'Default'		=> 'Boolean'
     );
     
     public static $has_one = array(
@@ -136,8 +134,7 @@ class ProductCustomisationOption extends DataObject {
         'Quantity',
         'ModifyPrice',
         'ModifyWeight',
-        'Default',
-        'ImageID'
+        'Default'
     );
     
     public function getItemSummary() {
