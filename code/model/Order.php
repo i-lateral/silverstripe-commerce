@@ -51,14 +51,11 @@ class Order extends DataObject {
     
     public static $summary_fields = array(
         'OrderNumber',
-        'Created',
         'BillingFirstnames',
         'BillingSurname',
-        'BillingAddress',
-        'DeliveryAddress',
         'BillingEmail',
         'Status',
-        'ID'
+        'Created'
     );
 
 	static $default_sort = "Created DESC";
