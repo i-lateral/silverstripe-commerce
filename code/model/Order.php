@@ -65,6 +65,8 @@ class Order extends DataObject {
         
         // Remove defailt item admin
         $fields->removeByName('Items');
+        $fields->removeByName('EmailDispatchSent');
+        $fields->removeByName('PostageID');
         
         // Remove Billing Details
         $fields->removeByName('BillingFirstnames');
@@ -117,7 +119,7 @@ class Order extends DataObject {
 		)->setHeadingLevel(4);
         
         $fields->addFieldToTab('Root.Main', $item_field);
-		
+        		
         // Structure billing details
         $billing_fields = ToggleCompositeField::create('BillingDetails', 'Billing Details',
 			array(
@@ -136,6 +138,7 @@ class Order extends DataObject {
         // Structure delivery details
         $delivery_fields = ToggleCompositeField::create('DeliveryDetails', 'Delivery Details',
 			array(
+                DropdownField::create('PostageID', 'Postage', PostageArea::get()->map('ID', 'Location')),
                 TextField::create('DeliveryFirstnames', 'First Name(s)'),
                 TextField::create('DeliverySurname', 'Surname'),
                 TextField::create('DeliveryAddress1', 'Address 1'),
@@ -147,7 +150,6 @@ class Order extends DataObject {
 		)->setHeadingLevel(4);
         
         $fields->addFieldToTab('Root.Main', $delivery_fields);
-        
         
         return $fields;
     }
