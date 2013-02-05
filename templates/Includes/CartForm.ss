@@ -11,7 +11,24 @@
                 <th class="actions"></th>
             </tr>
             
-            $CartItems
+            <% loop $Items %>
+				<tr>
+					<td><% if $Image %>$Image.CroppedImage(75,50)<% end_if %></td>
+					<td>
+						<strong>$Title</strong><br/>
+						<% if $Description %>$Description.Summary(10)<br/><% end_if %>
+						<% if $Customised %><span class="small">
+							<% loop $Customised %>
+								<strong>{$Title}:</strong> {$Value}
+								<% if not $Last %></br><% end_if %>
+							<% end_loop %>
+						</span><% end_if %>
+					</td>
+					<td class="quantity"><input type="text" name="Quantity_{$Key}" value="{$Quantity}" /></td>
+					<td class="total">{$CurrencySymbol}{$Price}</td>
+					<td class="remove"><a href="{$Top.Link}/remove/{$Key}"><img src="commerce/images/delete_medium.png" alt="remove" /></a></td>
+				</tr>
+			<% end_loop %>
             
             <tr class="subtotal">
                 <td class="right" colspan="3"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></td>

@@ -110,40 +110,14 @@ class CartForm extends Form {
         return $this->controller->redirectBack();
     }
     
-    /**
-     * Get all items in the cart session and convert to a DataObjectSet, in
-     * order to render properly in the templates.
-     * 
-     * @return DataObjectSet 
-     */
-    public function getCartItems() {
-        $controller = Controller::curr();
-        $return = "";
-        
-        foreach($this->cart->Items() as $item) {
-            $vars = array(
-                'Key'           => $item->Key,
-                'ProductID'     => $item->ID,
-                'Title'         => $item->Title,
-                'Description'   => ($item->Description) ? $item->Description : false,
-                'Customised'    => $item->Customised,
-                'Weight'        => $item->Weight,
-                'CurrencySymbol'=> SiteConfig::current_site_config()->Currency()->HTMLNotation,
-                'Price'         => money_format('%i',$item->Price),
-                'Image'         => ($item->ImageID) ? Image::get()->byID($item->ImageID) : false,
-                'Quantity'      => $item->Quantity
-            );
-            
-            $return .= $controller->renderwith(array('ShoppingCartItem'), $vars);
-        }
-        
-        return $return;
+    public function getItems() {
+        return $this->cart->Items();
     }
     
     /**
      * Generate a total cost from all the items in the cart session.
      * 
-     * @return Int 
+     * @return Int
      */
     public function getCartTotal() {
         $total = $this->cart->TotalPrice();

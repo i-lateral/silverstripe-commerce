@@ -87,7 +87,7 @@ class ShoppingCart extends ViewableData {
                 $custom_item = ProductCustomisationOption::get()->byID($custom_value);
 
                 $custom_data->add(new ArrayData(array(
-                    'Title' => $custom_key,
+                    'Title' => ucwords(str_replace(array('-','_'), ' ', $custom_key)),
                     'Value' => $custom_item->Title,
                     'ModifyPrice' => $custom_item->ModifyPrice
                 )));
