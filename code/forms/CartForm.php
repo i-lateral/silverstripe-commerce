@@ -12,8 +12,6 @@ class CartForm extends Form {
         $this->cart = ShoppingCart::get();
     
         $postage_map = (SiteConfig::current_site_config()->PostageAreas()) ? SiteConfig::current_site_config()->PostageAreas()->map('ID','Location') : '';
-        $postage_map->unshift(0, _t('Commerce.PLEASESELECT','Please Select'));
-        
         $postage_value = Session::get('PostageID');
         
         // Find all current payment methods
@@ -25,7 +23,8 @@ class CartForm extends Form {
         $fields = new FieldList(
             // Postage
             HeaderField::create('PostageHeading', _t('Commerce.POSTAGE', 'Postage'), 2),
-            DropdownField::create('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map, $postage_value)->addExtraClass('btn'),
+            DropdownField::create('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map)
+				->addExtraClass('btn'),
             
             // Payment Gateways
             HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payments'), 2),
@@ -38,7 +37,20 @@ class CartForm extends Form {
             FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('btn')->addExtraClass('highlight')
         );
         
-        parent::__construct($controller, $name, $fields, $actions);
+        $validator = new RequiredFields(
+            'Postage',
+            'PaymentMethod'
+        );
+        
+        parent::__construct($controller, $name, $fields, $actions, $validator);
+        
+        // Fix to get corect postage location to load from session
+        $fields->dataFieldByName('Postage')
+			->setValue($postage_value)
+			->setEmptyString(_t('Commerce.PLEASESELECT','Please Select'));
+			
+		// If postage is in session, overwrite default error message
+		if($postage_value) $fields->dataFieldByName('Postage')->setError(null,null);
     }
     
     public function forTemplate() {
@@ -106,6 +118,9 @@ class CartForm extends Form {
     
     public function doEmpty() {
         $this->cart->clear();
+        
+		Session::clear('PostageID');
+        unset($_SESSION['PostageID']);
         
         return $this->controller->redirectBack();
     }

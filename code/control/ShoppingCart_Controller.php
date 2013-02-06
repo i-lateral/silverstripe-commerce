@@ -58,7 +58,9 @@ class ShoppingCart_Controller extends Page_Controller {
     }
     
     public function CartForm() {
-        return CartForm::create($this, 'CartForm')->addExtraClass('forms');
+        return CartForm::create($this, 'CartForm')
+			->addExtraClass('forms')
+			->addExtraClass('commerce-cart-form');
     }
     
 	public function getTitle() {
