@@ -3,8 +3,8 @@
 class ProductCustomisation extends DataObject {
     public static $db = array(
         'Title'     => 'Varchar',
-        'DisplayAs' => "Enum('Dropdown,Radio,Checkboxes','Dropdown')",
         'Required'  => 'Boolean',
+        'DisplayAs' => "Enum('Dropdown,Radio,Checkboxes','Dropdown')",
         'Sort'      => 'Int'
     );
     
@@ -37,6 +37,9 @@ class ProductCustomisation extends DataObject {
         } else {
             $fields->addFieldToTab('Root.Main',LiteralField::create('CreateWarning','<p>You need to create this before you can add options</p>'));
         }
+        
+        $this->extend('updateCMSFields', $fields);
+        
         return $fields;
     }
     
