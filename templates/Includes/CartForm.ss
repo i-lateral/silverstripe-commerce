@@ -13,7 +13,7 @@
             
             <% loop $Items %>
 				<tr>
-					<td><% if $Image %>$Image.CroppedImage(75,50)<% end_if %></td>
+					<td><% if $Image %>$Image.CroppedImage(75,75)<% end_if %></td>
 					<td>
 						<strong>$Title</strong><br/>
 						<% if $Description %>$Description.Summary(10)<br/><% end_if %>
@@ -28,7 +28,7 @@
 					<td class="total">{$Top.CurrencySymbol}{$Price}</td>
 					<td class="remove"><a href="{$Top.Link}/remove/{$Key}"><img src="commerce/images/delete_medium.png" alt="remove" /></a></td>
 				</tr>
-			<% end_loop %>
+			<% end_loop %> 
             
             <tr class="subtotal">
                 <td class="right" colspan="3"><strong><% _t('Commerce.CARTSUBTOTAL','Subtotal') %></strong></td>

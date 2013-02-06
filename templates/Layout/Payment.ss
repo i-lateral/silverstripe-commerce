@@ -6,7 +6,7 @@
         <div class="commerce-summary">
             <% control Order %>
                 <div class="commerce-summary-billing">
-                    <h3><% _t('Commerce.BILLINGDETAILS','Billing Details') %></h3>
+                    <h2><% _t('Commerce.BILLINGDETAILS','Billing Details') %></h2>
                     <p>
                         <strong><% _t('Commerce.FULLNAME','Name') %>:</strong> $BillingFirstnames $BillingSurname<br/>
                         <strong><% _t('Commerce.EMAIL','Email') %>:</strong> $BillingEmail<br/>
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="commerce-summary-delivery">
-                    <h3><% _t('Commerce.DELIVERYDETAILS','Delivery Details') %></h3>
+                    <h2><% _t('Commerce.DELIVERYDETAILS','Delivery Details') %></h2>
                     <p>
                         <strong><% _t('Commerce.FULLNAME','Name') %>:</strong> $DeliveryFirstnames $DeliverySurname<br/>
                         <strong><% _t('Commerce.ADDRESS','Address') %></strong><br/>
