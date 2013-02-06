@@ -25,7 +25,7 @@
 						</span><% end_if %>
 					</td>
 					<td class="quantity"><input type="text" name="Quantity_{$Key}" value="{$Quantity}" /></td>
-					<td class="total">{$CurrencySymbol}{$Price}</td>
+					<td class="total">{$Top.CurrencySymbol}{$Price}</td>
 					<td class="remove"><a href="{$Top.Link}/remove/{$Key}"><img src="commerce/images/delete_medium.png" alt="remove" /></a></td>
 				</tr>
 			<% end_loop %>

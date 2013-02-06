@@ -111,7 +111,21 @@ class CartForm extends Form {
     }
     
     public function getItems() {
-        return $this->cart->Items();
+		$items = new ArrayList();
+		
+		foreach($this->cart->Items() as $item) {
+			$items->add(new ArrayData(array(
+				'Key' => $item->Key,
+				'Title' => $item->Title,
+				'Description' => $item->Description,
+				'Customised' => $item->Customised,
+				'Price' => $item->Price,
+				'Quantity' => $item->Quantity,
+				'Image' => Image::get()->byID($item->ImageID),
+			)));
+		}
+		
+        return $items;
     }
     
     /**
