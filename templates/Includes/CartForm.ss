@@ -45,6 +45,7 @@
 		
 		<fieldset class="commerce-cart-postage">
 			$Fields.FieldByName(PostageHeading)
+			
 			<div class="Field postage">
 				<% if $Fields.dataFieldByName(Postage).Message %><div class="message $Fields.dataFieldByName(Postage).MessageType">$Fields.dataFieldByName(Postage).Message</div><% end_if %>
 				<label class="left" for="{$FormName}_Postage"><% _t('Commerce.CARTLOCATION','Please choose the location to post to') %></label>
@@ -59,7 +60,8 @@
 		</fieldset>
 		
 		<fieldset class="commerce-cart-payment">
-			$Fields.dataFieldByName(PaymentHeading)
+			$Fields.FieldByName(PaymentHeading)
+			
 			<div class="Field payment">
 				<% if $Fields.dataFieldByName(PaymentMethod).Message %><div class="message $Fields.dataFieldByName(PaymentMethod).MessageType">$Fields.dataFieldByName(PaymentMethod).Message</div><% end_if %>
 				<label for="{$FormName}_PaymentMethod"><% _t('Commerce.PAYMENTSELECTION', 'Please choose how you would like to pay') %></label>

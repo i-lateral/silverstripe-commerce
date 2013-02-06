@@ -146,10 +146,16 @@ commerce-action-back {
         .commerce-cart .commerce-cart-payment .optionset li {
             font-size: 1em;
             color: #000;
+            clear: both;
         }
+        .commerce-cart .commerce-cart-payment .optionset input,
+        .commerce-cart .commerce-cart-payment .optionset label,
         .commerce-cart .commerce-cart-payment .optionset label img {
-            float: left;
-            margin-right: 1em;
+			float: left;
+			margin-right: 0.5em;
+        }
+        .commerce-cart .commerce-cart-payment .optionset input {
+			margin-top: 0.25em;
         }
 
 .commerce-cart .commerce-cart-actions {

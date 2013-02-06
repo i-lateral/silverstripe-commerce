@@ -27,7 +27,7 @@ class CartForm extends Form {
 				->addExtraClass('btn'),
             
             // Payment Gateways
-            HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payments'), 2),
+            HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payment'), 2),
             OptionsetField::create('PaymentMethod', _t('Commerce.PAYMENTSELECTION', 'Please choose how you would like to pay'), $payment_methods, $payment_value)
         );
         
