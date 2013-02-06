@@ -31,15 +31,7 @@ class ProductCustomisation extends DataObject {
         $fields->removeByName('ParentID');
         
         if($this->ID) {
-            $field_types = array(
-                'Title'         => 'TextField',
-                'Detail'        => 'TextField',
-                'Quantity'      => 'NumericField',
-                'ModifyPrice'   => 'TextField',
-                'ModifyWeight'  => 'TextField',
-                'Default'  		=> 'CheckboxField'
-            );
-            
+			$field_types = singleton('ProductCustomisationOption')->getFieldTypes();
 		    $options_field = new StackedTableField('Options', 'ProductCustomisationOption', null, $field_types);
             $fields->addFieldToTab('Root.Main', $options_field);
         } else {
@@ -113,7 +105,6 @@ class ProductCustomisation extends DataObject {
 class ProductCustomisationOption extends DataObject {
     public static $db = array(
         'Title'         => 'Varchar',
-        'Detail'        => 'Varchar',
         'Quantity'      => 'Int',
         'ModifyPrice'   => 'Decimal',
         'ModifyWeight'  => 'Decimal',
@@ -130,12 +121,33 @@ class ProductCustomisationOption extends DataObject {
     
     public static $summary_fields = array(
         'Title',
-        'Detail',
         'Quantity',
         'ModifyPrice',
         'ModifyWeight',
         'Default'
     );
+    
+    public static $field_types = array(
+		'Title'         => 'TextField',
+		'Quantity'      => 'NumericField',
+		'ModifyPrice'   => 'TextField',
+		'ModifyWeight'  => 'TextField',
+		'Default'  		=> 'CheckboxField'
+    );
+    
+    /**
+     * Use this method to get a full list of field types
+     * (for use in table fields)
+     *  
+     * @return Array of field names and types
+     */
+    public function getFieldTypes() {
+		$fields = self::$field_types;
+		
+		$this->extend('updateFieldTypes', $fields);
+		
+		return $fields;
+	}
     
     public function getItemSummary() {
         $config = SiteConfig::current_site_config();
