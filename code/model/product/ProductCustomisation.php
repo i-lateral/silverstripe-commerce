@@ -74,6 +74,8 @@ class ProductCustomisation extends DataObject {
 					break;
 			}
 			
+			$this->extend('updateField', $field);
+			
 			return $field;
 		} else
 			return false;
@@ -155,11 +157,12 @@ class ProductCustomisationOption extends DataObject {
     public function getItemSummary() {
         $config = SiteConfig::current_site_config();
         
-        $return = $this->Title;
-        $return .= ($this->Detail) ? ' <span class="detail">' . $this->Detail : '</span>';
-        $return .= ($this->ModifyPrice != 0) ? ' <span class="modify-price">(' . $config->Currency()->HTMLNotation . $this->ModifyPrice . ')</span>' : '';
+        $summary = $this->Title;
+        $summary .= ($this->ModifyPrice != 0) ? ' <span class="modify-price">' . $config->Currency()->HTMLNotation . $this->ModifyPrice . '</span>' : '';
         
-        return $return;
+		$this->extend('updateItemSummary', $summary);
+		
+        return $summary;
     }
 	
     public function canView($member = false) {
