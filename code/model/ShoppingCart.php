@@ -84,16 +84,17 @@ class ShoppingCart extends ViewableData {
             $price = $add_item->Price;
 
             foreach($customise as $custom_key => $custom_value) {
-                $custom_item = ProductCustomisationOption::get()->byID($custom_value);
-
                 // Check if customisation is an automated database custom, or an overwrite
-                if($custom_item) {
+                if(is_array($custom_value)) { // If the customisation effects the price
+					$value = $custom_value['Value'];
+                    $modify_price = $custom_value['Price'];
+                } elseif($custom_item = ProductCustomisationOption::get()->byID($custom_value)) {
                     $value = $custom_item->Title;
                     $modify_price = $custom_item->ModifyPrice;
                 } else {
                     $value = $custom_value;
                     $modify_price = 0;
-                }
+				}
                 
                 $custom_data->add(new ArrayData(array(
                     'Title' => ucwords(str_replace(array('-','_'), ' ', $custom_key)),
