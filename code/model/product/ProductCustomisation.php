@@ -110,9 +110,7 @@ class ProductCustomisation extends DataObject {
 class ProductCustomisationOption extends DataObject {
     public static $db = array(
         'Title'         => 'Varchar',
-        'Quantity'      => 'Int',
         'ModifyPrice'   => 'Decimal',
-        'ModifyWeight'  => 'Decimal',
         'Default'		=> 'Boolean'
     );
     
@@ -126,17 +124,13 @@ class ProductCustomisationOption extends DataObject {
     
     public static $summary_fields = array(
         'Title',
-        'Quantity',
         'ModifyPrice',
-        'ModifyWeight',
         'Default'
     );
     
     public static $field_types = array(
 		'Title'         => 'TextField',
-		'Quantity'      => 'NumericField',
 		'ModifyPrice'   => 'TextField',
-		'ModifyWeight'  => 'TextField',
 		'Default'  		=> 'CheckboxField'
     );
     
