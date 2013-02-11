@@ -18,12 +18,12 @@
 						<td>
 							<strong>$Title</strong><br/>
 							<% if $Description %>$Description.Summary(10)<br/><% end_if %>
-							<% if $Customised %><span class="small">
-								<% loop $Customised %>
+							<% if $Customised %><div class="small">
+								<% loop $Customised %><div class="{$ClassName}">
 									<strong>{$Title}:</strong> {$Value}
 									<% if not $Last %></br><% end_if %>
-								<% end_loop %>
-							</span><% end_if %>
+								</div><% end_loop %>
+							</div><% end_if %>
 						</td>
 						<td class="quantity"><input type="text" name="Quantity_{$Key}" value="{$Quantity}" /></td>
 						<td class="total">{$Top.CurrencySymbol}{$Price}</td>

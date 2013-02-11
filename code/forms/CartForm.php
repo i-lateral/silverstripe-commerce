@@ -129,13 +129,24 @@ class CartForm extends Form {
 		$items = new ArrayList();
 		
 		foreach($this->cart->Items() as $item) {
+			// Create a list for customisations, with some casting added
+			$customised_list = new ArrayList();
+			
+			foreach($item->Customised as $customised) {
+				$customised_list->add(new ArrayData(array(
+					'Title' => DBField::create_field('Varchar', $customised->Title),
+					'Value' => nl2br(Convert::raw2xml($customised->Value), true),
+					'ClassName' => Convert::raw2url($customised->Title)
+				)));
+			}
+			
 			$items->add(new ArrayData(array(
 				'Key' => $item->Key,
-				'Title' => $item->Title,
-				'Description' => $item->Description,
-				'Customised' => $item->Customised,
-				'Price' => $item->Price,
-				'Quantity' => $item->Quantity,
+				'Title' => DBField::create_field('Varchar', $item->Title),
+				'Description' => nl2br(Convert::raw2xml($item->Description), true),
+				'Customised' => $customised_list,
+				'Price' => DBField::create_field('Decimal', $item->Price),
+				'Quantity' => DBField::create_field('Int', $item->Quantity),
 				'Image' => Image::get()->byID($item->ImageID),
 			)));
 		}
