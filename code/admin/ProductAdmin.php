@@ -105,6 +105,8 @@ class ProductAdmin extends ModelAdmin {
 			
 		}
 		
+		$this->extend('updateEditForm', $form);
+		
         return $form;
     }
 	

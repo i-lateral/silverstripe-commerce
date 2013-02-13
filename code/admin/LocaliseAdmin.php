@@ -17,6 +17,8 @@ class LocaliseAdmin extends ModelAdmin {
     public function getEditForm($id = null, $fields = null) {
     	$form = parent::getEditForm($id, $fields);
 		
+		$this->extend('updateEditForm', $form);
+		
         return $form;
     }
 }
