@@ -116,15 +116,6 @@ class Payment_Controller extends Page_Controller {
      */
     public function success() {
         $site = SiteConfig::current_site_config();
-        $session_order = $this->getOrder();
-        
-        if($session_order && $session_order->OrderNumber) {   
-            // Quick Fix: Remove all items on existing order
-            foreach($session_order->Items() as $item) {
-                $session_order->Items()->remove($item);
-            }
-        }
-        
         $this->ClearSessionData();
         
         $vars = array(
@@ -142,14 +133,6 @@ class Payment_Controller extends Page_Controller {
      */
     public function failer() {
         $site = SiteConfig::current_site_config();
-        
-        if($order = $this->getOrder()) {
-            // Quick Fix: Remove all items on existing order
-            foreach($order->Items() as $item) {
-                $order->Items()->remove($item);
-            }
-        }
-        
         $this->ClearSessionData();
         
         $vars = array(
