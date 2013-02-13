@@ -85,9 +85,15 @@ commerce-action-back {
     float: right;
 }
     .commerce-product .commerce-product-summary .price {
-        font-weight: bold;
         font-size: 1.1em;
     }
+		.commerce-product .commerce-product-summary .price .value {
+			font-weight: bold;
+		}
+	.commerce-product .commerce-product-summary .packsize .label,
+	.commerce-product .commerce-product-summary .weight .label {
+		font-weight: bold;
+	}
 .commerce-product .commerce-product-details {
     padding-top: 1.5em;
 }

@@ -26,9 +26,20 @@
 	        </div>
 
             <div class="commerce-product-summary">
-	            <p class="price"><strong><% _t('Commerce.PRICE','Price') %>:</strong> {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p>
-                <% if $PackSize %><p class="packsize"><strong><% _t('Commerce.PACKSIZE','Pack Size') %>:</strong> {$PackSize}</p><% end_if %>
-                <% if $Weight %><p class="weight"><strong><% _t('Commerce.WEIGHT','Weight') %>:</strong> {$Weight}</p><% end_if %>
+	            <p class="price">
+					<span class="label"><% _t('Commerce.PRICE','Price') %>:</span>
+					<span class="value">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</span>
+				</p>
+				
+                <% if $PackSize %><p class="packsize">
+					<span class="label"><% _t('Commerce.PACKSIZE','Pack Size') %>:</span>
+					<span class="value">{$PackSize}</span>
+				</p><% end_if %>
+				
+                <% if $Weight %><p class="weight">
+					<span class="label"><% _t('Commerce.WEIGHT','Weight') %>:</span>
+					<span class="value">{$Weight}</span>
+				</p><% end_if %>
                 
                 <% if $Description %>
 	                <div class="description">
