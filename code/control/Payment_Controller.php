@@ -99,6 +99,8 @@ class Payment_Controller extends Page_Controller {
         if($data) {
             $callback = $this->getPaymentMethod()->ProcessCallback($data);
 
+			$this->ClearSessionData();
+			
             if($callback)
                 return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'success'));
             else
@@ -116,11 +118,10 @@ class Payment_Controller extends Page_Controller {
      */
     public function success() {
         $site = SiteConfig::current_site_config();
-        $this->ClearSessionData();
         
         $vars = array(
             'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete'),
-            'Content'   => ($site->SuccessCopy) ? $site->SuccessCopy : false
+            'Content'   => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
         );
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
@@ -133,11 +134,10 @@ class Payment_Controller extends Page_Controller {
      */
     public function failer() {
         $site = SiteConfig::current_site_config();
-        $this->ClearSessionData();
         
         $vars = array(
             'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
-            'Content'   => ($site->FailerCopy) ? $site->FailerCopy : false
+            'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
         );
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
@@ -149,11 +149,10 @@ class Payment_Controller extends Page_Controller {
      */
     public function error() {
         $site = SiteConfig::current_site_config();
-        $this->ClearSessionData();
         
         $vars = array(
             'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
-            'Content'   => ($site->FailerCopy) ? $site->FailerCopy : false
+            'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
         );
     
         return $this->renderWith(array('Payment_Response','Page'), $vars);
