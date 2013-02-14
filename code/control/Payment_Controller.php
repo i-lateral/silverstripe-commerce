@@ -148,11 +148,12 @@ class Payment_Controller extends Page_Controller {
      *
      */
     public function error() {
+        $site = SiteConfig::current_site_config();
         $this->ClearSessionData();
         
         $vars = array(
-            'Title'     => _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match"),
-            'Content' => _t('Commerce.ORDERCONTACT',"Please contact us with more details")
+            'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
+            'Content'   => ($site->FailerCopy) ? $site->FailerCopy : false
         );
     
         return $this->renderWith(array('Payment_Response','Page'), $vars);

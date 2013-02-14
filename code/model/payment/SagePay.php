@@ -76,7 +76,10 @@ class SagePay extends CommercePaymentMethod {
                 $order->Status = ($order_status == 'OK' || $order_status == 'AUTHENTICATED') ? 'paid' : 'failed';
                 $order->write();
                 
-                return true;
+                if($order_status == 'OK' || $order_status == 'AUTHENTICATED')
+					return true;
+				else
+					return false;
             }
         }
         

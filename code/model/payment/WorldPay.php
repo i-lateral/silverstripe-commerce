@@ -67,7 +67,11 @@ class WorldPay extends CommercePaymentMethod {
                 $order->Status = ($order_status == 'Y') ? 'paid' : 'failed';
                 $order->write();
                 
-                return true;
+                
+                if($order_status == 'Y')
+					return true;
+				else
+					return false;
             }
         }
         
