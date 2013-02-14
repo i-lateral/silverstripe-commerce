@@ -211,6 +211,22 @@ class Order extends DataObject {
         return $total;
     }
     
+    protected function generate_order_number() {
+		$id = str_pad($this->ID, 8,  "0");
+		
+		$guidText = 
+			substr($id, 0, 4) . '-' . 
+			substr($id, 4, 4) . '-' . 
+			rand(1000,9999);
+
+        // Work out if an order prefix string has been set in siteconfig
+        $config = SiteConfig::current_site_config();
+        
+        $guidText = ($config->OrderPrefix) ? $config->OrderPrefix . '-' . $guidText : $guidText;
+
+		return $guidText;
+	}
+    
     public function onBeforeDelete() {
         // Delete all items attached to this order
         foreach($this->Items() as $item) {
@@ -222,6 +238,12 @@ class Order extends DataObject {
     
     public function onAfterWrite() {
         parent::onAfterWrite();
+        
+        // Check if an order number has been generated, if not, add it and save again
+        if(!$this->OrderNumber) {
+			$this->OrderNumber = $this->generate_order_number();
+			$this->write();
+		}
         
         // Deal with sending the status email
         if(($this->Status == 'dispatched') && !($this->EmailDispatchSent)) {      
