@@ -142,7 +142,6 @@ class CheckoutForm extends Form {
         // Save form data into an order object
         $order = new Order();
         $form->saveInto($order);
-        $order->OrderNumber = $order_prefix . uniqid();
         $order->Status      = 'incomplete';
         $order->PostageID   = Session::get('PostageID');
         $order->write();
