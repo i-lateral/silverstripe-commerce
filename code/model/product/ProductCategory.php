@@ -3,7 +3,8 @@
 class ProductCategory extends DataObject {
 	public static $db = array(
 		'Title'         => 'Varchar',
-		'URLSegment'   => 'Varchar',
+		'Content'       => 'HTMLText',
+		'URLSegment'    => 'Varchar',
 		'ListOrGrid'    => "Enum('Grid,List','Grid')",
 		'Sort'	        => 'Int'
 	);
@@ -76,12 +77,13 @@ class ProductCategory extends DataObject {
 		$url_field = TextField::create('URLSegment')
 		    ->setReadonly(true)
 		    ->performReadonlyTransformation();
-		
+                
 		$fields->addFieldToTab('Root.Main', TextField::create('Title'));
 		$fields->addFieldToTab('Root.Main', $url_field);
+		$fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content')->setRows(20)->addExtraClass('stacked'));
 		$fields->addFieldToTab('Root.Main', DropdownField::create('ListOrGrid','View children as a list or grid?',$this->dbObject('ListOrGrid')->enumValues()));		
 		$fields->addFieldToTab('Root.Main', NumericField::create('Sort'));
-		
+                
 		// If record is just created, check for parent ID in URL and set appropriately
 		$parentField = new TreeDropdownField('ParentID', 'Parent Category', 'ProductCategory');
 
