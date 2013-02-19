@@ -7,10 +7,19 @@
 class Commerce_SiteConfig extends DataExtension {
     public static $db = array(
         // Commerce Configs
-        'SuccessCopy'       => 'Text',
-        'FailerCopy'        => 'Text',
-        'OrderPrefix'       => 'Varchar(9)',
-        'CartCopy'          => 'HTMLText'
+        'ContactEmail'          => 'Varchar(100)',
+        'ContactPhone'          => 'Varchar(50)',
+        'SuccessCopy'           => 'Text',
+        'FailerCopy'            => 'Text',
+        'OrderPrefix'           => 'Varchar(9)',
+        'CartCopy'              => 'HTMLText',
+        'EmailFromAddress'      => "Text",
+        'SendPaidEmail'         => "Enum('No,Customer,Vendor,Both','No')",
+        'PaidEmailAddress'      => "Text",
+        'SendProcessingEmail'   => "Enum('No,Customer,Vendor,Both','No')",
+        'ProcessingEmailAddress'=> "Text",
+        'SendDispatchedEmail'   => "Enum('No,Customer,Vendor,Both','Customer')",
+        'DispatchedEmailAddress'=> "Text"
     );
     
     public static $has_one = array(
@@ -24,28 +33,76 @@ class Commerce_SiteConfig extends DataExtension {
         'PaymentMethods'    => 'CommercePaymentMethod'
     );
     
+    public function sendCommerceEmail($recipient, $status) {
+        if($recipient == 'Customer')
+                $array = array('Customer', 'Both');
+        elseif($recipient == 'Vendor')
+                $array = array('Vendor', 'Both');
+        else
+                $array = array();
+            
+        if($status == 'paid' && in_array($this->owner->SendPaidEmail, $array))
+                return true;
+        elseif($status == 'processing' && in_array($this->owner->SendProcessingEmail, $array))
+                return true;
+        elseif($status == 'dispatched' && in_array($this->owner->SendDispatchedEmail, $array))
+                return true;
+        else
+                return false;
+    }
+    
     public function updateCMSFields(FieldList $fields) {
+        
         // Ecommerce Fields
-        $fields->addFieldToTab('Root.Commerce', TextField::create('OrderPrefix', 'Short code that can appear at the start of order numbers', null, 9));
-        $fields->addFieldToTab('Root.Commerce', HtmlEditorField::create('CartCopy', 'Copy to appear above shopping cart')->setRows(10));
-        $fields->addFieldToTab('Root.Commerce', TextAreaField::create('SuccessCopy', 'Content to appear on order success page')->setRows(3));
-        $fields->addFieldToTab('Root.Commerce', TextAreaField::create('FailerCopy', 'Content to appear on order failer page')->setRows(3));
-		$fields->addFieldToTab('Root.Commerce', UploadField::create('NoProductImage','Overwrite default "image unavailable" image'));
-		
-    	// Add dropdown to manage currency relations
-		$currency_map = CommerceCurrency::get()->map();
-		$currency_map->unshift('0','Please Select');
-		
-    	$fields->addFieldToTab('Root.Commerce', DropdownField::create('CurrencyID', 'Currency to use', $currency_map, $this->owner->CurrencyID));
-		
-		// Add dropdown to manage weight relations
-		$weights_map = ProductWeight::get()->map();
-		$weights_map->unshift('0','Please Select');
-		
-    	$fields->addFieldToTab('Root.Commerce', DropdownField::create('WeightID', 'Weight to use', $weights_map, $this->owner->WeightID));
-		
+        $fields->addFieldToTab('Root.Main', HeaderField::create('ContactHeader', 'Contact Details', 2));   
+        $fields->addFieldToTab('Root.Main', new TextField('ContactEmail', 'Contact Email Address'));
+        $fields->addFieldToTab('Root.Main', new TextField('ContactPhone', 'Contact Phone Number'));
+        
+        $fields->addFieldToTab('Root.Main', HeaderField::create('CommerceHeader', 'Ecommerce', 2));        
+        
+        
+        // Compress default commerce settings
+        $settings_fields = ToggleCompositeField::create('CommerceSettings', 'Default Settings',
+                array(
+                        TextField::create('OrderPrefix', 'Short code that can appear at the start of order numbers', null, 9),
+                        DropdownField::create('CurrencyID', 'Currency to use', CommerceCurrency::get()->map(), $this->owner->CurrencyID)->setEmptyString('Please Select'),
+                        DropdownField::create('WeightID', 'Weight to use', ProductWeight::get()->map(), $this->owner->WeightID)->setEmptyString('Please Select'),
+                        UploadField::create('NoProductImage','Overwrite default "image unavailable" image')
+                )
+        )->setHeadingLevel(4);
+        
+        
+        // Compress shopping cart settings
+        $cart_fields = ToggleCompositeField::create('CartProcess', 'Cart and Checkout Content',
+                array(
+                        HtmlEditorField::create('CartCopy', 'Shopping cart')->setRows(15)->addExtraClass('stacked'),
+                        TextAreaField::create('SuccessCopy', 'Order success page')->setRows(4)->setColumns(30)->addExtraClass('stacked'),
+                        TextAreaField::create('FailerCopy', 'Order failer page')->setRows(4)->setColumns(30)->addExtraClass('stacked')              
+                )
+        )->setHeadingLevel(4);
+        
+        
+        // Add config sets
+        $fields->addFieldToTab('Root.Main', $settings_fields);
+        $fields->addFieldToTab('Root.Main', $cart_fields);
+        
+        // Compress email alerts
+        $email_fields = ToggleCompositeField::create('EmailAlerts', 'Email Alerts',
+                array(
+                        TextField::create('EmailFromAddress', 'Send notifications from?'),
+                        DropdownField::create('SendPaidEmail', 'When order placed', $this->owner->dbObject('SendPaidEmail')->enumValues()),
+                        TextField::create('PaidEmailAddress', 'Vendor email address?'),
+                        DropdownField::create('SendProcessingEmail', 'When order marked as processing', $this->owner->dbObject('SendProcessingEmail')->enumValues()),
+                        TextField::create('ProcessingEmailAddress', 'Vendor email address?'),
+                        DropdownField::create('SendDispatchedEmail', 'When order marked dispatched', $this->owner->dbObject('SendDispatchedEmail')->enumValues()),
+                        TextField::create('DispatchedEmailAddress', 'Vendor email address?')
+                )
+        )->setHeadingLevel(4);
+        
+        $fields->addFieldToTab('Root.Main', $email_fields);
+        
 		// Postage
-		$postage_config = GridFieldConfig::create()->addComponents(
+        $postage_config = GridFieldConfig::create()->addComponents(
             new GridFieldToolbarHeader(),
             new GridFieldAddNewButton('toolbar-header-right'),
             new GridFieldSortableHeader(),
@@ -61,7 +118,7 @@ class Commerce_SiteConfig extends DataExtension {
         $fields->addFieldToTab('Root.Postage', $postage_table);
         
 		// Payment Methods
-		$payment_config = GridFieldConfig::create()->addComponents(
+        $payment_config = GridFieldConfig::create()->addComponents(
             new GridFieldToolbarHeader(),
             new GridFieldAddNewButton('toolbar-header-right'),
             new GridFieldSortableHeader(),

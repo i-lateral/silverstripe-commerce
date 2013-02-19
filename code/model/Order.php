@@ -86,31 +86,31 @@ class Order extends DataObject {
         $fields->removeByName('DeliveryPostCode');
         $fields->removeByName('DeliveryCountry');
         
-		// Add non-editable order number
-		$ordernum_field = TextField::create('OrderNumber')
-		    ->setReadonly(true)
-		    ->performReadonlyTransformation();
+        // Add non-editable order number
+        $ordernum_field = TextField::create('OrderNumber')
+            ->setReadonly(true)
+            ->performReadonlyTransformation();
 
-		$fields->addFieldToTab('Root.Main', $ordernum_field, 'BillingEmail');
+        $fields->addFieldToTab('Root.Main', $ordernum_field, 'BillingEmail');
+
+        // Display the created and last edited dates
+        $lastedited_field = TextField::create('LastEdited', 'Last time order was saved')
+            ->setReadonly(true)
+            ->performReadonlyTransformation();
         
-		// Display the created and last edited dates
-		$lastedited_field = TextField::create('LastEdited', 'Last time order was saved')
-		    ->setReadonly(true)
-		    ->performReadonlyTransformation();
-		
-		$created_field = TextField::create('Created')
-		    ->setReadonly(true)
-		    ->performReadonlyTransformation();
-		
-		$fields->addFieldToTab('Root.Main', $created_field, 'EmailDispatchSent');
-		$fields->addFieldToTab('Root.Main', $lastedited_field, 'EmailDispatchSent');
-		
-		// Load basic list of items
-		$item_config = GridFieldConfig::create()->addComponents(
-		    new GridFieldSortableHeader(),
-		    new GridFieldDataColumns(),
-		    new GridFieldFooter()
-	    );
+        $created_field = TextField::create('Created')
+            ->setReadonly(true)
+            ->performReadonlyTransformation();
+        
+        $fields->addFieldToTab('Root.Main', $created_field, 'EmailDispatchSent');
+        $fields->addFieldToTab('Root.Main', $lastedited_field, 'EmailDispatchSent');
+        
+        // Load basic list of items
+        $item_config = GridFieldConfig::create()->addComponents(
+            new GridFieldSortableHeader(),
+            new GridFieldDataColumns(),
+            new GridFieldFooter()
+        );
 		
         $item_field = ToggleCompositeField::create('OrderItems', 'Order Items',
 			array(
@@ -212,20 +212,20 @@ class Order extends DataObject {
     }
     
     protected function generate_order_number() {
-		$id = str_pad($this->ID, 8,  "0");
-		
-		$guidText = 
-			substr($id, 0, 4) . '-' . 
-			substr($id, 4, 4) . '-' . 
-			rand(1000,9999);
+        $id = str_pad($this->ID, 8,  "0");
+        
+        $guidText = 
+            substr($id, 0, 4) . '-' . 
+            substr($id, 4, 4) . '-' . 
+            rand(1000,9999);
 
         // Work out if an order prefix string has been set in siteconfig
         $config = SiteConfig::current_site_config();
         
         $guidText = ($config->OrderPrefix) ? $config->OrderPrefix . '-' . $guidText : $guidText;
 
-		return $guidText;
-	}
+        return $guidText;
+    }
     
     public function onBeforeDelete() {
         // Delete all items attached to this order
@@ -241,31 +241,48 @@ class Order extends DataObject {
         
         // Check if an order number has been generated, if not, add it and save again
         if(!$this->OrderNumber) {
-			$this->OrderNumber = $this->generate_order_number();
-			$this->write();
-		}
+            $this->OrderNumber = $this->generate_order_number();
+            $this->write();
+        }
         
         // Deal with sending the status email
-        if(($this->Status == 'dispatched') && !($this->EmailDispatchSent)) {      
+        if($this->isChanged('Status') && in_array($this->Status, array('paid','processing','dispatched')) ) {
             $siteconfig = SiteConfig::current_site_config();
-              
+            
+            $subject = "Order {$this->OrderNumber} {$this->Status}";
+            $from =  $siteconfig->Title . "<{$siteconfig->EmailFromAddress}>";
+            
             $vars = array(
                 'Order' => $this,
                 'SiteConfig' => $siteconfig
             );
             
-            $body = $this->renderWith('Email_Dispatch', $vars);
+            // Deal with customer email
+            if($siteconfig->sendCommerceEmail('Customer', $this->Status)) {
+                    $body = $this->renderWith('OrderEmail_Customer', $vars);
+                    $email = new Email($from,$this->BillingEmail,$subject,$body);
+                    $email->sendPlain();
+            }
             
-            $email = new Email(
-                $siteconfig->EmailFrom,
-                $this->BillingEmail,
-                "Order {$this->OrderNumber} dispatched",
-                $body);
-                
-            $email->sendPlain();
+            // Deal with vendor email
+            if($siteconfig->sendCommerceEmail('Vendor', $this->Status)) {
+                    switch($this->Status) {
+                        case 'paid':
+                            $email = $siteconfig->PaidEmailAddress;
+                        case 'processing':
+                            $email = $siteconfig->ProcessingEmailAddress;
+                        case 'dispatched':
+                            $email = $siteconfig->DispatchedEmailAddress;
+                    }
+                    
+                    if(isset($email)) {
+                            $body = $this->renderWith('OrderEmail_Vendor', $vars);
+                            $email = new Email($from,$email,$subject,$body);
+                            $email->sendPlain();
+                    }
+            }
             
-            $this->EmailDispatchSent = 1;
-            $this->write();
+            
         }
     }
     
