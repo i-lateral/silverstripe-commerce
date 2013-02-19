@@ -6,6 +6,7 @@ class Product extends DataObject {
 		'URLSegment'	=> 'Varchar',
 		'Price'         => 'Decimal',
 		'Description'	=> 'HTMLText',
+        'Sort'          => 'Int',
 		'Quantity'		=> 'Int',
 		'PackSize'      => 'Varchar',
 		'Weight'        => 'Int',
@@ -33,6 +34,8 @@ class Product extends DataObject {
 	    'Price'         => 'Price',
 	    'CategoriesList'=> 'Categories'
 	);
+
+    public static $default_sort = "\"Sort\" DESC";
 	
 	/**
      * Return a URL to link to this product (via Catalog_Controller)
@@ -100,7 +103,9 @@ class Product extends DataObject {
 		    ->performReadonlyTransformation();
 		
 		$fields->addFieldToTab('Root.Main', $url_field, 'Price');
-		
+        $fields->addFieldToTab('Root.Main', HTMLEditorField::create('Description')->setRows(20)->addExtraClass('stacked'));
+        
+		$fields->removeByName('Sort');
 		$fields->removeByName('Quantity');
 		$fields->removeByName('PackSize');
 		$fields->removeByName('Weight');
@@ -109,6 +114,7 @@ class Product extends DataObject {
 		$additional_field = ToggleCompositeField::create('AdditionalData', 'Additional Data',
 			array(
 				NumericField::create("Quantity", $this->fieldLabel('Quantity')),
+				TextField::create("Sort", $this->fieldLabel('Sort')),
 				TextField::create("PackSize", $this->fieldLabel('PackSize')),
 				TextField::create("Weight", $this->fieldLabel('Weight')),
 				TextField::create("StockID", $this->fieldLabel('StockID'))
@@ -144,6 +150,8 @@ class Product extends DataObject {
 		    $fields->addFieldToTab('Root.Customisations', $custom_field);
 		}
 		
+        $this->extend('updateCMSFields', $fields);
+        
 		return $fields;
 	}
 	

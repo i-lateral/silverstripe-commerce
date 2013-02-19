@@ -1,40 +1,42 @@
 <?php
 
 class ProductCategory extends DataObject {
-	public static $db = array(
-		'Title'         => 'Varchar',
-		'Content'       => 'HTMLText',
-		'URLSegment'    => 'Varchar',
-		'Sort'	        => 'Int'
-	);
-	
-	public static $has_one = array(
-		'Parent'        => 'ProductCategory'
-	);
-	
-	public static $many_many = array(
-		'Products'      => 'Product'
-	);
+        public static $db = array(
+                'Title'         => 'Varchar',
+                'Content'       => 'HTMLText',
+                'URLSegment'    => 'Varchar',
+                'Sort'	        => 'Int'
+        );
 
-	public static $extensions = array(
+        public static $has_one = array(
+                'Parent'        => 'ProductCategory'
+        );
+
+        public static $many_many = array(
+                'Products'      => 'Product'
+        );
+
+        public static $extensions = array(
                 "Hierarchy"
-	);
-	
-	public static $summary_fields = array(
+        );
+
+        public static $summary_fields = array(
                 'Title' => 'Title',
                 'URLSegment' => 'URLSegment'
-	);
-	
-	/**
-     * Return a URL to link to this catagory (via Catalog_Controller)
-     * 
-     * @return string URL to cart controller
-     */
-    public function Link(){    
-        return Controller::join_links(BASE_URL , $this->URLSegment);
-    }
+        );
 
-    /**
+        public static $default_sort = "\"Sort\" DESC";
+	
+        /**
+        * Return a URL to link to this catagory (via Catalog_Controller)
+        * 
+        * @return string URL to cart controller
+        */
+        public function Link(){    
+        return Controller::join_links(BASE_URL , $this->URLSegment);
+        }
+
+        /**
 	 * Returns TRUE if this is the currently active category.
 	 *
 	 * @return bool
