@@ -5,7 +5,6 @@ class ProductCategory extends DataObject {
 		'Title'         => 'Varchar',
 		'Content'       => 'HTMLText',
 		'URLSegment'    => 'Varchar',
-		'ListOrGrid'    => "Enum('Grid,List','Grid')",
 		'Sort'	        => 'Int'
 	);
 	
@@ -18,12 +17,12 @@ class ProductCategory extends DataObject {
 	);
 
 	public static $extensions = array(
-		"Hierarchy"
+                "Hierarchy"
 	);
 	
 	public static $summary_fields = array(
-	    'Title' => 'Title',
-	    'URLSegment' => 'URLSegment'
+                'Title' => 'Title',
+                'URLSegment' => 'URLSegment'
 	);
 	
 	/**
@@ -80,8 +79,7 @@ class ProductCategory extends DataObject {
                 
 		$fields->addFieldToTab('Root.Main', TextField::create('Title'));
 		$fields->addFieldToTab('Root.Main', $url_field);
-		$fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content')->setRows(20)->addExtraClass('stacked'));
-		$fields->addFieldToTab('Root.Main', DropdownField::create('ListOrGrid','View children as a list or grid?',$this->dbObject('ListOrGrid')->enumValues()));		
+		$fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content')->setRows(20)->addExtraClass('stacked'));		
 		$fields->addFieldToTab('Root.Main', NumericField::create('Sort'));
                 
 		// If record is just created, check for parent ID in URL and set appropriately
@@ -89,6 +87,8 @@ class ProductCategory extends DataObject {
 
 		$fields->addFieldToTab('Root.Main', $parentField);
 		
+                $this->extend('updateCMSFields', $fields);
+                
 		return $fields;
 	}
 	
