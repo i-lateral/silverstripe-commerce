@@ -10,6 +10,7 @@ ITEMS
 <% if $Order.Status = 'dispatched' %>DELIVERY ADDRESS
 ------------------------------------
 Your order will be dispatched to:
+{$Order.BillingFirstnames} {$Order.BillingSurname}
 {$Order.DeliveryAddress1},
 {$Order.DeliveryAddress2},
 {$Order.DeliveryCity},
