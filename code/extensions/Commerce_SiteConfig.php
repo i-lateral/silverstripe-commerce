@@ -54,20 +54,23 @@ class Commerce_SiteConfig extends DataExtension {
     public function updateCMSFields(FieldList $fields) {
         
         // Ecommerce Fields
-        $fields->addFieldToTab('Root.Main', HeaderField::create('ContactHeader', 'Contact Details', 2));   
-        $fields->addFieldToTab('Root.Main', new TextField('ContactEmail', 'Contact Email Address'));
-        $fields->addFieldToTab('Root.Main', new TextField('ContactPhone', 'Contact Phone Number'));
-        
         $fields->addFieldToTab('Root.Main', HeaderField::create('CommerceHeader', 'Ecommerce', 2));        
         
+        // Compress default commerce settings
+        $contact_fields = ToggleCompositeField::create('ContactDetails', 'Contact Details',
+                array(
+					TextField::create('ContactEmail', 'Email Address'),
+					TextField::create('ContactPhone', 'Phone Number')
+                )
+        )->setHeadingLevel(4);
         
         // Compress default commerce settings
         $settings_fields = ToggleCompositeField::create('CommerceSettings', 'Default Settings',
                 array(
-                        TextField::create('OrderPrefix', 'Short code that can appear at the start of order numbers', null, 9),
-                        DropdownField::create('CurrencyID', 'Currency to use', CommerceCurrency::get()->map(), $this->owner->CurrencyID)->setEmptyString('Please Select'),
-                        DropdownField::create('WeightID', 'Weight to use', ProductWeight::get()->map(), $this->owner->WeightID)->setEmptyString('Please Select'),
-                        UploadField::create('NoProductImage','Overwrite default "image unavailable" image')
+					TextField::create('OrderPrefix', 'Short code that can appear at the start of order numbers', null, 9),
+					DropdownField::create('CurrencyID', 'Currency to use', CommerceCurrency::get()->map(), $this->owner->CurrencyID)->setEmptyString('Please Select'),
+					DropdownField::create('WeightID', 'Weight to use', ProductWeight::get()->map(), $this->owner->WeightID)->setEmptyString('Please Select'),
+					UploadField::create('NoProductImage','Overwrite default "image unavailable" image')
                 )
         )->setHeadingLevel(4);
         
@@ -75,30 +78,30 @@ class Commerce_SiteConfig extends DataExtension {
         // Compress shopping cart settings
         $cart_fields = ToggleCompositeField::create('CartProcess', 'Cart and Checkout Content',
                 array(
-                        HtmlEditorField::create('CartCopy', 'Shopping cart')->setRows(15)->addExtraClass('stacked'),
-                        TextAreaField::create('SuccessCopy', 'Order success page')->setRows(4)->setColumns(30)->addExtraClass('stacked'),
-                        TextAreaField::create('FailerCopy', 'Order failer page')->setRows(4)->setColumns(30)->addExtraClass('stacked')              
+					HtmlEditorField::create('CartCopy', 'Shopping cart')->setRows(15)->addExtraClass('stacked'),
+					TextAreaField::create('SuccessCopy', 'Order success page')->setRows(4)->setColumns(30)->addExtraClass('stacked'),
+					TextAreaField::create('FailerCopy', 'Order failer page')->setRows(4)->setColumns(30)->addExtraClass('stacked')              
+                )
+        )->setHeadingLevel(4);
+        
+        // Compress email alerts
+        $email_fields = ToggleCompositeField::create('EmailAlerts', 'Email Alerts',
+                array(
+					TextField::create('EmailFromAddress', 'Send notifications from?'),
+					DropdownField::create('SendPaidEmail', 'When order placed', $this->owner->dbObject('SendPaidEmail')->enumValues()),
+					TextField::create('PaidEmailAddress', 'Vendor email address?'),
+					DropdownField::create('SendProcessingEmail', 'When order marked as processing', $this->owner->dbObject('SendProcessingEmail')->enumValues()),
+					TextField::create('ProcessingEmailAddress', 'Vendor email address?'),
+					DropdownField::create('SendDispatchedEmail', 'When order marked dispatched', $this->owner->dbObject('SendDispatchedEmail')->enumValues()),
+					TextField::create('DispatchedEmailAddress', 'Vendor email address?')
                 )
         )->setHeadingLevel(4);
         
         
         // Add config sets
+        $fields->addFieldToTab('Root.Main', $contact_fields);
         $fields->addFieldToTab('Root.Main', $settings_fields);
         $fields->addFieldToTab('Root.Main', $cart_fields);
-        
-        // Compress email alerts
-        $email_fields = ToggleCompositeField::create('EmailAlerts', 'Email Alerts',
-                array(
-                        TextField::create('EmailFromAddress', 'Send notifications from?'),
-                        DropdownField::create('SendPaidEmail', 'When order placed', $this->owner->dbObject('SendPaidEmail')->enumValues()),
-                        TextField::create('PaidEmailAddress', 'Vendor email address?'),
-                        DropdownField::create('SendProcessingEmail', 'When order marked as processing', $this->owner->dbObject('SendProcessingEmail')->enumValues()),
-                        TextField::create('ProcessingEmailAddress', 'Vendor email address?'),
-                        DropdownField::create('SendDispatchedEmail', 'When order marked dispatched', $this->owner->dbObject('SendDispatchedEmail')->enumValues()),
-                        TextField::create('DispatchedEmailAddress', 'Vendor email address?')
-                )
-        )->setHeadingLevel(4);
-        
         $fields->addFieldToTab('Root.Main', $email_fields);
         
 		// Postage
