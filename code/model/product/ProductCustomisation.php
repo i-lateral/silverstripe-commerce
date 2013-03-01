@@ -22,7 +22,7 @@ class ProductCustomisation extends DataObject {
         'Sort'
     );
 
-	public static $default_sort = "\"Sort\"";
+	public static $default_sort = "\"Sort\" DESC";
     
     public function getCMSFields() {
         $fields = parent::getCMSFields();
@@ -111,6 +111,7 @@ class ProductCustomisationOption extends DataObject {
     public static $db = array(
         'Title'         => 'Varchar',
         'ModifyPrice'   => 'Decimal',
+		'Sort'			=> 'Int',
         'Default'		=> 'Boolean'
     );
     
@@ -130,9 +131,12 @@ class ProductCustomisationOption extends DataObject {
     
     public static $field_types = array(
 		'Title'         => 'TextField',
+		'Sort'         	=> 'Int',
 		'ModifyPrice'   => 'TextField',
 		'Default'  		=> 'CheckboxField'
     );
+
+	public static $default_sort = "\"Sort\" DESC";
     
     /**
      * Use this method to get a full list of field types
