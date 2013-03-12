@@ -74,10 +74,12 @@ class Payment_Controller extends Page_Controller {
      * Method to clear any existing sessions related to commerce module
      */    
     public function ClearSessionData() {
-        ShoppingCart::get()->clear();
-        unset($_SESSION['Order']);
-        unset($_SESSION['PostageID']);
-        unset($_SESSION['PaymentMethod']);
+        if(isset($_SESSION)) {
+            ShoppingCart::get()->clear();
+            unset($_SESSION['Order']);
+            unset($_SESSION['PostageID']);
+            unset($_SESSION['PaymentMethod']);
+        }
     }
     
     /**
@@ -105,7 +107,7 @@ class Payment_Controller extends Page_Controller {
             else
                 return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
         } else
-            $this->httpError(500);
+            return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
     }
     
     /*
@@ -120,6 +122,8 @@ class Payment_Controller extends Page_Controller {
             'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete'),
             'Content'   => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
         );
+        
+        $this->ClearSessionData();
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
@@ -151,6 +155,8 @@ class Payment_Controller extends Page_Controller {
             'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
             'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
         );
+        
+        $this->ClearSessionData();
     
         return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
