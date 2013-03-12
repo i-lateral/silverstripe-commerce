@@ -103,9 +103,9 @@ class Payment_Controller extends Page_Controller {
             if($callback)
                 return $this->success();
             else
-                return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
+                return $this->error();
         } else
-            return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
+            return $this->error();
     }
     
     /*
