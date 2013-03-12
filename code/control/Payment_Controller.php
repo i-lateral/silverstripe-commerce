@@ -85,9 +85,7 @@ class Payment_Controller extends Page_Controller {
      * sends it to the relevent gateway class for processing
      *
      */
-    public function callback() {
-        $result = false;
-        
+    public function callback() {        
         // See if data has been passed via the request
         if($this->request->postVars())
             $data = $this->request->postVars();
@@ -96,6 +94,7 @@ class Payment_Controller extends Page_Controller {
         else
             $data = false;
     
+        // If post data exists, process. Otherwise provide 500 error
         if($data) {
             $callback = $this->getPaymentMethod()->ProcessCallback($data);
 
@@ -105,9 +104,7 @@ class Payment_Controller extends Page_Controller {
                 return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'success'));
             else
                 return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
-        }
-        
-        if($result == false)
+        } else
             $this->httpError(500);
     }
     
