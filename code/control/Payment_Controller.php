@@ -96,14 +96,12 @@ class Payment_Controller extends Page_Controller {
         else
             $data = false;
     
-        // If post data exists, process. Otherwise provide 500 error
+        // If post data exists, process. Otherwise provide error
         if($data) {
             $callback = $this->getPaymentMethod()->ProcessCallback($data);
-
-			$this->ClearSessionData();
 			
             if($callback)
-                return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'success'));
+                return $this->success();
             else
                 return $this->redirect(Controller::join_links(BASE_URL , self::$url_segment, 'error'));
         } else
@@ -124,22 +122,6 @@ class Payment_Controller extends Page_Controller {
         );
         
         $this->ClearSessionData();
-        
-        return $this->renderWith(array('Payment_Response','Page'), $vars);
-    }
-    
-    /*
-     * Method called when payement gateway returns the failer URL
-     *
-     * @return array
-     */
-    public function failer() {
-        $site = SiteConfig::current_site_config();
-        
-        $vars = array(
-            'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
-            'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
-        );
         
         return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
