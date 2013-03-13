@@ -1,6 +1,4 @@
-<div class="typography">
-    <div id="Content">
-        <h1>$Title</h1>
-        <p>$Content</p>
-    </div>
+<div class="commerce-content-container typography">
+	<h1>$Title</h1>
+	<p>$Content</p>
 </div>
