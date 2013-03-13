@@ -10,7 +10,10 @@ class ProductAdmin extends ModelAdmin {
     public static $url_segment = 'products';
     public static $menu_title = 'Products';
     public static $menu_priority = 11;
-    public static $managed_models = array('Product','ProductCategory');
+    public static $managed_models = array(
+        'Product' => array('title' => 'Products'),
+        'ProductCategory' => array('title' => 'Categories')
+    );
 	
 	public $showImportForm = array('Product');
 	
