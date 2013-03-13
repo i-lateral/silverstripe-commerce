@@ -42,7 +42,8 @@ class Order extends DataObject {
         'DeliveryAddress'   => 'Text',
         'PostageCost'       => 'Decimal',
         'SubTotal'          => 'Currency',
-        'OrderTotal'        => 'Currency'
+        'OrderTotal'        => 'Currency',
+        'ItemSummary'       => 'HTMLText'
     );
     
     public static $defaults = array(
@@ -50,12 +51,12 @@ class Order extends DataObject {
     );
     
     public static $summary_fields = array(
-        'OrderNumber',
-        'BillingFirstnames',
-        'BillingSurname',
-        'BillingEmail',
-        'Status',
-        'Created'
+        "OrderNumber" => "Order Number",
+        "BillingFirstnames" => "First Name(s)",
+        "BillingSurname" => "Surname",
+        "BillingEmail" => "Email",
+        "Status" => "Status",
+        "Created" => "Created"
     );
 
 	static $default_sort = "Created DESC";
@@ -153,18 +154,6 @@ class Order extends DataObject {
         
         return $fields;
     }
-
-    public function canCreate($member = null) {
-        return false;
-    }
-
-    public function canEdit($member = null) {
-        return true;
-    }
-
-    public function canDelete($member = null) {
-        return true;
-    }
     
     public function getPostageCost() {
         return $this->Postage()->Cost;
@@ -198,6 +187,16 @@ class Order extends DataObject {
             $total += DataObject::get_by_id('PostageArea', Session::get('PostageID'))->Cost;
         
         return number_format($total,2);
+    }
+    
+    public function getItemSummary() {
+        $return = '';
+        
+        foreach($this->Items() as $item) {
+            $return .= "{$item->Quantity} x {$item->Title};\n";
+        }
+        
+        return $return;
     }
     
     public function getSubTotal() {
@@ -292,5 +291,17 @@ class Order extends DataObject {
         foreach ($this->Items() as $item) {
             $item->delete();
         }
+    }
+    
+    public function canCreate($member = null) {
+        return false;
+    }
+
+    public function canEdit($member = null) {
+        return true;
+    }
+
+    public function canDelete($member = null) {
+        return true;
     }
 }
