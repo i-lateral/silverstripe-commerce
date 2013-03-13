@@ -9,7 +9,7 @@
 class ProductAdmin extends ModelAdmin {
     public static $url_segment = 'products';
     public static $menu_title = 'Products';
-    public static $menu_priority = 10;
+    public static $menu_priority = 11;
     public static $managed_models = array('Product','ProductCategory');
 	
 	public $showImportForm = array('Product');
@@ -25,85 +25,85 @@ class ProductAdmin extends ModelAdmin {
         // Filter categories
         if($this->modelClass == 'ProductCategory') {
             $list
-			    ->where("ParentID = {$this->currentCategoryID()}")
-			    ->sort('Sort','DESC');
+                ->where("ParentID = {$this->currentCategoryID()}")
+                ->sort('Sort','DESC');
         }
         
         return $list;
     }
 	
-	public function getEditForm($id = null, $fields = null) {
+    public function getEditForm($id = null, $fields = null) {
     	$form = parent::getEditForm($id, $fields);
-		$params = $this->request->requestVar('q');
-		
-		// Alterations for Hiarachy on product cataloge
-		if($this->modelClass == 'ProductCategory') {
-			$fields = $form->Fields();
-			$gridField = $fields->fieldByName('ProductCategory');
-			
-			// Set custom record editor
-			$record_editor = new GridFieldDetailForm();
-			$record_editor->setItemRequestClass('ProductCategory_ItemRequest');
-			
-			// Tidy up category config
-			$field_config = $gridField->getConfig();
-			$field_config
-	            ->removeComponentsByType('GridFieldExportButton')
-	            ->removeComponentsByType('GridFieldPrintButton')
-	            ->removeComponentsByType('GridFieldDetailForm')
-				->addComponents(
-				    $record_editor,
-					GridFieldLevelup::create($this->currentCategoryID())->setLinkSpec('admin/products/ProductCategory/?ParentID=%d')
-				);
-				
-			// Find data colums, so we can add link to view children
-			$columns = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
+        $params = $this->request->requestVar('q');
+        
+        // Alterations for Hiarachy on product cataloge
+        if($this->modelClass == 'ProductCategory') {
+                $fields = $form->Fields();
+                $gridField = $fields->fieldByName('ProductCategory');
 
-			// Don't allow navigating into children nodes on filtered lists
-			$fields = array(
-				'Title' => 'Title',
-				'URLSegment' => 'URLSegement'
-			);
+                // Set custom record editor
+                $record_editor = new GridFieldDetailForm();
+                $record_editor->setItemRequestClass('ProductCategory_ItemRequest');
 
-			if(!$params) {
-				$fields = array_merge(array('listChildrenLink' => ''), $fields);
-			}
-	
-			$columns->setDisplayFields($fields);
-			$columns->setFieldCasting(array('Title' => 'HTMLText', 'URLSegment' => 'Text'));
+                // Tidy up category config
+                $field_config = $gridField->getConfig();
+                $field_config
+                    ->removeComponentsByType('GridFieldExportButton')
+                    ->removeComponentsByType('GridFieldPrintButton')
+                    ->removeComponentsByType('GridFieldDetailForm')
+                    ->addComponents(
+                        $record_editor,
+                        GridFieldLevelup::create($this->currentCategoryID())->setLinkSpec('admin/products/ProductCategory/?ParentID=%d')
+                    );
+                        
+                // Find data colums, so we can add link to view children
+                $columns = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
 
-			$controller = $this;
-			$columns->setFieldFormatting(array(
-			    'Title' => function($value, &$item) use($controller) {
-					return sprintf(
-						'<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->Title . '</a>',
-						$controller->Link(),
-						$item->ID,
-						null
-					);
-				},
-			    'URLSegment' => function($value, &$item) use($controller) {
-					return sprintf(
-						'<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->URLSegment . '</a>',
-						$controller->Link(),
-						$item->ID,
-						null
-					);
-				},
-				'listChildrenLink' => function($value, &$item) use($controller) {
-					$num = $item ? $item->numChildren() : null;
-					if($num) {
-						return sprintf(
-							'<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">%s</a>',
-							$controller->Link(),
-							$item->ID,
-							$num
-						);
-					}
-				}
-			));
-			
-		}
+                // Don't allow navigating into children nodes on filtered lists
+                $fields = array(
+                    'Title' => 'Title',
+                    'URLSegment' => 'URLSegement'
+                );
+
+                if(!$params) {
+                    $fields = array_merge(array('listChildrenLink' => ''), $fields);
+                }
+
+                $columns->setDisplayFields($fields);
+                $columns->setFieldCasting(array('Title' => 'HTMLText', 'URLSegment' => 'Text'));
+
+                $controller = $this;
+                $columns->setFieldFormatting(array(
+                    'Title' => function($value, &$item) use($controller) {
+                        return sprintf(
+                            '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->Title . '</a>',
+                            $controller->Link(),
+                            $item->ID,
+                            null
+                        );
+                    },
+                    'URLSegment' => function($value, &$item) use($controller) {
+                        return sprintf(
+                            '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->URLSegment . '</a>',
+                            $controller->Link(),
+                            $item->ID,
+                            null
+                        );
+                    },
+                    'listChildrenLink' => function($value, &$item) use($controller) {
+                        $num = $item ? $item->numChildren() : null;
+                        if($num) {
+                            return sprintf(
+                                '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">%s</a>',
+                                $controller->Link(),
+                                $item->ID,
+                                $num
+                            );
+                        }
+                    }
+                ));
+                
+        }
 		
         return $form;
     }

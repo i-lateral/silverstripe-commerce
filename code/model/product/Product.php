@@ -24,12 +24,14 @@ class Product extends DataObject {
 	);
 	
 	public static $casting = array(
-	    'CategoriesList' => 'Varchar'
+	    'CategoriesList'    => 'Varchar',
+	    'Thumbnail'         => 'Varchar'
 	);
 	
 	public static $summary_fields = array(
+        'Thumbnail'     => 'Thumbnail',
 	    'Title'         => 'Title',
-	    'URLSegment'    => 'URLSegment',
+	    'URLSegment'    => 'URL Segment',
 	    'StockID'       => 'Stock Number', 
 	    'Price'         => 'Price',
 	    'CategoriesList'=> 'Categories'
@@ -67,6 +69,13 @@ class Product extends DataObject {
         }
         
         return $images;
+    }
+    
+    public function getThumbnail() {
+        if($this->Images()->exists())
+            return $this->Images()->first()->CMSThumbnail();
+        else
+            return '(No Image)';
     }
     
     /**
