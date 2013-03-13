@@ -36,6 +36,23 @@ class ProductAdmin extends ModelAdmin {
     	$form = parent::getEditForm($id, $fields);
         $params = $this->request->requestVar('q');
         
+        
+        if($this->modelClass == 'Product') {
+            $gridField = $form->Fields()->fieldByName('Product');
+            $field_config = $gridField->getConfig();
+            
+            // Re add creation button and update grid field
+            $add_button = new GridFieldAddNewButton('toolbar-header-left');
+            $add_button->setButtonName('Add Product');
+            
+            $field_config
+                ->removeComponentsByType('GridFieldExportButton')
+                ->removeComponentsByType('GridFieldPrintButton')
+                ->removeComponentsByType('GridFieldAddNewButton')
+                ->addComponents($add_button);
+                
+        }
+        
         // Alterations for Hiarachy on product cataloge
         if($this->modelClass == 'ProductCategory') {
                 $fields = $form->Fields();
@@ -44,6 +61,10 @@ class ProductAdmin extends ModelAdmin {
                 // Set custom record editor
                 $record_editor = new GridFieldDetailForm();
                 $record_editor->setItemRequestClass('ProductCategory_ItemRequest');
+                
+                // Create add button and update grid field
+                $add_button = new GridFieldAddNewButton('toolbar-header-left');
+                $add_button->setButtonName('Add Category');
 
                 // Tidy up category config
                 $field_config = $gridField->getConfig();
@@ -51,8 +72,10 @@ class ProductAdmin extends ModelAdmin {
                     ->removeComponentsByType('GridFieldExportButton')
                     ->removeComponentsByType('GridFieldPrintButton')
                     ->removeComponentsByType('GridFieldDetailForm')
+                    ->removeComponentsByType('GridFieldAddNewButton')
                     ->addComponents(
                         $record_editor,
+                        $add_button,
                         GridFieldLevelup::create($this->currentCategoryID())->setLinkSpec('admin/products/ProductCategory/?ParentID=%d')
                     );
                         
