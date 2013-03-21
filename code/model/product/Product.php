@@ -145,9 +145,12 @@ class Product extends DataObject {
 		    $fields->addFieldToTab('Root.Attributes', $attributes_field);
 		    
 		    // Deal with customisations
+            $add_button = new GridFieldAddNewButton('toolbar-header-left');
+            $add_button->setButtonName('Add Customisation');
+            
 		    $custom_config = GridFieldConfig::create()->addComponents(
                 new GridFieldToolbarHeader(),
-                new GridFieldAddNewButton('toolbar-header-right'),
+                $add_button,
                 new GridFieldSortableHeader(),
                 new GridFieldDataColumns(),
                 new GridFieldPaginator(20),
@@ -155,7 +158,7 @@ class Product extends DataObject {
                 new GridFieldDeleteAction(),
                 new GridFieldDetailForm()
             );
-		    $custom_field = GridField::create('Customisations', null, $this->Customisations(), $custom_config);
+		    $custom_field = GridField::create('Customisations', '', $this->Customisations(), $custom_config);
 		    $fields->addFieldToTab('Root.Customisations', $custom_field);
 		}
 		
