@@ -43,8 +43,13 @@ class ProductCustomisation extends DataObject {
         return $fields;
     }
     
+    // Get the default options for this customisation
     public function DefaultOptions() {
-		return $this->Options()->filter('Default', 1);
+		$options = $this->Options()->filter('Default', 1);
+		
+		$this->extend('updateDefaultOptions', $options);
+		
+		return $options;
 	}
     
     /**
