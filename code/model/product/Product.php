@@ -25,8 +25,7 @@ class Product extends DataObject {
 	
 	public static $casting = array(
 	    'CategoriesList'    => 'Varchar',
-	    'Thumbnail'         => 'Varchar',
-		'DefaultPrice'		=> 'Decimal'
+	    'Thumbnail'         => 'Varchar'
 	);
 	
 	public static $summary_fields = array(
@@ -78,24 +77,6 @@ class Product extends DataObject {
         else
             return '(No Image)';
     }
-    
-    /**
-     * Method that calculates the default price, based on any customisations made
-     * 
-     * @return Decimal
-     */
-    public function getDefaultPrice() {
-		$price = $this->Price;
-		
-		foreach($this->Customisations() as $customisation) {
-			if($customisation->DefaultOptions()->first())
-				$price += $customisation->DefaultOptions()->first()->ModifyPrice;
-		}
-		
-		$this->extend('updateDefaultPrice', $price);
-		
-		return $price;
-	}
     
     /**
      * Determin if the product has more than one image
