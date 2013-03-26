@@ -1,11 +1,11 @@
-de_DE:
+de_DE:    
   Commerce:
     # Products and Categories
     PRICE: 'Preis'
     PACKSIZE: 'Gebindegröße'
     WEIGHT: 'Gewicht'
     DESCRIPTION: 'Beschreibung'
-    ATTRIBUTES: 'Attributes'
+    ATTRIBUTES: 'Eigenschaften'
     CARTNAME: 'Warenkorb'
     VIEWCART: 'Warenkorb'
     CHANGELOCATION: 'Region auswählen'
@@ -17,7 +17,7 @@ de_DE:
     CARTISEMPTY: 'Ihr Warenkorb ist derzeit leer'
     CARTQTY: 'Anzahl'
     CARTCOST: 'Preis'
-    POSTAGE: 'Porto'
+    POSTAGE: 'Versand'
     CARTLOCATION: 'Bitte wählen Sie den Lieferungsort aus'
     CARTTOTAL: 'Gesamt'
     PAYMENT: 'Zahlung'
@@ -42,7 +42,7 @@ de_DE:
     PAYMENTDETAILS: 'Zahlungsangaben eingeben'
     ERRORMESSAGE: 'Bitte füllen Sie jetzt alle erforderlichen Felder aus'
     SUMMARY: 'Zusammenfassung'
-    SUMMARYCOPY: 'Bitte überprüfen Sie ihre persönlichen Angaben, bevor Sie fortfahren und Ihre Zahlungsangaben eingeben'
+    SUMMARYCOPY: 'Bitte Überprüfen Sie ihre persönlichen Angaben, bevor Sie fortfahren und Ihre Zahlungsangaben eingeben'
     FULLNAME: 'Name'
     ADDRESS: 'Adresse'
     CONFIRMPAY: 'Bestätigen und zahlen'
