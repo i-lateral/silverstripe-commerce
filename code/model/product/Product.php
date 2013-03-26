@@ -25,11 +25,11 @@ class Product extends DataObject {
 	
 	public static $casting = array(
 	    'CategoriesList'    => 'Varchar',
-	    'Thumbnail'         => 'Varchar'
+	    'CMSThumbnail'      => 'Varchar'
 	);
 	
 	public static $summary_fields = array(
-        'Thumbnail'     => 'Thumbnail',
+        'CMSThumbnail'  => 'Thumbnail',
 	    'Title'         => 'Title',
 	    'URLSegment'    => 'URL Segment',
 	    'StockID'       => 'Stock Number', 
@@ -71,7 +71,7 @@ class Product extends DataObject {
         return $images;
     }
     
-    public function getThumbnail() {
+    public function getCMSThumbnail() {
         if($this->Images()->exists())
             return $this->Images()->first()->CMSThumbnail();
         else

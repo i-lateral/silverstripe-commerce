@@ -8,9 +8,7 @@
 	        <% if RootCategories %>
 	            <% loop RootCategories %>
 	                <div class="commerce-list-child site-float-left">
-                        <% if Thumbnail %>
-                            <div class="commerce-list-image"><a href="$Link">$Thumbnail.PaddedImage(190,190)</a></div>
-                        <% else_if Images %>
+                        <% if Images %>
                             <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
                         <% else %>
                             <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
@@ -29,9 +27,7 @@
             <% if CategoryChildren %>
                 <% loop CategoryChildren %>
 	                <div class="commerce-list-child site-float-left">
-                        <% if Thumbnail %>
-                            <div class="commerce-list-image"><a href="$Link">$Thumbnail.PaddedImage(190,190)</a></div>
-                        <% else_if Images %>
+                        <% if Images %>
                             <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
                         <% else %>
                             <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
