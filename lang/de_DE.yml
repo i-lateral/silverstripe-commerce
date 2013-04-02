@@ -9,6 +9,7 @@ de_DE:
     CARTNAME: 'Warenkorb'
     VIEWCART: 'Warenkorb'
     CHANGELOCATION: 'Region auswählen'
+    CHANGELLANGUAGE: 'Sprache auswählen'
     READMORE: 'Lesen Sie mehr'
     BACK: 'Zurück'
     ADDTOCART: 'In den Warenkorb'
