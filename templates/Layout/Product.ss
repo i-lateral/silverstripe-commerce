@@ -28,7 +28,8 @@
             <div class="commerce-product-summary">
 	            <p class="price">
 					<span class="label"><% _t('Commerce.PRICE','Price') %>:</span>
-					<span class="value">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</span>
+					<span class="currency">{$Top.SiteConfig.Currency.HTMLNotation.RAW}</span>
+					<span class="value">{$Price}</span>
 				</p>
 				
                 <% if $PackSize %><p class="packsize">

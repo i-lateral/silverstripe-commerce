@@ -161,7 +161,7 @@ class ProductCustomisationOption extends DataObject {
         $config = SiteConfig::current_site_config();
         
         $summary = $this->Title;
-        $summary .= ($this->ModifyPrice != 0) ? ' <span class="modify-price">' . $config->Currency()->HTMLNotation . $this->ModifyPrice . '</span>' : '';
+        $summary .= ($this->ModifyPrice != 0) ? ' (' . $config->Currency()->HTMLNotation . $this->ModifyPrice . ')' : '';
         
 		$this->extend('updateItemSummary', $summary);
 		
