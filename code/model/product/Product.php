@@ -14,7 +14,7 @@ class Product extends DataObject {
 	);
 	
 	public static $has_many = array(
-		'Images'		    => 'ProductImage',
+		'Images'		    => 'Image',
 		'Attributes'        => 'ProductAttribute',
 		'Customisations'    => 'ProductCustomisation'
 	);

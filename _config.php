@@ -1,6 +1,7 @@
 <?php
 // Extentions
 Object::add_extension('SiteConfig', 'Commerce_SiteConfig');
+Object::add_extension('Image', 'Commerce_Image');
 
 // If CMS installed, use this, if not, use Content Controller
 if(class_exists('ContentController'))
