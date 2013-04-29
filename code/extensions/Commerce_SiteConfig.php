@@ -87,13 +87,16 @@ class Commerce_SiteConfig extends DataExtension {
         // Compress email alerts
         $email_fields = ToggleCompositeField::create('EmailAlerts', 'Email Alerts',
                 array(
-					TextField::create('EmailFromAddress', 'Send notifications from?'),
-					DropdownField::create('SendPaidEmail', 'When order placed', $this->owner->dbObject('SendPaidEmail')->enumValues()),
-					TextField::create('PaidEmailAddress', 'Vendor email address?'),
-					DropdownField::create('SendProcessingEmail', 'When order marked as processing', $this->owner->dbObject('SendProcessingEmail')->enumValues()),
-					TextField::create('ProcessingEmailAddress', 'Vendor email address?'),
-					DropdownField::create('SendDispatchedEmail', 'When order marked dispatched', $this->owner->dbObject('SendDispatchedEmail')->enumValues()),
-					TextField::create('DispatchedEmailAddress', 'Vendor email address?')
+					TextField::create('EmailFromAddress', 'Send commerce notifications from?'),
+					LiteralField::create('OrderPlacedHeader', '<div class="field"><h4>When an order is placed</h4></div>'),
+					DropdownField::create('SendPaidEmail', 'Send emails to', $this->owner->dbObject('SendPaidEmail')->enumValues()),
+					TextField::create('PaidEmailAddress', 'From address'),
+					LiteralField::create('OrderProcessingHeader', '<div class="field"><h4>When an order is marked as processing</h4></div>'),
+					DropdownField::create('SendProcessingEmail', 'Send emails to', $this->owner->dbObject('SendProcessingEmail')->enumValues()),
+					TextField::create('ProcessingEmailAddress', 'From address'),
+					LiteralField::create('OrderPlacedHeader', '<div class="field"><h4>When an order is marked as dispatched</h4></div>'),
+					DropdownField::create('SendDispatchedEmail', 'Send emails to', $this->owner->dbObject('SendDispatchedEmail')->enumValues()),
+					TextField::create('DispatchedEmailAddress', 'From address')
                 )
         )->setHeadingLevel(4);
         
