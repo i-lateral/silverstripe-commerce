@@ -14,9 +14,12 @@ class Product extends DataObject {
 	);
 	
 	public static $has_many = array(
-		'Images'		    => 'Image',
 		'Attributes'        => 'ProductAttribute',
 		'Customisations'    => 'ProductCustomisation'
+	);
+	
+	public static $many_many = array(
+		'Images' => 'Image'
 	);
 	
 	public static $belongs_many_many = array(

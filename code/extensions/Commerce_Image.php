@@ -1,6 +1,6 @@
 <?php
 class Commerce_Image extends DataExtension {
-	public static $has_one = array(
-		'ParentProduct'		=> 'Product'
+	public static $belongs_many_many = array(
+		'Products'		=> 'Product'
 	);
 }
