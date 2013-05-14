@@ -1,6 +1,6 @@
 <% _t('CommerceEmail.THANKYOU','Thank you for ordering from') %> {$SiteConfig.Title}.
 
-<% _t('CommerceEmail.ORDER','Order') %> ({$Order.OrderNumber}) <% _t('CommerceEmail.MARKEDAS','has been marked as') %>: {$Order.Status}
+<% _t('CommerceEmail.ORDER','Order') %> ({$Order.OrderNumber}) <% _t('CommerceEmail.MARKEDAS','has been marked as') %>: {$Order.TranslatedStatus}
 
 <% _t('CommerceEmail.ITEMS','Items Ordered') %>
 ------------------------------------
