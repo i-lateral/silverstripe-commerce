@@ -1,5 +1,11 @@
 de_DE:    
   Commerce:
+    # Order Status
+    INCOMPLETE: 'Unfertig'
+    FAILED: 'Gescheitert'
+    PAID: 'Bezahlt'
+    PROCESSING: 'Bearbeitung'
+    DISPATCHED: 'Verschickt'
     # Products and Categories
     PRICE: 'Preis'
     PACKSIZE: 'Gebindegröße'
@@ -52,3 +58,15 @@ de_DE:
     ORDERFAILED: 'Auftrag fehlgeschlagen'
     ORDERERROR: 'Leider konnten wir Ihren Auftrag nicht bearbeiten.'
     ORDERCONTACT: 'Bitte rufen Sie uns an, wenn Sie telefonisch bestellen möchten'
+  CommerceEmail:
+    # Email Notifications
+    THANKYOU: 'Vielen Dank, dass Sie auf Armydogtags bestellt haben'
+    ORDER: 'Ihr Auftrag'
+    MARKEDAS: 'ist'
+    ITEMS: 'Einzelheiten Ihrer Auftrag'
+    ORDERDISPATCHEDTO: 'Ihr Auftrag wurde an die folgende Adresse versandt'
+    CONTACTQUERIES: 'Bei Fragen erreichen Sie uns unter'
+    PHONE: 'Telephon'
+    EMAIL: 'Email'
+    CHECKORDER: 'Bitte prüfen Sie Ihre Erkennungsmarken sorgfältig, sobald Sie sie erhalten, und kontaktieren Sie uns bei Problemen so schnell wie möglich'
+    FINALTHANKS: 'Vielen Dank'

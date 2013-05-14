@@ -43,7 +43,8 @@ class Order extends DataObject {
         'PostageCost'       => 'Decimal',
         'SubTotal'          => 'Currency',
         'OrderTotal'        => 'Currency',
-        'ItemSummary'       => 'HTMLText'
+        'ItemSummary'       => 'HTMLText',
+        'TranslatedStatus'  => 'Varchar'
     );
     
     public static $defaults = array(
@@ -209,6 +210,10 @@ class Order extends DataObject {
         
         return $total;
     }
+    
+    public function getTranslatedStatus() {
+		return _t("Namespace." . strtoupper($this->Status), $this->Status);
+	}
     
     protected function generate_order_number() {
         $id = str_pad($this->ID, 8,  "0");

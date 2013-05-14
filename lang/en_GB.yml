@@ -1,5 +1,11 @@
 en_GB:
   Commerce:
+    # Order Status
+    INCOMPLETE: 'Incomplete'
+    FAILED: 'Failed'
+    PAID: 'Paid'
+    PROCESSING: 'Processing'
+    DISPATCHED: 'Dispatched'
     # Products and Categories
     PRICE: 'Price'
     PACKSIZE: 'Pack Size'
@@ -52,3 +58,15 @@ en_GB:
     ORDERFAILED: 'Order Failed'
     ORDERERROR: "An error occured, Order ID's do not match"
     ORDERCONTACT: "Please contact us with more details"
+  CommerceEmail:
+    # Email Notifications
+    THANKYOU: 'Thank you for ordering from'
+    ORDER: 'Order'
+    MARKEDAS: 'has been marked as'
+    ITEMS: 'Items Ordered'
+    ORDERDISPATCHEDTO: 'Your order will be dispatched to'
+    CONTACTQUERIES: 'If you have any queries, please'
+    PHONE: 'Phone'
+    EMAIL: 'Email'
+    CHECKORDER: 'Please check your order carefully when it arrives and contact us as soon as possible if there are any problems'
+    FINALTHANKS: 'Many thanks'

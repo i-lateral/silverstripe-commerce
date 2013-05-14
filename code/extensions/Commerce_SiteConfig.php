@@ -19,7 +19,8 @@ class Commerce_SiteConfig extends DataExtension {
         'SendProcessingEmail'   => "Enum('No,Customer,Vendor,Both','No')",
         'ProcessingEmailAddress'=> "Text",
         'SendDispatchedEmail'   => "Enum('No,Customer,Vendor,Both','Customer')",
-        'DispatchedEmailAddress'=> "Text"
+        'DispatchedEmailAddress'=> "Text",
+        'VendorEmailFooter'		=> "Text"
     );
     
     public static $has_one = array(
@@ -96,10 +97,11 @@ class Commerce_SiteConfig extends DataExtension {
 					TextField::create('ProcessingEmailAddress', 'From address'),
 					LiteralField::create('OrderPlacedHeader', '<div class="field"><h4>When an order is marked as dispatched</h4></div>'),
 					DropdownField::create('SendDispatchedEmail', 'Send emails to', $this->owner->dbObject('SendDispatchedEmail')->enumValues()),
-					TextField::create('DispatchedEmailAddress', 'From address')
+					TextField::create('DispatchedEmailAddress', 'From address'),
+					LiteralField::create('FooterContent', '<div class="field"><h4>Footer Content</h4></div>'),
+					TextareaField::create('VendorEmailFooter', 'Add custom content to the footer of vendor emails?')
                 )
         )->setHeadingLevel(4);
-        
         
         // Add config sets
         $fields->addFieldToTab('Root.Main', $contact_fields);
