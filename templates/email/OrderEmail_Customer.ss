@@ -18,8 +18,7 @@
 {$Order.DeliveryCountry}<% end_if %>
 
 <% if $SiteConfig.VendorEmailFooter %>$SiteConfig.VendorEmailFooter<% end_if %>
-<% if $SiteConfig.ContactPhone || $SiteConfig.ContactEmail %>
-<%t CommerceEmail.CONTACTQUERIES 'If you have any queries, please' %>:
+<% if $SiteConfig.ContactPhone || $SiteConfig.ContactEmail %><%t CommerceEmail.CONTACTQUERIES 'If you have any queries, please' %>:
 <% if $SiteConfig.ContactPhone %><%t CommerceEmail.PHONE 'Phone' %>: {$SiteConfig.ContactPhone}<% end_if %>
 <% if $SiteConfig.ContactEmail %><%t CommerceEmail.EMAIL 'Email' %>: {$SiteConfig.ContactEmail}<% end_if %>
 <% end_if %>

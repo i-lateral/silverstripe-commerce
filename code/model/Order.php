@@ -253,8 +253,8 @@ class Order extends DataObject {
         if($this->isChanged('Status') && in_array($this->Status, array('paid','processing','dispatched')) ) {
             $siteconfig = SiteConfig::current_site_config();
 
-            $subject = "Order {$this->OrderNumber} {$this->Status}";
-            $from =  $siteconfig->Title . "<{$siteconfig->EmailFromAddress}>";
+            $subject = _t('CommerceEmail.ORDER', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
+            $from =  $siteconfig->EmailFromAddress;
 
             $vars = array(
                 'Order' => $this,
@@ -263,9 +263,18 @@ class Order extends DataObject {
 
             // Deal with customer email
             if($siteconfig->sendCommerceEmail('Customer', $this->Status)) {
-                    $body = $this->renderWith('OrderEmail_Customer', $vars);
-                    $email = new Email($from,$this->BillingEmail,$subject,$body);
-                    $email->sendPlain();
+                // if subsites installed, then get the native language for that site
+                $current_i18n = i18n::get_locale();
+                if($this->SubsiteID && class_exists('Subsite') && $this->Subsite())
+                    i18n::set_locale($this->Subsite()->Language);
+
+                $body = $this->renderWith('OrderEmail_Customer', $vars);
+                $email = new Email($from,$this->BillingEmail,$subject,$body);
+                $email->sendPlain();
+
+                // If subsites enabled, set the language back
+                if($this->SubsiteID && class_exists('Subsite') && $this->Subsite())
+                    i18n::set_locale($current_i18n);
             }
 
             // Deal with vendor email
@@ -281,7 +290,7 @@ class Order extends DataObject {
 
                     if(isset($email_to)) {
                             $body = $this->renderWith('OrderEmail_Vendor', $vars);
-                            $email = new Email($from,$email,$subject,$body);
+                            $email = new Email($from,$email_to,$subject,$body);
                             $email->sendPlain();
                     }
             }
