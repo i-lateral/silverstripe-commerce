@@ -28,7 +28,7 @@ en_GB:
     CARTLOCATION: 'Please choose the location to post to'
     CARTTOTAL: 'Total'
     PAYMENT: 'Payment'
-    PAYMENTSELECTION: 'Please choose how you would like to pay' 
+    PAYMENTSELECTION: 'Please choose how you would like to pay'
     CARTEMPTY: 'Empty Cart'
     CARTUPDATE: 'Update Cart'
     CARTPROCEED: 'Proceed to Checkout'
@@ -60,7 +60,7 @@ en_GB:
     ORDERCONTACT: "Please contact us with more details"
   CommerceEmail:
     # Email Notifications
-    THANKYOU: 'Thank you for ordering from'
+    THANKYOU: 'Thank you for ordering from {title}'
     ORDER: 'Order'
     MARKEDAS: 'has been marked as'
     ITEMS: 'Items Ordered'

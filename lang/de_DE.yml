@@ -1,4 +1,4 @@
-de_DE:    
+de_DE:
   Commerce:
     # Order Status
     INCOMPLETE: 'Unfertig'
@@ -60,7 +60,7 @@ de_DE:
     ORDERCONTACT: 'Bitte rufen Sie uns an, wenn Sie telefonisch bestellen möchten'
   CommerceEmail:
     # Email Notifications
-    THANKYOU: 'Vielen Dank, dass Sie auf Armydogtags bestellt haben'
+    THANKYOU: 'Vielen Dank, dass Sie auf {title} bestellt haben'
     ORDER: 'Ihr Auftrag'
     MARKEDAS: 'ist'
     ITEMS: 'Einzelheiten Ihrer Auftrag'
