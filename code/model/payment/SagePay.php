@@ -66,7 +66,7 @@ class SagePay extends CommercePaymentMethod {
         // Check if CallBack data exists and install id matches the saved ID
         if(isset($data) && isset($data['crypt'])) {
             // Now decode the Crypt field and extract the results
-            $crypt_decoded = $this->decodeAndDecrypt($data['crypt']);
+            $crypt_decoded = $this->decode_crypt($data['crypt']);
             $values = $this->getToken($crypt_decoded);
 
             $order = Order::get()->filter('OrderNumber',$values['VendorTxCode'])->first();
@@ -157,85 +157,108 @@ class SagePay extends CommercePaymentMethod {
         $strPost .= "&Apply3DSecure=0";
 
         // Encrypt the plaintext string for inclusion in the hidden field
-        $encrypted_data = $this->encryptAndEncode($strPost);
+        $encrypted_data = $this->encode_crypt($strPost);
 
         // Send back variables to be rendered by the controller
         return $encrypted_data;
     }
 
-    private function encryptAndEncode($strIn, $type = 'AES') {
-        if($type=="XOR") {
-            //** XOR encryption with Base64 encoding **
-            return base64Encode(simpleXor($strIn,$this->EncryptedPassword));
-        } else {
-            //** AES encryption, CBC blocking with PKCS5 padding then HEX encoding - DEFAULT **
-            //** use initialization vector (IV) set from $strEncryptionPassword
-            $strIV = $this->EncryptedPassword;
-            //** add PKCS5 padding to the text to be encypted
-            $strIn = $this->addPKCS5Padding($strIn);
-
-            //** perform encryption with PHP's MCRYPT module
-            $strCrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->EncryptedPassword, $strIn, MCRYPT_MODE_CBC, $strIV);
-
-            //** perform hex encoding and return
-            return "@" . bin2hex($strCrypt);
-        }
-    }
-
     /**
-      * Wrapper function do decode then decrypt based on header of the encrypted field
+      * Wrapper function do encode data for transit to sage
       *
       * @param crypt_data data from to be decoded
       * @return array of variables
       */
-    private function decodeAndDecrypt($crypt_data) {
-        if (substr($crypt_data,0,1)=="@") {
-            // remove the first char which is @ to flag this is AES encrypted
-            $crypt_data = substr($crypt_data,1);
-
-            // HEX decoding
-            $crypt_data = pack('H*', $crypt_data);
-
-            // perform decryption with PHP's MCRYPT module
-            $decrypted_data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->EncryptedPassword, $crypt_data, MCRYPT_MODE_CBC, $this->EncryptedPassword);
-
-            return $this->removePKCS5Padding($decrypted_data);
-        } else {
-            // Base 64 decoding plus XOR decryption
-            return simpleXor(base64Decode($crypt_data), $this->EncryptedPassword);
-        }
+    private function encode_crypt($data_to_encrypt) {
+        return $this->base_64_encode($this->simple_xor($data_to_encrypt));
     }
+
 
     /**
-     * Need to remove padding bytes from end of decoded string
-     *
-     * @param decrypted decrypted data
-     */
-    private function removePKCS5Padding($decrypted) {
-        return substr($decrypted, 0, -ord($decrypted[strlen($decrypted) - 1]));
+      * Wrapper function do decode data sent from sage to success / failer URLS
+      *
+      * @param crypt_data data from to be decoded
+      * @return array of variables
+      */
+    private function decode_crypt($crypt_data) {
+        return $this->simple_xor($this->base_64_decode($crypt_data), $this->EncryptedPassword);
     }
 
-    /**
-     * PHP's mcrypt does not have built in PKCS5 Padding, so we use this
-     *
-     * @param input string to add padding too
+
+    /* The SimpleXor encryption algorithm
+     * NOTE: This is a placeholder really.  Future releases of Form will use
+     * AES or TwoFish.  Proper encryption This simple function and the Base64
+     * will deter script kiddies and prevent the "View Source" type tampering
+     * It won't stop a half decent hacker though, but the most they could do is
+     * change the amount field to something else, so provided the vendor checks
+     * the reports and compares amounts, there is no harm done.  It's still more
+     * secure than the other PSPs who don't both encrypting their forms at all
      */
-    private function addPKCS5Padding($input) {
-       $blocksize = 16;
-       $padding = "";
+    private function simple_xor($encrypted_data) {
+      $KeyList = array();
+      $output = "";
 
-       // Pad input to an even block size boundary
-       $padlength = $blocksize - (strlen($input) % $blocksize);
-       for($i = 1; $i <= $padlength; $i++) {
-          $padding .= chr($padlength);
-       }
+      // Convert $Key into array of ASCII values
+      for($i = 0; $i < strlen($this->EncryptedPassword); $i++) {
+        $KeyList[$i] = ord(substr($this->EncryptedPassword, $i, 1));
+      }
 
-       return $input . $padding;
+      // Step through string a character at a time
+      for($i = 0; $i < strlen($encrypted_data); $i++) {
+        $output.= chr(ord(substr($encrypted_data, $i, 1)) ^ ($KeyList[$i % strlen($this->EncryptedPassword)]));
+      }
+
+      // Return the result
+      return $output;
     }
 
-    /* The getToken function.                                                                                         **
-    ** NOTE: A function of convenience that extracts the value from the "name=value&name2=value2..." reply string **
-    ** Works even if one of the values is a URL containing the & or = signs.                                          */
+
+    /* Base 64 Encoding function
+     * PHP does it natively but just for consistency and ease of maintenance,
+     * let's declare our own function
+     *
+     * @param plain string to encode
+     * @return encoded string
+     */
+    private function base_64_encode($plain) {
+      // Initialise output variable
+      $output = "";
+
+      // Do encoding
+      $output = base64_encode($plain);
+
+      // Return the result
+      return $output;
+    }
+
+
+    /* Base 64 decoding function
+     * PHP does it natively but just for consistency and ease of maintenance,
+     * let's declare our own function
+     *
+     * @param scrambled string to decode
+     * @return decoded string
+     */
+    private function base_64_decode($scrambled) {
+      // Fix plus to space conversion issue
+      $scrambled = str_replace(' ','+',$scrambled);
+
+      // Do encoding
+      $output = base64_decode($scrambled);
+
+      // Return the result
+      return $output;
+    }
+
+
+    /*
+     * A function of convenience that extracts the value from the
+     * "name=value&name2=value2..." reply string
+     * Works even if one of the values is a URL containing the & or = signs.
+     *
+     * @param thisString string to convert
+     * @return array of values
+     */
     private function getToken($thisString) {
         // List the possible tokens
         $Tokens = array(
@@ -293,4 +316,5 @@ class SagePay extends CommercePaymentMethod {
         // Return the ouput array
         return $output;
     }
+
 }

@@ -25,8 +25,7 @@ class CommercePaymentMethod extends DataObject {
     public static $db = array(
         // Payment Gateway config
         'Summary'           => 'Text',
-        'LiveURL'           => 'Varchar(100)',
-        'DevURL'            => 'Varchar(100)',
+        'URL'               => 'Varchar(200)',
         'GatewayMessage'    => 'Text',
         'Default'           => 'Boolean',
         'CallBackSlug'      => 'Varchar'
@@ -73,8 +72,7 @@ class CommercePaymentMethod extends DataObject {
 
         if($this->ID) {
             $fields->addFieldToTab('Root.Main', TextField::create('Summary', 'Summary message to appear on website'));
-            $fields->addFieldToTab('Root.Main', TextField::create('LiveURL', 'Live payment URL'));
-            $fields->addFieldToTab('Root.Main', TextField::create('DevURL', 'Development payment URL'));
+            $fields->addFieldToTab('Root.Main', TextField::create('URL', 'Payment gateway URL'));
             $fields->addFieldToTab('Root.Main', CheckboxField::create('Default', 'Default payment method?'));
             $fields->addFieldToTab('Root.Main', TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
 
@@ -90,8 +88,11 @@ class CommercePaymentMethod extends DataObject {
 
             $fields->addFieldToTab('Root.Main', $slug_field);
         } else {
-            $fields->removeByName('LiveURL');
-            $fields->removeByName('DevURL');
+            $fields->removeByName('URL');
+            $fields->removeByName('Summary');
+            $fields->removeByName('Default');
+            $fields->removeByName('GatewayMessage');
+            $fields->removeByName('CallBackSlug');
         }
 
         return $fields;
@@ -99,10 +100,7 @@ class CommercePaymentMethod extends DataObject {
 
     // Get relevent payment gateway URL to use in HTML form
     public function GatewayURL() {
-        if(Director::isDev())
-            return $this->DevURL;
-        else
-            return $this->LiveURL;
+            return $this->URL;
     }
 
     /**
