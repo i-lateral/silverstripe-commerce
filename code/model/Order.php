@@ -212,7 +212,7 @@ class Order extends DataObject {
     }
 
     public function getTranslatedStatus() {
-        return _t("Namespace." . strtoupper($this->Status), $this->Status);
+        return _t("Commerce." . strtoupper($this->Status), $this->Status);
     }
 
     protected function generate_order_number() {
@@ -253,7 +253,6 @@ class Order extends DataObject {
         if($this->isChanged('Status') && in_array($this->Status, array('paid','processing','dispatched')) ) {
             $siteconfig = SiteConfig::current_site_config();
 
-            $subject = _t('CommerceEmail.ORDER', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
             $from =  $siteconfig->EmailFromAddress;
 
             $vars = array(
@@ -268,6 +267,8 @@ class Order extends DataObject {
                 if($this->SubsiteID && class_exists('Subsite') && $this->Subsite())
                     i18n::set_locale($this->Subsite()->Language);
 
+                $subject = _t('CommerceEmail.ORDER', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
+
                 $body = $this->renderWith('OrderEmail_Customer', $vars);
                 $email = new Email($from,$this->BillingEmail,$subject,$body);
                 $email->sendPlain();
@@ -279,20 +280,21 @@ class Order extends DataObject {
 
             // Deal with vendor email
             if($siteconfig->sendCommerceEmail('Vendor', $this->Status)) {
-                    switch($this->Status) {
-                        case 'paid':
-                            $email_to = $siteconfig->PaidEmailAddress;
-                        case 'processing':
-                            $email_to = $siteconfig->ProcessingEmailAddress;
-                        case 'dispatched':
-                            $email_to = $siteconfig->DispatchedEmailAddress;
-                    }
+                $subject = _t('CommerceEmail.ORDER', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
+                switch($this->Status) {
+                    case 'paid':
+                        $email_to = $siteconfig->PaidEmailAddress;
+                    case 'processing':
+                        $email_to = $siteconfig->ProcessingEmailAddress;
+                    case 'dispatched':
+                        $email_to = $siteconfig->DispatchedEmailAddress;
+                }
 
-                    if(isset($email_to)) {
-                            $body = $this->renderWith('OrderEmail_Vendor', $vars);
-                            $email = new Email($from,$email_to,$subject,$body);
-                            $email->sendPlain();
-                    }
+                if(isset($email_to)) {
+                    $body = $this->renderWith('OrderEmail_Vendor', $vars);
+                    $email = new Email($from,$email_to,$subject,$body);
+                    $email->sendPlain();
+                }
             }
 
 
