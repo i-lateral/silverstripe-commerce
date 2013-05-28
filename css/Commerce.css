@@ -20,6 +20,7 @@ commerce-action-back {
     background-image: -webkit-linear-gradient(top, #99ba53, #81aa2a);
     background-image: -o-linear-gradient(top, #99ba53, #81aa2a);
     background-image: linear-gradient(top, #99ba53, #81aa2a);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#99ba53', endColorstr='#81aa2a', GradientType=0);
     text-shadow: 0 -1px 0px #666;
 }
 .btn.highlight:hover {
@@ -87,13 +88,13 @@ commerce-action-back {
     .commerce-product .commerce-product-summary .price {
         font-size: 1.1em;
     }
-		.commerce-product .commerce-product-summary .price .value {
-			font-weight: bold;
-		}
-	.commerce-product .commerce-product-summary .packsize .label,
-	.commerce-product .commerce-product-summary .weight .label {
-		font-weight: bold;
-	}
+        .commerce-product .commerce-product-summary .price .value {
+            font-weight: bold;
+        }
+    .commerce-product .commerce-product-summary .packsize .label,
+    .commerce-product .commerce-product-summary .weight .label {
+        font-weight: bold;
+    }
 .commerce-product .commerce-product-details {
     padding-top: 1.5em;
 }
@@ -119,7 +120,7 @@ commerce-action-back {
     .commerce-cart .commerce-cart-items .subtotal strong {
         text-align: right;
     }
-    
+
 .commerce-cart .commerce-cart-postage {}
     .commerce-cart .commerce-cart-postage label {
         display: inline;
@@ -157,11 +158,11 @@ commerce-action-back {
         .commerce-cart .commerce-cart-payment .optionset input,
         .commerce-cart .commerce-cart-payment .optionset label,
         .commerce-cart .commerce-cart-payment .optionset label img {
-			float: left;
-			margin-right: 0.5em;
+            float: left;
+            margin-right: 0.5em;
         }
         .commerce-cart .commerce-cart-payment .optionset input {
-			margin-top: 0.25em;
+            margin-top: 0.25em;
         }
 
 .commerce-cart .commerce-cart-actions {
@@ -178,10 +179,10 @@ commerce-action-back {
     clear: both;
     padding-bottom: 0.5em;
 }
-#CheckoutForm_CheckoutForm .fieldgroup-field label { 
+#CheckoutForm_CheckoutForm .fieldgroup-field label {
     width: 26%;
 }
-#CheckoutForm_CheckoutForm .fieldgroup-field input { 
+#CheckoutForm_CheckoutForm .fieldgroup-field input {
     width: 55%;
 }
 #CheckoutForm_CheckoutForm .fieldgroup-field select {
