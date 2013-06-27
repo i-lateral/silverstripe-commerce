@@ -7,6 +7,7 @@ class SagePay extends CommercePaymentMethod {
         'SendEmail'         => "Enum('0,1,2','1')",
         'EmailRecipient'    => 'Varchar(100)',
         'VendorName'        => 'Varchar(100)',
+        'ProtocolVersion'   => "Enum('2.23,3','3')",
         'EncryptedPassword' => 'Varchar(100)'
     );
 
@@ -23,6 +24,7 @@ class SagePay extends CommercePaymentMethod {
             );
 
             $fields->addFieldToTab('Root.Main', TextField::create('VendorName', 'Vendor name'));
+            $fields->addFieldToTab('Root.Main', DropdownField::create('ProtocolVersion', 'Version of forms protocol to use?', singleton('SagePay')->dbObject('ProtocolVersion')->enumValues()));
             $fields->addFieldToTab('Root.Main', PasswordField::create('EncryptedPassword', 'Password'));
 
             $fields->addFieldToTab('Root.Main', OptionsetField::create('SendEmail', 'How would you like SagePay to send emails?', $email_options));
@@ -49,7 +51,7 @@ class SagePay extends CommercePaymentMethod {
     public function getGatewayFields() {
         $fields = new FieldList(
             HiddenField::create('navigate'),
-            HiddenField::create('VPSProtocol',null,'2.23'),
+            HiddenField::create('VPSProtocol',null,$this->ProtocolVersion),
             HiddenField::create('TxType', null, 'PAYMENT'),
             HiddenField::create('Vendor', null, $this->VendorName),
             HiddenField::create('Crypt', null, $this->GatewayData())
@@ -66,7 +68,13 @@ class SagePay extends CommercePaymentMethod {
         // Check if CallBack data exists and install id matches the saved ID
         if(isset($data) && isset($data['crypt'])) {
             // Now decode the Crypt field and extract the results
-            $crypt_decoded = $this->decode_crypt($data['crypt']);
+            $crypt_decoded = StringDecryptor::create(substr($data['crypt']))
+                                                ->setHash($this->EncryptedPassword)
+                                                ->setEncryption('MCRYPT')
+                                                ->decode()
+                                                ->decrypt()
+                                                ->get();
+
             $values = $this->getToken($crypt_decoded);
 
             $order = Order::get()->filter('OrderNumber',$values['VendorTxCode'])->first();
@@ -157,97 +165,15 @@ class SagePay extends CommercePaymentMethod {
         $strPost .= "&Apply3DSecure=0";
 
         // Encrypt the plaintext string for inclusion in the hidden field
-        $encrypted_data = $this->encode_crypt($strPost);
+        $encrypted_data = StringEncryptor::create($strPost)
+                                            ->setHash($this->EncryptedPassword)
+                                            ->setEncryption('MCRYPT')
+                                            ->encrypt()
+                                            ->encode()
+                                            ->get();
 
         // Send back variables to be rendered by the controller
-        return $encrypted_data;
-    }
-
-    /**
-      * Wrapper function do encode data for transit to sage
-      *
-      * @param crypt_data data from to be decoded
-      * @return array of variables
-      */
-    private function encode_crypt($data_to_encrypt) {
-        return $this->base_64_encode($this->simple_xor($data_to_encrypt));
-    }
-
-
-    /**
-      * Wrapper function do decode data sent from sage to success / failer URLS
-      *
-      * @param crypt_data data from to be decoded
-      * @return array of variables
-      */
-    private function decode_crypt($crypt_data) {
-        return $this->simple_xor($this->base_64_decode($crypt_data), $this->EncryptedPassword);
-    }
-
-
-    /* The SimpleXor encryption algorithm
-     * NOTE: This is a placeholder really.  Future releases of Form will use
-     * AES or TwoFish.  Proper encryption This simple function and the Base64
-     * will deter script kiddies and prevent the "View Source" type tampering
-     * It won't stop a half decent hacker though, but the most they could do is
-     * change the amount field to something else, so provided the vendor checks
-     * the reports and compares amounts, there is no harm done.  It's still more
-     * secure than the other PSPs who don't both encrypting their forms at all
-     */
-    private function simple_xor($encrypted_data) {
-      $KeyList = array();
-      $output = "";
-
-      // Convert $Key into array of ASCII values
-      for($i = 0; $i < strlen($this->EncryptedPassword); $i++) {
-        $KeyList[$i] = ord(substr($this->EncryptedPassword, $i, 1));
-      }
-
-      // Step through string a character at a time
-      for($i = 0; $i < strlen($encrypted_data); $i++) {
-        $output.= chr(ord(substr($encrypted_data, $i, 1)) ^ ($KeyList[$i % strlen($this->EncryptedPassword)]));
-      }
-
-      // Return the result
-      return $output;
-    }
-
-
-    /* Base 64 Encoding function
-     * PHP does it natively but just for consistency and ease of maintenance,
-     * let's declare our own function
-     *
-     * @param plain string to encode
-     * @return encoded string
-     */
-    private function base_64_encode($plain) {
-      // Initialise output variable
-      $output = "";
-
-      // Do encoding
-      $output = base64_encode($plain);
-
-      // Return the result
-      return $output;
-    }
-
-
-    /* Base 64 decoding function
-     * PHP does it natively but just for consistency and ease of maintenance,
-     * let's declare our own function
-     *
-     * @param scrambled string to decode
-     * @return decoded string
-     */
-    private function base_64_decode($scrambled) {
-      // Fix plus to space conversion issue
-      $scrambled = str_replace(' ','+',$scrambled);
-
-      // Do encoding
-      $output = base64_decode($scrambled);
-
-      // Return the result
-      return $output;
+        return '@' . $encrypted_data;
     }
 
 
