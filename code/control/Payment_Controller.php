@@ -9,7 +9,7 @@
 
 class Payment_Controller extends Page_Controller {
     public static $url_segment = "payment";
-    
+
     static $allowed_actions = array(
         'index',
         'success',
@@ -17,25 +17,25 @@ class Payment_Controller extends Page_Controller {
         'error',
         'callback'
     );
-    
+
     public function init() {
         parent::init();
     }
-    
+
     public function index() {
         $vars = array(
             'ClassName' => "Payment",
             'Title'     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
             'MetaTitle' => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
         );
-    
+
         return $this->renderWith(array('Payment','Page'), $vars);
     }
-    
+
     public function getOrder() {
         return Session::get('Order');
     }
-    
+
     public function getPaymentMethod() {
         // Check if payment slug is set and that corresponds to a payment
         if($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
@@ -50,29 +50,29 @@ class Payment_Controller extends Page_Controller {
     // Get the existing gateway data from the relevent PaymentMethod object
     public function getGatewayData() {
         $payment_method = $this->getPaymentMethod();
-        
-        return $this->renderWith('GatewayData_' . $payment_method->ClassName, $payment_method->GatewayData());  
+
+        return $this->renderWith('GatewayData_' . $payment_method->ClassName, $payment_method->GatewayData());
     }
-    
+
     public function GatewayForm() {
         $payment = $this->getPaymentMethod();
-        
+
         $form = Form::create($this, $payment->Title . 'Form', $payment->getGatewayFields(), $payment->getGatewayActions());
         $form->addExtraClass('forms');
         $form->setFormMethod('POST');
         $form->setFormAction($payment->GatewayURL());
-        
+
         return $form;
     }
-    
+
     // Get relevent payment gateway URL to use in HTML form
     public function getGatewayURL() {
         return $this->getPaymentMethod()->GatewayURL();
     }
-    
+
     /**
      * Method to clear any existing sessions related to commerce module
-     */    
+     */
     public function ClearSessionData() {
         if(isset($_SESSION)) {
             ShoppingCart::get()->clear();
@@ -81,13 +81,13 @@ class Payment_Controller extends Page_Controller {
             unset($_SESSION['PaymentMethod']);
         }
     }
-    
+
     /**
      * This method takes any post data submitted via a payment provider and
      * sends it to the relevent gateway class for processing
      *
      */
-    public function callback() {        
+    public function callback() {
         // See if data has been passed via the request
         if($this->request->postVars())
             $data = $this->request->postVars();
@@ -95,19 +95,25 @@ class Payment_Controller extends Page_Controller {
             $data = $this->request->getVars();
         else
             $data = false;
-    
+
         // If post data exists, process. Otherwise provide error
         if($data) {
             $callback = $this->getPaymentMethod()->ProcessCallback($data);
-			
+
             if($callback)
-                return $this->success();
+                $return = $this->success();
             else
-                return $this->error();
+                $return = $this->error();
         } else
-            return $this->error();
+            $return = $this->error();
+
+        // Clear our session data
+        $this->ClearSessionData();
+
+        // Render our return values
+        return $this->renderWith(array('Payment_Response','Page'), $return);
     }
-    
+
     /*
      * Method called when payement gateway returns the sucess URL
      *
@@ -115,31 +121,26 @@ class Payment_Controller extends Page_Controller {
      */
     public function success() {
         $site = SiteConfig::current_site_config();
-        
-        $vars = array(
-            'Title'     => _t('Commerce.ORDERCOMPLETE','Order Complete'),
-            'Content'   => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
+        $order = Session::get('Order');
+
+        return array(
+            'CommerceOrderSuccess' => true,
+            'Order' => $order,
+            'Title' => _t('Commerce.ORDERCOMPLETE','Order Complete'),
+            'Content' => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
         );
-        
-        $this->ClearSessionData();
-        
-        return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
-    
+
     /*
      * Represents an error in the in all stages of the payment process
      *
      */
     public function error() {
         $site = SiteConfig::current_site_config();
-        
-        $vars = array(
+
+        return array(
             'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
             'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
         );
-        
-        $this->ClearSessionData();
-    
-        return $this->renderWith(array('Payment_Response','Page'), $vars);
     }
 }
