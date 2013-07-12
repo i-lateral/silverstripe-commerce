@@ -123,8 +123,15 @@ class Payment_Controller extends Page_Controller {
         $site = SiteConfig::current_site_config();
         $order = Session::get('Order');
 
+        if($order)
+            $commerceOrderSuccess = true;
+        else {
+            $commerceOrderSuccess = false;
+            $order = false;
+        }
+
         return array(
-            'CommerceOrderSuccess' => true,
+            'CommerceOrderSuccess' => $commerceOrderSuccess,
             'Order' => $order,
             'Title' => _t('Commerce.ORDERCOMPLETE','Order Complete'),
             'Content' => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
