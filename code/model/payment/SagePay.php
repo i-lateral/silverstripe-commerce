@@ -67,10 +67,14 @@ class SagePay extends CommercePaymentMethod {
     public function ProcessCallback($data = null) {
         // Check if CallBack data exists and install id matches the saved ID
         if(isset($data) && isset($data['crypt'])) {
+            // Clear Sagepay '@' symbol (denotes encrypted data)
+            if(substr($data['crypt'],0,1) == "@")
+                $data['crypt'] = substr($data['crypt'], 1);
+
             // Now decode the Crypt field and extract the results
             $crypt_decoded = StringDecryptor::create($data['crypt'])
                                                 ->setHash($this->EncryptedPassword)
-                                                ->decode()
+                                                ->setEncryption('MCRYPT')
                                                 ->decrypt()
                                                 ->get();
 
@@ -166,12 +170,12 @@ class SagePay extends CommercePaymentMethod {
         // Encrypt the plaintext string for inclusion in the hidden field
         $encrypted_data = StringEncryptor::create($strPost)
                                             ->setHash($this->EncryptedPassword)
+                                            ->setEncryption('MCRYPT')
                                             ->encrypt()
-                                            ->encode()
                                             ->get();
 
         // Send back variables to be rendered by the controller
-        return $encrypted_data;
+        return '@' . $encrypted_data;
     }
 
 

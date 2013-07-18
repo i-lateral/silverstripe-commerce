@@ -27,12 +27,11 @@
  *              ->decrypt()
  *              ->get();
  *
- * MCrypt AES encryption then base 64 encoded:
+ * MCrypt AES encryption
  *
  * $encrypt = StringEncryptor::create('encrypt this')
  *              ->setHash('hashcode')
  *              ->setEncryption('MCRYPT')
- *              ->decode()
  *              ->decrypt()
  *              ->get();
  */

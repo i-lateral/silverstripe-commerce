@@ -25,13 +25,12 @@
  *              ->encode()
  *              ->get();
  *
- * MCrypt AES encryption then base 64 encoded:
+ * MCrypt AES encryption:
  *
  * $encrypt = StringEncryptor::create('encrypt this')
  *              ->setHash('hashcode')
  *              ->setEncryption('MCRYPT')
  *              ->encrypt()
- *              ->encode()
  *              ->get();
  *
  */
@@ -164,13 +163,15 @@ class StringEncryptor {
      * @return self
      */
     private function mcrypt() {
+        $strIV = $this->hash;
+
         // add PKCS5 padding to the text to be encypted
         $strIn = $this->addPKCS5Padding();
 
         // perform encryption with PHP's MCRYPT module
-        $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->hash, $strIn, MCRYPT_MODE_CBC, $this->hash);
+        $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->hash, $strIn, MCRYPT_MODE_CBC, $strIV);
 
-        // perform hex encoding and return
+        // perform hex encoding and return with @ symbol
         return bin2hex($output);
     }
 
