@@ -51,7 +51,7 @@ class CommercePaymentMethod extends DataObject {
      * @return String
      */
     public function getLabel() {
-        return ($this->Icon) ? '<img class="payment-icon" src="'. $this->Icon .'" /> <span>' . $this->Summary . '</span>' : "<span>{$this->Summary}</span>'";
+        return ($this->Icon) ? '<img class="payment-icon" src="'. $this->Icon .'" /> <span>' . $this->Summary . '</span>' : "<span>{$this->Summary}</span>";
     }
 
     public function getCMSFields() {
