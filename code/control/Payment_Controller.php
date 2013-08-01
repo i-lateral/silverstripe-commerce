@@ -23,6 +23,10 @@ class Payment_Controller extends Page_Controller {
     }
 
     public function index() {
+        // If no shopping cart doesn't exist, redirect to base
+        if(!ShoppingCart::get()->Items()->exists())
+            return $this->redirect(Director::BaseURL());
+
         $vars = array(
             'ClassName' => "Payment",
             'Title'     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
