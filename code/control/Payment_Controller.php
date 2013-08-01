@@ -40,6 +40,11 @@ class Payment_Controller extends Page_Controller {
         return Session::get('Order');
     }
 
+    /**
+     * Determine which payment provider we are using from the URL and use it to
+     * process the order
+     *
+     */
     public function getPaymentMethod() {
         // Check if payment slug is set and that corresponds to a payment
         if($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())

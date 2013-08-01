@@ -80,7 +80,12 @@ class SagePay extends CommercePaymentMethod {
 
             $values = $this->getToken($crypt_decoded);
 
-            $order = Order::get()->filter('OrderNumber',$values['VendorTxCode'])->first();
+            $order = Order::get()
+                        ->filter(array(
+                            'OrderNumber' => $values['VendorTxCode'],
+                            'Status' => 'incomplete'
+                        ))->first();
+
             $order_status = $values['Status'];
 
             if($order) {
