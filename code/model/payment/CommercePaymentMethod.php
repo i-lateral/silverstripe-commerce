@@ -7,18 +7,26 @@
  *
  *
  */
-
 class CommercePaymentMethod extends DataObject {
 
     /**
+     * Shall this class appear in the list of payment providers. Use this to
+     * hide "high level" classes that you intend to extend
+     */
+    public static $hidden = false;
+
+    /**
+     * The controller this is mapped to
+     */
+    public static $handler;
+
+    /**
      * Title of this payment method (eg: PayPal, WorldPay, etc)
-     *
      */
     public $Title;
 
     /**
      * Route to icon that is associated with this provider
-     *
      */
     public $Icon;
 
@@ -64,6 +72,12 @@ class CommercePaymentMethod extends DataObject {
         // Remove parent class from list
         unset($payments['CommercePaymentMethod']);
 
+        // Check if any payment types have been hidden and unset
+        foreach($payments as $payment_type) {
+            if($payment_type::$hidden)
+                unset($payments[$payment_type]);
+        }
+
         $classname_field = DropdownField::create('ClassName','Type of Payment',$payments)
             ->setHasEmptyDefault(true)
             ->setEmptyString('Select Gateway');
@@ -101,49 +115,5 @@ class CommercePaymentMethod extends DataObject {
     // Get relevent payment gateway URL to use in HTML form
     public function GatewayURL() {
             return $this->URL;
-    }
-
-    /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
-     *
-     * @return Form
-     */
-    public function getGatewayFields() {
-        user_error('You have not added a GatewayFields() method on your PaymentMethod Class');
-    }
-
-    /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
-     *
-     * @return Form
-     */
-    public function getGatewayActions() {
-        $actions = new FieldList(
-            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . Checkout_Controller::$url_segment . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))->addExtraClass('btn')->addExtraClass('highlight')->addExtraClass('commerce-action-next')
-        );
-
-        return $actions;
-    }
-
-    /**
-     * Return a string that will be loaded into the summary form
-     *
-     * @return String
-     */
-    public function GatewayData() {
-        user_error('You have not added a GatewayData() method on your PaymentMethod Class');
-    }
-
-    /**
-     * Process the call back from the payment provider
-     *
-     * @param order the order stored in the session
-     * @param data post data from the form
-     */
-    public function ProcessCallback($data = null) {
-        user_error('You have not added a ProcessCallback() method on your PaymentMethod Class');
     }
 }

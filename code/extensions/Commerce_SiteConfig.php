@@ -54,6 +54,9 @@ class Commerce_SiteConfig extends DataExtension {
 
     public function updateCMSFields(FieldList $fields) {
 
+        $fields->removeByName('ContactEmail');
+        $fields->removeByName('ContactPhone');
+
         // Ecommerce Fields
         $fields->addFieldToTab('Root.Main', HeaderField::create('CommerceHeader', 'Ecommerce', 2));
 

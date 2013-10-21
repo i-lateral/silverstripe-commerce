@@ -8,6 +8,7 @@
 class Order extends DataObject {
     public static $db = array(
         'OrderNumber'       => 'Varchar',
+        'PaymentID'         => 'Text', // ID number returned by the payment gateway
         'BillingFirstnames' => 'Varchar',
         'BillingSurname'    => 'Varchar',
         'BillingAddress1'   => 'Varchar',
@@ -90,6 +91,13 @@ class Order extends DataObject {
 
         // Add non-editable order number
         $ordernum_field = TextField::create('OrderNumber')
+            ->setReadonly(true)
+            ->performReadonlyTransformation();
+
+        $fields->addFieldToTab('Root.Main', $ordernum_field, 'BillingEmail');
+
+        // Add non-editable payment ID
+        $ordernum_field = TextField::create('PaymentID', "Payment gateway ID number")
             ->setReadonly(true)
             ->performReadonlyTransformation();
 

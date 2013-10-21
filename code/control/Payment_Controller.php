@@ -10,90 +10,89 @@
 class Payment_Controller extends Page_Controller {
     public static $url_segment = "payment";
 
-    static $allowed_actions = array(
+    public static $allowed_actions = array(
         'index',
-        'success',
-        'failer',
-        'error',
-        'callback'
+        'callback',
+        'complete'
     );
+
+    protected $payment_handler;
+
+    public function getPaymentHandler() {
+        return $this->payment_handler;
+    }
+
+    public function setPaymentHandler($handler) {
+        $this->payment_handler = $handler;
+        return $this;
+    }
+
+
+    protected $payment_method;
+
+    public function getPaymentMethod() {
+        return $this->payment_method;
+    }
+
+    public function setPaymentMethod($method) {
+        $this->payment_method = $method;
+        return $this;
+    }
+
+    /**
+     * Find the current order
+     *
+     * @return Order
+     */
+    public function getOrder() {
+        return Session::get('Order');
+    }
 
     public function init() {
         parent::init();
+
+        // Check if payment slug is set and that corresponds to a payment
+        if($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
+            $this->payment_method = $method;
+        // Then check session
+        elseif($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))
+            $this->payment_method = $method;
+
+        // Setup payment handler
+        if($this->payment_method && $this->payment_method !== null) {
+            $handler = $this->payment_method->ClassName;
+            $handler = $handler::$handler;
+
+            $this->payment_handler = $handler::create();
+            $this->payment_handler->setPaymentGateway($this->getPaymentMethod());
+        }
     }
 
     public function index() {
-        // If no shopping cart doesn't exist, redirect to base
+        // If shopping cart doesn't exist, redirect to base
         if(!ShoppingCart::get()->Items()->exists())
             return $this->redirect(Director::BaseURL());
 
+        // Perform pre gateway action and return data (if any)
+        $data = $this->payment_handler->onBeforeGateway();
+
+        // Setup gateway form
+        $form = $this->payment_handler->GatewayForm($data);
+
         $vars = array(
-            'ClassName' => "Payment",
-            'Title'     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            'MetaTitle' => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            'ClassName'   => "Payment",
+            'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            'GatewayForm' => $form
         );
 
         return $this->renderWith(array('Payment','Page'), $vars);
     }
 
-    public function getOrder() {
-        return Session::get('Order');
-    }
-
     /**
-     * Determine which payment provider we are using from the URL and use it to
-     * process the order
-     *
-     */
-    public function getPaymentMethod() {
-        // Check if payment slug is set and that corresponds to a payment
-        if($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
-            return $method;
-        // Then check session
-        elseif($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))
-            return $method;
-        else
-            return false;
-    }
-
-    // Get the existing gateway data from the relevent PaymentMethod object
-    public function getGatewayData() {
-        $payment_method = $this->getPaymentMethod();
-
-        return $this->renderWith('GatewayData_' . $payment_method->ClassName, $payment_method->GatewayData());
-    }
-
-    public function GatewayForm() {
-        $payment = $this->getPaymentMethod();
-
-        $form = Form::create($this, $payment->Title . 'Form', $payment->getGatewayFields(), $payment->getGatewayActions());
-        $form->addExtraClass('forms');
-        $form->setFormMethod('POST');
-        $form->setFormAction($payment->GatewayURL());
-
-        return $form;
-    }
-
-    // Get relevent payment gateway URL to use in HTML form
-    public function getGatewayURL() {
-        return $this->getPaymentMethod()->GatewayURL();
-    }
-
-    /**
-     * Method to clear any existing sessions related to commerce module
-     */
-    public function ClearSessionData() {
-        if(isset($_SESSION)) {
-            ShoppingCart::get()->clear();
-            unset($_SESSION['Order']);
-            unset($_SESSION['PostageID']);
-            unset($_SESSION['PaymentMethod']);
-        }
-    }
-
-    /**
-     * This method takes any post data submitted via a payment provider and
-     * sends it to the relevent gateway class for processing
+     * This method is what is called at the end of the transaction. It takes
+     * either post data or get data and then sends it to the relevent payment
+     * method for processing.
      *
      */
     public function callback() {
@@ -105,9 +104,11 @@ class Payment_Controller extends Page_Controller {
         else
             $data = false;
 
+        $this->extend('onBeforeCommerceCallback', $data);
+
         // If post data exists, process. Otherwise provide error
         if($data) {
-            $callback = $this->getPaymentMethod()->ProcessCallback($data);
+            $callback = $this->payment_handler->ProcessCallback($data);
 
             if($callback)
                 $return = $this->success();
@@ -116,11 +117,18 @@ class Payment_Controller extends Page_Controller {
         } else
             $return = $this->error();
 
+        $this->extend('onAfterCommerceCallback', $return);
+
         // Clear our session data
-        $this->ClearSessionData();
+        if(isset($_SESSION)) {
+            ShoppingCart::get()->clear();
+            unset($_SESSION['Order']);
+            unset($_SESSION['PostageID']);
+            unset($_SESSION['PaymentMethod']);
+        }
 
         // Render our return values
-        return $this->renderWith(array('Payment_Response','Page'), $return);
+        return $this->customise($return)->renderWith(array('Payment_Response','Page'));
     }
 
     /*
@@ -130,7 +138,7 @@ class Payment_Controller extends Page_Controller {
      */
     public function success() {
         $site = SiteConfig::current_site_config();
-        $order = Session::get('Order');
+        $order = $this->getOrder();
 
         if($order)
             $commerceOrderSuccess = true;
