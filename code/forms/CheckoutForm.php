@@ -7,17 +7,17 @@
 class CheckoutForm extends Form {
     public function __construct($controller, $name) {
         // If cart is empty, re-direct to homepage
-        if(!ShoppingCart::get()->Items()) 
+        if(!ShoppingCart::get()->Items())
             $this->redirect(BASE_URL);
-        
+
         // Overwrite custom validation
         Requirements::javascript("http://ajax.microsoft.com/ajax/jquery.validate/1.8/jquery.validate.min.js");
-        
+
         Requirements::customScript('
             (function($) {
                 $(document).ready(function() {
                     jQuery.validator.messages.required = "";
-                    
+
                     $("#CheckoutForm_CheckoutForm").validate({
                         invalidHandler: function(e, validator) {
                             var errors = validator.numberOfInvalids();
@@ -48,7 +48,7 @@ class CheckoutForm extends Form {
                 });
             })(jQuery);
         ');
-    
+
         $billing_fields = FieldGroup::create(
                 HeaderField::create('BillingHeader', _t('Commerce.BILLINGDETAILS','Billing Details'), 2),
                 TextField::create('BillingFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
@@ -61,7 +61,7 @@ class CheckoutForm extends Form {
                 TextField::create('BillingPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
                 CountryDropdownField::create('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')->addExtraClass('btn')
             )->addExtraClass('billing_fields');
-            
+
         $delivery_fields = FieldGroup::create(
                 HeaderField::create('DeliveryHeader', _t('Commerce.DELIVERYDETAILS','Delivery Details') . '(' . _t('Commerce.IFDIFFERENT','if different') . ')', 2),
                 TextField::create('DeliveryFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)')),
@@ -73,12 +73,12 @@ class CheckoutForm extends Form {
                 CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')->addExtraClass('btn')
             )
             ->addExtraClass('delivery_fields');
-            
+
         $fields= FieldList::create(
             $billing_fields,
             $delivery_fields
         );
-        
+
         $actions = FieldList::create(
             LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . ShoppingCart_Controller::$url_segment . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
             FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
@@ -86,7 +86,7 @@ class CheckoutForm extends Form {
                 ->addExtraClass('commerce-action-next')
                 ->addExtraClass('highlight')
         );
-        
+
         $validator = new RequiredFields(
             'BillingFirstnames',
             'BillingSurname',
@@ -96,22 +96,22 @@ class CheckoutForm extends Form {
             'BillingCountry',
             'BillingEmail'
         );
-        
+
         parent::__construct($controller, $name, $fields, $actions, $validator);
     }
-    
+
     public function doPost($data, $form) {
         $order = $this->save_data_to_order($form);
-        
+
         Session::set('Order',$order);
-        
+
         $this->controller->redirect(BASE_URL . '/' . Payment_Controller::$url_segment);
     }
-    
+
     /**
      * Method that is responsible for saving subbmited checkout data into an
      * order object
-     * 
+     *
      * @param type $form Form submitted
      * @return Order Object
      */
@@ -119,33 +119,32 @@ class CheckoutForm extends Form {
         // Work out if an order prefix string has been set in siteconfig
         $config = SiteConfig::current_site_config();
         $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
-        
+
         // Check if delivery details are set. If not, set to billing details.
         $formData = $form->getData();
-        
-		$delivery_address = '';
-        
+
+        $delivery_address = '';
+
         foreach($formData as $key => $value) {
-        	if($key == 'DeliveryCountry' && !$delivery_address)
-				$formData[$key] = $formData[str_replace('Delivery', 'Billing', $key)];
-			
+            if($key == 'DeliveryCountry' && !$delivery_address)
+                $formData[$key] = $formData[str_replace('Delivery', 'Billing', $key)];
+
             if(strstr($key, 'Delivery')) {
-            	if(!$value)
-            		$formData[$key] = $formData[str_replace('Delivery', 'Billing', $key)];
-				else
-					$delivery_address .= $value;
+                if(!$value)
+                    $formData[$key] = $formData[str_replace('Delivery', 'Billing', $key)];
+                else
+                    $delivery_address .= $value;
             }
         }
-        
+
         $form->loadDataFrom($formData);
-        
+
         // Save form data into an order object
         $order = new Order();
         $form->saveInto($order);
         $order->Status      = 'incomplete';
         $order->PostageID   = Session::get('PostageID');
-        $order->write();
-            
+
         // Loop through each session cart item and add that item to the order
         foreach(ShoppingCart::get()->Items() as $cart_item) {
             $order_item = new OrderItem();
@@ -157,7 +156,7 @@ class CheckoutForm extends Form {
 
             $order->Items()->add($order_item);
         }
-        
+
         return $order;
     }
 }

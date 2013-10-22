@@ -79,11 +79,16 @@ class Payment_Controller extends Page_Controller {
         // Setup gateway form
         $form = $this->payment_handler->GatewayForm($data);
 
+        // Finally, save order to database before transport
+        $order = $this->getOrder();
+        $order->write();
+
         $vars = array(
             'ClassName'   => "Payment",
             'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
             'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            'GatewayForm' => $form
+            'GatewayForm' => $form,
+            'Order'       => $order
         );
 
         return $this->renderWith(array('Payment','Page'), $vars);

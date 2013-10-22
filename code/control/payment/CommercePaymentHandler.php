@@ -30,7 +30,7 @@ abstract class CommercePaymentHandler extends Controller {
      *
      */
     public function onBeforeGateway() {
-        $data = new ArrayList();
+        $data = array();
 
         $this->extend('onBeforeGateway', $data);
 

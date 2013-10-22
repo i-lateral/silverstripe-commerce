@@ -8,7 +8,7 @@
 class Order extends DataObject {
     public static $db = array(
         'OrderNumber'       => 'Varchar',
-        'PaymentID'         => 'Text', // ID number returned by the payment gateway
+        'PaymentID'         => 'Varchar(99)', // ID number returned by the payment gateway (if any)
         'BillingFirstnames' => 'Varchar',
         'BillingSurname'    => 'Varchar',
         'BillingAddress1'   => 'Varchar',
