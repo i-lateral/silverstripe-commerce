@@ -158,6 +158,19 @@ class SagePayServerHandler extends CommercePaymentHandler {
     public function ProcessCallback($data = null, $success_data, $error_data) {
         $vars = $error_data;
 
+        $success_url = Controller::join_links(
+            Director::absoluteBaseURL(),
+            Payment_Controller::$url_segment,
+            'complete'
+        );
+
+        $error_url = Controller::join_links(
+            Director::absoluteBaseURL(),
+            Payment_Controller::$url_segment,
+            'complete',
+            'error'
+        );
+
         // Check if CallBack data exists and install id matches the saved ID
         if(isset($data) && isset($data['VendorTxCode']) && isset($data['Status'])) {
             $order = Order::get()
@@ -175,31 +188,17 @@ class SagePayServerHandler extends CommercePaymentHandler {
                 if($order_status == 'OK' || $order_status == 'AUTHENTICATED') {
                     $vars = $success_data;
                     $vars['Status'] = "OK";
-                    $vars['RedirectURL'] = Controller::join_links(
-                        Director::BaseURL(),
-                        Payment_Controller::$url_segment,
-                        'complete'
-                    );
+                    $vars['RedirectURL'] = $success_url;
                 }
             } else {
                 $vars['Status'] = "INVALID";
                 $vars['StatusDetail'] =  _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match");
-                $vars['RedirectURL'] = Controller::join_links(
-                    Director::BaseURL(),
-                    Payment_Controller::$url_segment,
-                    'complete',
-                    'error'
-                );
+                $vars['RedirectURL'] = $error_url;
             }
         } else {
             $vars['Status'] = "ERROR";
             $vars['StatusDetail'] =  _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match");
-            $vars['RedirectURL'] = Controller::join_links(
-                Director::BaseURL(),
-                Payment_Controller::$url_segment,
-                'complete',
-                'error'
-            );
+            $vars['RedirectURL'] = $error_url;
         }
 
         return $this->renderWith(array("Payment_SagePayServer"), $vars);
