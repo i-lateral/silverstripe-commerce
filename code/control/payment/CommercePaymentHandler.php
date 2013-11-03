@@ -92,12 +92,13 @@ abstract class CommercePaymentHandler extends Controller {
 
 
     /**
-     * Process the call back from the payment provider
+     * Retrieve and process order data from the request
      *
-     * @param order the order stored in the session
-     * @param data post data from the form
+     * @var $data request data
+     * @var $success_data initial success vars
+     * @var $error_data initial success vars
      */
-    public function ProcessCallback($data = null) {
+    public function ProcessCallback($data = null, $success_data, $error_data) {
         user_error('You have not added a ProcessCallback() method on your Payment Handler Class');
     }
 }

@@ -70,7 +70,7 @@ class Payment_Controller extends Page_Controller {
 
     public function index() {
         // If shopping cart doesn't exist, redirect to base
-        if(!ShoppingCart::get()->Items()->exists())
+        if(!ShoppingCart::get()->Items()->exists() || $this->getPaymentHandler() === null)
             return $this->redirect(Director::BaseURL());
 
         // Perform pre gateway action and return data (if any)
@@ -109,20 +109,51 @@ class Payment_Controller extends Page_Controller {
         else
             $data = false;
 
-        $this->extend('onBeforeCommerceCallback', $data);
+        $handler = $this->getPaymentHandler();
 
         // If post data exists, process. Otherwise provide error
-        if($data) {
-            $callback = $this->payment_handler->ProcessCallback($data);
+        if($data && $handler !== null) {
+            $callback = $handler->ProcessCallback(
+                $data,
+                $this->success_data(),
+                $this->error_data()
+            );
+        } else {
+            // Redirect to error page
+            return $this->redirect(Controller::join_links(
+                Director::BaseURL(),
+                self::$url_segment,
+                'complete',
+                'error'
+            ));
+        }
 
-            if($callback)
-                $return = $this->success();
-            else
-                $return = $this->error();
-        } else
-            $return = $this->error();
+        return $callback;
+    }
 
-        $this->extend('onAfterCommerceCallback', $return);
+    /*
+     * Deal with rendering a completion message to the end user
+     *
+     * @return String
+     */
+    public function complete() {
+        $site = SiteConfig::current_site_config();
+        $order = $this->getOrder();
+
+        $id = $this->request->param('ID');
+
+        if($id == "error")
+            $return = $this->error_data();
+        else
+            $return = $this->success_data();
+
+        if($order) {
+            $return['CommerceOrderSuccess'] = true;
+            $return['Order'] = $order;
+        } else {
+            $return['CommerceOrderSuccess'] = false;
+            $return['Order'] = false;
+        }
 
         // Clear our session data
         if(isset($_SESSION)) {
@@ -132,39 +163,29 @@ class Payment_Controller extends Page_Controller {
             unset($_SESSION['PaymentMethod']);
         }
 
-        // Render our return values
-        return $this->customise($return)->renderWith(array('Payment_Response','Page'));
+        return $this->customise($return)->renderWith(array("Payment_Response",'Page'));
     }
 
     /*
-     * Method called when payement gateway returns the sucess URL
+     * Pull together data to be used in success templates
      *
      * @return array
      */
-    public function success() {
+    public function success_data() {
         $site = SiteConfig::current_site_config();
-        $order = $this->getOrder();
-
-        if($order)
-            $commerceOrderSuccess = true;
-        else {
-            $commerceOrderSuccess = false;
-            $order = false;
-        }
 
         return array(
-            'CommerceOrderSuccess' => $commerceOrderSuccess,
-            'Order' => $order,
             'Title' => _t('Commerce.ORDERCOMPLETE','Order Complete'),
             'Content' => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
         );
     }
 
     /*
-     * Represents an error in the in all stages of the payment process
+     * Pull together data to be used in success templates
      *
+     * @return array
      */
-    public function error() {
+    public function error_data() {
         $site = SiteConfig::current_site_config();
 
         return array(

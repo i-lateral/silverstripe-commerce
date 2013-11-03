@@ -149,44 +149,59 @@ class SagePayServerHandler extends CommercePaymentHandler {
     }
 
     /**
-     * Try and retrieve order data from the request
+     * Retrieve and process order data from the request
      *
+     * @var $data request data
+     * @var $success_data initial success vars
+     * @var $error_data initial success vars
      */
-    public function ProcessCallback($data = null) {
+    public function ProcessCallback($data = null, $success_data, $error_data) {
+        $vars = $error_data;
+
         // Check if CallBack data exists and install id matches the saved ID
-        if(isset($data) && isset($data['crypt'])) {
-            // Clear Sagepay '@' symbol (denotes encrypted data)
-            if(substr($data['crypt'],0,1) == "@")
-                $data['crypt'] = substr($data['crypt'], 1);
-
-            // Now decode the Crypt field and extract the results
-            $crypt_decoded = StringDecryptor::create($data['crypt'])
-                                                ->setHash($this->EncryptedPassword)
-                                                ->setEncryption('MCRYPT')
-                                                ->decrypt()
-                                                ->get();
-
-            $values = $this->getToken($crypt_decoded);
-
+        if(isset($data) && isset($data['VendorTxCode']) && isset($data['Status'])) {
             $order = Order::get()
-                        ->filter(array(
-                            'OrderNumber' => $values['VendorTxCode'],
-                            'Status' => 'incomplete'
-                        ))->first();
+                ->filter(array(
+                    'OrderNumber' => $data['VendorTxCode'],
+                    'Status' => 'incomplete'
+                ))->first();
 
-            $order_status = $values['Status'];
+            $order_status = $data['Status'];
 
-            if($order) {
+            if($order && $order->PaymentID == $data['VPSTxId']) {
                 $order->Status = ($order_status == 'OK' || $order_status == 'AUTHENTICATED') ? 'paid' : 'failed';
                 $order->write();
 
-                if($order_status == 'OK' || $order_status == 'AUTHENTICATED')
-                    return true;
-                else
-                    return false;
+                if($order_status == 'OK' || $order_status == 'AUTHENTICATED') {
+                    $vars = $success_data;
+                    $vars['Status'] = "OK";
+                    $vars['RedirectURL'] = Controller::join_links(
+                        Director::BaseURL(),
+                        Payment_Controller::$url_segment,
+                        'complete'
+                    );
+                }
+            } else {
+                $vars['Status'] = "INVALID";
+                $vars['StatusDetail'] =  _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match");
+                $vars['RedirectURL'] = Controller::join_links(
+                    Director::BaseURL(),
+                    Payment_Controller::$url_segment,
+                    'complete',
+                    'error'
+                );
             }
+        } else {
+            $vars['Status'] = "ERROR";
+            $vars['StatusDetail'] =  _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match");
+            $vars['RedirectURL'] = Controller::join_links(
+                Director::BaseURL(),
+                Payment_Controller::$url_segment,
+                'complete',
+                'error'
+            );
         }
 
-        return false;
+        return $this->renderWith(array("Payment_SagePayServer"), $vars);
     }
 }

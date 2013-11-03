@@ -151,10 +151,28 @@ class SagePayFormsHandler extends CommercePaymentHandler {
     }
 
     /**
-     * Try and retrieve order data from the request
+     * Retrieve and process order data from the request
      *
+     * @var $data request data
+     * @var $success_data initial success vars
+     * @var $error_data initial success vars
      */
-    public function ProcessCallback($data = null) {
+    public function ProcessCallback($data = null, $success_data, $error_data) {
+        $successs_url = Controller::join_links(
+            Director::BaseURL(),
+            Payment_Controller::$url_segment,
+            'complete'
+        );
+
+        $error_url = Controller::join_links(
+            Director::BaseURL(),
+            Payment_Controller::$url_segment,
+            'complete',
+            'error'
+        );
+
+        $controller = Controller::curr();
+
         // Check if CallBack data exists and install id matches the saved ID
         if(isset($data) && isset($data['crypt'])) {
             // Clear Sagepay '@' symbol (denotes encrypted data)
@@ -171,10 +189,10 @@ class SagePayFormsHandler extends CommercePaymentHandler {
             $values = $this->get_token($crypt_decoded);
 
             $order = Order::get()
-                        ->filter(array(
-                            'OrderNumber' => $values['VendorTxCode'],
-                            'Status' => 'incomplete'
-                        ))->first();
+                ->filter(array(
+                    'OrderNumber' => $values['VendorTxCode'],
+                    'Status' => 'incomplete'
+                ))->first();
 
             $order_status = $values['Status'];
 
@@ -183,12 +201,13 @@ class SagePayFormsHandler extends CommercePaymentHandler {
                 $order->write();
 
                 if($order_status == 'OK' || $order_status == 'AUTHENTICATED')
-                    return true;
+                    return $controller->redirect($successs_url);
                 else
-                    return false;
-            }
+                    return $controller->redirect($error_url);
+            } else
+                return $controller->redirect($error_url);
         }
 
-        return false;
+        return $controller->redirect($error_url);
     }
 }
