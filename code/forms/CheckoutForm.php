@@ -105,7 +105,7 @@ class CheckoutForm extends Form {
 
         Session::set('Order',$order);
 
-        $this->controller->redirect(BASE_URL . '/' . Payment_Controller::$url_segment);
+        return $this->controller->redirect(BASE_URL . '/' . Payment_Controller::$url_segment);
     }
 
     /**
@@ -144,6 +144,7 @@ class CheckoutForm extends Form {
         $form->saveInto($order);
         $order->Status      = 'incomplete';
         $order->PostageID   = Session::get('PostageID');
+        $order->write(); // Write so we can setup our foreign keys
 
         // Loop through each session cart item and add that item to the order
         foreach(ShoppingCart::get()->Items() as $cart_item) {
