@@ -26,7 +26,7 @@ class SagePayFormsHandler extends CommercePaymentHandler {
             Director::absoluteBaseURL(),
             Payment_Controller::$url_segment,
             "callback",
-            $this->payment_gateway->CallBackSlug
+            $this->payment_gateway->ID
         );
 
         $strPost = "VendorTxCode=" . $order->OrderNumber;

@@ -26,7 +26,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
             Director::absoluteBaseURL(),
             Payment_Controller::$url_segment,
             "callback",
-            $this->CallBackSlug
+            $this->payment_gateway->ID
         );
 
         $payload_data = array();

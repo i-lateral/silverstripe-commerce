@@ -52,7 +52,7 @@ class Payment_Controller extends Page_Controller {
         parent::init();
 
         // Check if payment slug is set and that corresponds to a payment
-        if($this->request->param('ID') && $method = CommercePaymentMethod::get()->filter('CallBackSlug',$this->request->param('ID'))->first())
+        if($this->request->param('ID') && $method = CommercePaymentMethod::get()->byID($this->request->param('ID')))
             $this->payment_method = $method;
         // Then check session
         elseif($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))

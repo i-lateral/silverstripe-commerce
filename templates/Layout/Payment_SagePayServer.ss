@@ -1,3 +1,3 @@
-Status="{$Status}"
-RedirectURL="{$RedirectURL}"
-StatusDetail="{$StatusDetail}"
+Status={$Status}
+RedirectURL={$RedirectURL}
+StatusDetail={$StatusDetail}
