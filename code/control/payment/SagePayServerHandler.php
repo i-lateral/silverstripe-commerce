@@ -181,13 +181,14 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
             $order_status = $data['Status'];
 
-            if($order && $order->PaymentID == $data['VPSTxId']) {
+            if($order && trim($order->PaymentID) == trim($data['VPSTxId'])) {
                 $order->Status = ($order_status == 'OK' || $order_status == 'AUTHENTICATED') ? 'paid' : 'failed';
                 $order->write();
 
                 if($order_status == 'OK' || $order_status == 'AUTHENTICATED') {
                     $vars = $success_data;
                     $vars['Status'] = "OK";
+                    $vars['StatusDetail'] =  _t('Commerce.ORDERCOMPLETE',"Order Complete");
                     $vars['RedirectURL'] = $success_url;
                 }
             } else {
