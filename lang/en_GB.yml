@@ -60,6 +60,7 @@ en_GB:
     ORDERCONTACT: "Please contact us with more details"
   CommerceEmail:
     # Email Notifications
+    FAILEDNOTICE: 'Unfortunately we could not process your order and payment. Please get in touch with us if you have any questions.'
     THANKYOU: 'Thank you for ordering from {title}'
     ORDER: 'Order'
     MARKEDAS: 'has been marked as'

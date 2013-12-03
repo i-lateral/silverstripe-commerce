@@ -14,6 +14,8 @@ class Commerce_SiteConfig extends DataExtension {
         'OrderPrefix'           => 'Varchar(9)',
         'CartCopy'              => 'HTMLText',
         'EmailFromAddress'      => "Text",
+        'SendFailedEmail'       => "Enum('No,Customer,Vendor,Both','No')",
+        'FailedEmailAddress'    => "Text",
         'SendPaidEmail'         => "Enum('No,Customer,Vendor,Both','No')",
         'PaidEmailAddress'      => "Text",
         'SendProcessingEmail'   => "Enum('No,Customer,Vendor,Both','No')",
@@ -43,6 +45,8 @@ class Commerce_SiteConfig extends DataExtension {
                 $array = array();
 
         if($status == 'paid' && in_array($this->owner->SendPaidEmail, $array))
+                return true;
+        elseif($status == 'failed' && in_array($this->owner->SendFailedEmail, $array))
                 return true;
         elseif($status == 'processing' && in_array($this->owner->SendProcessingEmail, $array))
                 return true;
@@ -95,6 +99,9 @@ class Commerce_SiteConfig extends DataExtension {
                     LiteralField::create('OrderPlacedHeader', '<div class="field"><h4>When an order is placed</h4></div>'),
                     DropdownField::create('SendPaidEmail', 'Send emails to', $this->owner->dbObject('SendPaidEmail')->enumValues()),
                     TextField::create('PaidEmailAddress', 'Vendor address'),
+                    LiteralField::create('OrderFailedHeader', '<div class="field"><h4>When an order fails</h4></div>'),
+                    DropdownField::create('SendFailedEmail', 'Send emails to', $this->owner->dbObject('SendPaidEmail')->enumValues()),
+                    TextField::create('FailedEmailAddress', 'Vendor address'),
                     LiteralField::create('OrderProcessingHeader', '<div class="field"><h4>When an order is marked as processing</h4></div>'),
                     DropdownField::create('SendProcessingEmail', 'Send emails to', $this->owner->dbObject('SendProcessingEmail')->enumValues()),
                     TextField::create('ProcessingEmailAddress', 'Vendor address'),

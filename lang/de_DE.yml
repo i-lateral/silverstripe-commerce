@@ -60,6 +60,7 @@ de_DE:
     ORDERCONTACT: 'Bitte rufen Sie uns an, wenn Sie telefonisch bestellen möchten'
   CommerceEmail:
     # Email Notifications
+    FAILEDNOTICE: 'Leider konnten wir Ihren Auftrag und Zahlung nicht bearbeiten. Bitte setzen Sie mit uns in Verbindung, wenn Sie.'
     THANKYOU: 'Vielen Dank, dass Sie auf {title} bestellt haben'
     ORDER: 'Der Status ihres Auftrages'
     MARKEDAS: 'ist'

@@ -1,3 +1,14 @@
+<% if $Order.Status = 'failed' %>
+<%t CommerceEmail.ORDER 'Order' %> ({$Order.OrderNumber}) <%t CommerceEmail.MARKEDAS 'has been marked as' %>: {$Order.TranslatedStatus}
+
+<%t CommerceEmail.FAILEDNOTICE 'Unfortunately we could not process your order and payment. Please get in touch with us if you have any questions.' %>
+
+<% if $SiteConfig.ContactPhone %><%t CommerceEmail.PHONE 'Phone' %>: {$SiteConfig.ContactPhone}<% end_if %>
+<% if $SiteConfig.ContactEmail %><%t CommerceEmail.EMAIL 'Email' %>: {$SiteConfig.ContactEmail}<% end_if %>
+
+{$SiteConfig.Title}
+
+<% else %>
 <%t CommerceEmail.THANKYOU 'Thank you for ordering from {title}' title=$SiteConfig.Title %> .
 
 <%t CommerceEmail.ORDER 'Order' %> ({$Order.OrderNumber}) <%t CommerceEmail.MARKEDAS 'has been marked as' %>: {$Order.TranslatedStatus}
@@ -29,3 +40,4 @@ possible if there are any problems' %>.<% end_if %>
 <%t CommerceEmail.FINALTHANKS 'Many thanks' %>,
 
 {$SiteConfig.Title}
+<% end_if %>
