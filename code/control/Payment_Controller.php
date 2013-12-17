@@ -98,7 +98,6 @@ class Payment_Controller extends Page_Controller {
      * This method is what is called at the end of the transaction. It takes
      * either post data or get data and then sends it to the relevent payment
      * method for processing.
-     *
      */
     public function callback() {
         // See if data has been passed via the request

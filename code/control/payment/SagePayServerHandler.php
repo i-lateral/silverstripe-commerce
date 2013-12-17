@@ -183,6 +183,8 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
             if($order && trim($order->PaymentID) == trim($data['VPSTxId'])) {
                 $order->Status = ($order_status == 'OK' || $order_status == 'AUTHENTICATED') ? 'paid' : 'failed';
+                // Store all the data sent from the gateway in a json
+                $order->GatewayData = json_encode($data);
                 $order->write();
 
                 if($order_status == 'OK' || $order_status == 'AUTHENTICATED') {

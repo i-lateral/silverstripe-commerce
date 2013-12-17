@@ -198,6 +198,9 @@ class SagePayFormsHandler extends CommercePaymentHandler {
 
             if($order) {
                 $order->Status = ($order_status == 'OK' || $order_status == 'AUTHENTICATED') ? 'paid' : 'failed';
+                $order->PaymentID = $values['VPSTxId'];
+                // Store all the data sent from the gateway in a json
+                $order->GatewayData = json_encode($values);
                 $order->write();
 
                 if($order_status == 'OK' || $order_status == 'AUTHENTICATED')

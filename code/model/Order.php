@@ -26,6 +26,7 @@ class Order extends DataObject {
         'DeliveryPostCode'  => 'Varchar',
         'DeliveryCountry'   => 'Varchar',
         'EmailDispatchSent' => 'Boolean',
+        'GatewayData'       => 'Text',
         'Status'            => "Enum('incomplete,failed,paid,processing,dispatched','incomplete')"
     );
 
@@ -70,6 +71,8 @@ class Order extends DataObject {
         $fields->removeByName('Items');
         $fields->removeByName('EmailDispatchSent');
         $fields->removeByName('PostageID');
+        $fields->removeByName('PaymentID');
+        $fields->removeByName('GatewayData');
 
         // Remove Billing Details
         $fields->removeByName('BillingFirstnames');
@@ -91,13 +94,6 @@ class Order extends DataObject {
 
         // Add non-editable order number
         $ordernum_field = TextField::create('OrderNumber')
-            ->setReadonly(true)
-            ->performReadonlyTransformation();
-
-        $fields->addFieldToTab('Root.Main', $ordernum_field, 'BillingEmail');
-
-        // Add non-editable payment ID
-        $ordernum_field = TextField::create('PaymentID', "Payment gateway ID number")
             ->setReadonly(true)
             ->performReadonlyTransformation();
 
@@ -160,6 +156,21 @@ class Order extends DataObject {
         )->setHeadingLevel(4);
 
         $fields->addFieldToTab('Root.Main', $delivery_fields);
+
+        // Add non-editable payment ID
+        $paymentid_field = TextField::create('PaymentID', "Payment gateway ID number")
+            ->setReadonly(true)
+            ->performReadonlyTransformation();
+
+        $fields->addFieldToTab('Root.Gateway', $paymentid_field);
+
+        $gateway_data = LiteralField::create(
+            "FormattedGatewayData",
+            "<strong>Data returned from the payment gateway:</strong><br/><br/>" .
+            str_replace(",",",<br/>",$this->GatewayData)
+        );
+
+        $fields->addFieldToTab("Root.Gateway", $gateway_data);
 
         return $fields;
     }
