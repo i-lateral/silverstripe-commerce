@@ -5,25 +5,25 @@
  * @author morven
  */
 class PostageArea extends DataObject {
-    public static $db = array(
+    private static $db = array(
         'Location'  => 'Varchar',
         'Cost'      => 'Decimal'
     );
-    
-	public static $has_one = array(
-		'Site' => 'SiteConfig',
-	);
-	
-    public static $summary_fields = array(
+
+    private static $has_one = array(
+        'Site' => 'SiteConfig',
+    );
+
+    private static $summary_fields = array(
         'Location'  => 'Location',
         'Cost'      => 'Cost'
     );
-    
-    public static $field_types = array(
+
+    private static $field_types = array(
         'Location'  => 'TextField',
         'Cost'      => 'TextField'
     );
-    
+
     public function canCreate($member = null) {
         return true;
     }

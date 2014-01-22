@@ -4,7 +4,7 @@
 class Checkout_Controller extends Page_Controller {
     public static $url_segment = "checkout";
 
-    public static $allowed_actions = array(
+    private static $allowed_actions = array(
         'CheckoutForm'
     );
 

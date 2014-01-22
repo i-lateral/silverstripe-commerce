@@ -15,7 +15,10 @@
         "issues": "http://github.com/i-lateral/silverstripe-commerce/issues"
     },
     "require": {
-        "silverstripe/framework": ">=3.1"
+        "silverstripe/framework": ">=3.1",
+        "ajshort/silverstripe-gridfieldextensions": "dev-master",
+        "colymba/gridfield-bulk-editing-tools": "dev-master",
+        "bummzack/sortablefile": "dev-master"
     },
     "extra": {
         "installer-name": "commerce"

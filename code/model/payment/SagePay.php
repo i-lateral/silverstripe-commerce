@@ -6,7 +6,7 @@ class SagePay extends CommercePaymentMethod {
 
     public $Title = 'SagePay';
 
-    public static $db = array(
+    private static $db = array(
         'SendEmail'         => "Enum('0,1,2','1')",
         'EmailRecipient'    => 'Varchar(100)',
         'VendorName'        => 'Varchar(100)',

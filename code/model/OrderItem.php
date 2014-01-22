@@ -5,7 +5,7 @@
  * @author morven
  */
 class OrderItem extends DataObject {
-    public static $db = array(
+    private static $db = array(
         'Title'         => 'Varchar',
         'SKU'           => 'Varchar(100)',
         'Type'          => 'Varchar',
@@ -13,23 +13,23 @@ class OrderItem extends DataObject {
         'Quantity'      => 'Int',
         'Price'         => 'Currency'
     );
-    
-    public static $has_one = array(
+
+    private static $has_one = array(
         'Parent'    => 'Order'
     );
-    
-    public static $casting = array(
+
+    private static $casting = array(
         'CustomDetails'    => 'HTMLText'
     );
-    
-    public static $summary_fields = array(
+
+    private static $summary_fields = array(
         'Title',
         'SKU',
         'CustomDetails',
         'Quantity',
         'Total'
     );
-    
+
     public function getTotal() {
         return $this->Quantity * $this->Price;
     }
@@ -41,15 +41,15 @@ class OrderItem extends DataObject {
      */
     public function getCustomDetails() {
         $return = "";
-        
+
         if($this->Customisation) {
             $customisations = unserialize($this->Customisation);
-            
+
             foreach($customisations as $custom) {
                 $return .= $custom->Title . ': ' . $custom->Value . ";\n";
             }
         }
-        
+
         return $return;
     }
 

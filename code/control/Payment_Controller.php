@@ -10,7 +10,7 @@
 class Payment_Controller extends Page_Controller {
     public static $url_segment = "payment";
 
-    public static $allowed_actions = array(
+    private static $allowed_actions = array(
         'index',
         'callback',
         'complete'

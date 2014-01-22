@@ -2,7 +2,7 @@
 
 class Product_Controller extends Page_Controller {
 
-    public static $allowed_actions = array(
+    private static $allowed_actions = array(
         'AddItemForm'
     );
 

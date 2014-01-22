@@ -1,16 +1,17 @@
 <?php
 
 class ProductAttribute extends DataObject {
-    public static $db = array(
+    private static $db = array(
         'Title'     => 'Varchar',
-        'Content'   => 'Text'
+        'Content'   => 'Varchar',
+        'Sort'      => 'Int'
     );
-    
-    public static $has_one = array(
+
+    private static $has_one = array(
         'Parent'    => 'Product'
     );
-    
-    public static $summary_fields = array(
+
+    private static $summary_fields = array(
         'Title',
         'Content'
     );

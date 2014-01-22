@@ -8,7 +8,7 @@ class WorldPay extends CommercePaymentMethod {
 
     public $Icon = 'commerce/images/worldpay-small.png';
 
-    public static $db = array(
+    private static $db = array(
         'InstallID' => 'Varchar(10)'
     );
 

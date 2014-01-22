@@ -6,7 +6,7 @@
  * @author morven
  */
 class Order extends DataObject {
-    public static $db = array(
+    private static $db = array(
         'OrderNumber'       => 'Varchar',
         'PaymentID'         => 'Varchar(99)', // ID number returned by the payment gateway (if any)
         'BillingFirstnames' => 'Varchar',
@@ -30,16 +30,16 @@ class Order extends DataObject {
         'Status'            => "Enum('incomplete,failed,paid,processing,dispatched','incomplete')"
     );
 
-    public static $has_one = array(
+    private static $has_one = array(
         'Postage' => 'PostageArea'
     );
 
-    public static $has_many = array(
+    private static $has_many = array(
         'Items' => 'OrderItem'
     );
 
     // Cast method calls nicely
-    public static $casting = array(
+    private static $casting = array(
         'BillingAddress'    => 'Text',
         'DeliveryAddress'   => 'Text',
         'PostageCost'       => 'Decimal',
@@ -49,11 +49,11 @@ class Order extends DataObject {
         'TranslatedStatus'  => 'Varchar'
     );
 
-    public static $defaults = array(
+    private static $defaults = array(
         'EmailDispatchSent' => 0
     );
 
-    public static $summary_fields = array(
+    private static $summary_fields = array(
         "OrderNumber" => "Order Number",
         "BillingFirstnames" => "First Name(s)",
         "BillingSurname" => "Surname",
@@ -62,7 +62,7 @@ class Order extends DataObject {
         "Created" => "Created"
     );
 
-    static $default_sort = "Created DESC";
+    private static $default_sort = "Created DESC";
 
     public function getCMSFields() {
         $fields = parent::getCMSFields();

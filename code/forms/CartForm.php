@@ -11,14 +11,26 @@ class CartForm extends Form {
         // Set shopping cart
         $this->cart = ShoppingCart::get();
 
-        $postage_map = (SiteConfig::current_site_config()->PostageAreas()) ? SiteConfig::current_site_config()->PostageAreas()->map('ID','Location') : '';
-        $postage_value = Session::get('PostageID');
+        $postage_areas = SiteConfig::current_site_config()->PostageAreas();
+        $payment_methods = SiteConfig::current_site_config()->PaymentMethods();
 
-        // Find all current payment methods
-        $payment_methods = SiteConfig::current_site_config()->PaymentMethods()->map('ID','Label');
+        // Deal with setting up postage areas
+        if($postage_areas->exists()) {
+            $postage_map = $postage_areas->map('ID','Location');
+            $postage_value = Session::get('PostageID');
+        } else {
+            $postage_map = array();
+            $postage_value = 0;
+        }
 
-        // Find the default payment method
-        $payment_value = SiteConfig::current_site_config()->PaymentMethods()->filter('Default',1)->first()->ID;
+        // Deal with payment methods
+        if($payment_methods->exists()) {
+            $payment_map = $payment_methods->map('ID','Label');
+            $payment_value = $payment_methods->filter('Default',1)->first()->ID;
+        } else {
+            $payment_map = array();
+            $payment_value = 0;
+        }
 
         $fields = new FieldList(
             // Postage
@@ -28,14 +40,24 @@ class CartForm extends Form {
 
             // Payment Gateways
             HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payment'), 2),
-            OptionsetField::create('PaymentMethod', _t('Commerce.PAYMENTSELECTION', 'Please choose how you would like to pay'), $payment_methods, $payment_value)
+            OptionsetField::create('PaymentMethod', _t('Commerce.PAYMENTSELECTION', 'Please choose how you would like to pay'), $payment_map, $payment_value)
         );
 
         $actions = new FieldList(
-            FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))->addExtraClass('btn'),
-            FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))->addExtraClass('btn'),
-            FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))->addExtraClass('btn')->addExtraClass('highlight')
+            FormAction::create('doEmpty', _t('Commerce.CARTEMPTY','Empty Cart'))
+                ->addExtraClass('btn')
+                ->addExtraClass('btn-red'),
+            FormAction::create('doUpdate', _t('Commerce.CARTUPDATE','Update Cart'))
+                ->addExtraClass('btn')
+                ->addExtraClass('btn-blue')
         );
+
+        if($payment_methods->exists()) {
+            $actions->add(FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))
+                ->addExtraClass('btn')
+                ->addExtraClass('highlight')
+            );
+        }
 
         $validator = new RequiredFields(
             'Postage',

@@ -30,7 +30,7 @@ class CommercePaymentMethod extends DataObject {
      */
     public $Icon;
 
-    public static $db = array(
+    private static $db = array(
         // Payment Gateway config
         'Summary'           => 'Text',
         'URL'               => 'Varchar(200)',
@@ -38,15 +38,15 @@ class CommercePaymentMethod extends DataObject {
         'Default'           => 'Boolean'
     );
 
-    public static $has_one = array(
+    private static $has_one = array(
         'ParentConfig'  => 'SiteConfig'
     );
 
-    public static $casting = array(
+    private static $casting = array(
         'Label' => 'Text'
     );
 
-    public static $summary_fields = array(
+    private static $summary_fields = array(
         'Title',
         'Summary',
         'Default'
