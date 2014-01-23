@@ -1,9 +1,9 @@
-#Menu-ProductAdmin .icon-16 {
-	background-image: url('../images/product.png');
-	background-position: 0 0;
+#Menu-CatalogueAdmin .icon-16 {
+    background-image: url('../images/catalogue.png');
+    background-position: 0 0;
 }
 
 #Menu-OrderAdmin .icon-16 {
-	background-image: url('../images/order.png');
-	background-position: 0 0;
+    background-image: url('../images/order.png');
+    background-position: 0 0;
 }
