@@ -187,4 +187,19 @@ class Commerce_SiteConfig extends DataExtension {
             DB::alteration_message('No image file added to DB', 'created');
         }
     }
+
+    public function onBeforeWrite() {
+        parent::onBeforeWrite();
+
+        // If product image has not been set, add the default
+        if(!$this->owner->NoProductImageID) {
+            $image = Image::get()
+                ->filter('Name','no-image.png')
+                ->first();
+
+            if($image) {
+                $this->owner->NoProductImageID = $image->ID;
+            }
+        }
+    }
 }

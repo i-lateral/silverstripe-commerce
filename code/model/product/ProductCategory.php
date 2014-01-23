@@ -2,27 +2,31 @@
 
 class ProductCategory extends DataObject {
     private static $db = array(
-            'Title'         => 'Varchar',
-            'Content'       => 'HTMLText',
-            'URLSegment'    => 'Varchar',
-            'Sort'          => 'Int'
+        'Title'         => 'Varchar',
+        'Content'       => 'HTMLText',
+        'URLSegment'    => 'Varchar',
+        'Sort'          => 'Int'
     );
 
     private static $has_one = array(
-            'Parent'        => 'ProductCategory'
+        'Parent'        => 'ProductCategory'
     );
 
     private static $many_many = array(
-            'Products'      => 'Product'
+        'Products'      => 'Product'
+    );
+
+    private static $many_many_extraFields = array(
+        'Products' => array('SortOrder' => 'Int')
     );
 
     private static $extensions = array(
-            "Hierarchy"
+        "Hierarchy"
     );
 
     private static $summary_fields = array(
-            'Title' => 'Title',
-            'URLSegment' => 'URLSegment'
+        'Title'         => 'Title',
+        'URLSegment'    => 'URLSegment'
     );
 
     private static $default_sort = "\"Sort\" DESC";
@@ -32,7 +36,7 @@ class ProductCategory extends DataObject {
     *
     * @return string URL to cart controller
     */
-    public function Link(){
+    public function Link() {
         return Controller::join_links(BASE_URL , $this->URLSegment);
     }
 
@@ -75,21 +79,19 @@ class ProductCategory extends DataObject {
     public function getCMSFields() {
         $fields = parent::getCMSFields();
 
+        $fields->removeByName('Sort');
+
         $url_field = TextField::create('URLSegment')
             ->setReadonly(true)
             ->performReadonlyTransformation();
 
+        // Add fields to the CMS
         $fields->addFieldToTab('Root.Main', TextField::create('Title'));
         $fields->addFieldToTab('Root.Main', $url_field);
         $fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content')->setRows(20)->addExtraClass('stacked'));
-        $fields->addFieldToTab('Root.Main', NumericField::create('Sort'));
+        $fields->addFieldToTab('Root.Main', HiddenField::create('ParentID', 'Parent Category'));
 
-        // If record is just created, check for parent ID in URL and set appropriately
-        $parentField = new TreeDropdownField('ParentID', 'Parent Category', 'ProductCategory');
-
-        $fields->addFieldToTab('Root.Main', $parentField);
-
-                $this->extend('updateCMSFields', $fields);
+        $this->extend('updateCMSFields', $fields);
 
         return $fields;
     }

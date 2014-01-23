@@ -28,9 +28,13 @@ class ProductAdmin extends ModelAdmin {
 
         // Filter categories
         if($this->modelClass == 'ProductCategory') {
-            $list
-                ->where("ParentID = {$this->currentCategoryID()}")
-                ->sort('Sort','DESC');
+            $parentID = $this->request->requestVar('ParentID');
+
+            if($parentID) {
+                $list
+                    ->where("'ParentID' = " . $parentID)
+                    ->sort('Sort','DESC');
+            }
         }
 
         return $list;
@@ -39,7 +43,6 @@ class ProductAdmin extends ModelAdmin {
     public function getEditForm($id = null, $fields = null) {
         $form = parent::getEditForm($id, $fields);
         $params = $this->request->requestVar('q');
-
 
         if($this->modelClass == 'Product') {
             $gridField = $form->Fields()->fieldByName('Product');
@@ -53,83 +56,78 @@ class ProductAdmin extends ModelAdmin {
                 ->removeComponentsByType('GridFieldExportButton')
                 ->removeComponentsByType('GridFieldPrintButton')
                 ->removeComponentsByType('GridFieldAddNewButton')
-                ->addComponents($add_button);
+                ->addComponents(
+                    $add_button,
+                    GridFieldOrderableRows::create('Sort')
+                );
 
         }
 
         // Alterations for Hiarachy on product cataloge
         if($this->modelClass == 'ProductCategory') {
-                $fields = $form->Fields();
-                $gridField = $fields->fieldByName('ProductCategory');
+            $fields = $form->Fields();
+            $gridField = $fields->fieldByName('ProductCategory');
 
-                // Set custom record editor
-                $record_editor = new GridFieldDetailForm();
-                $record_editor->setItemRequestClass('ProductCategory_ItemRequest');
+            // Set custom record editor
+            $record_editor = new GridFieldDetailForm();
+            $record_editor->setItemRequestClass('ProductCategory_ItemRequest');
 
-                // Create add button and update grid field
-                $add_button = new GridFieldAddNewButton('toolbar-header-left');
-                $add_button->setButtonName('Add Category');
+            // Create add button and update grid field
+            $add_button = new GridFieldAddNewButton('toolbar-header-left');
+            $add_button->setButtonName('Add Category');
 
-                // Tidy up category config
-                $field_config = $gridField->getConfig();
-                $field_config
-                    ->removeComponentsByType('GridFieldExportButton')
-                    ->removeComponentsByType('GridFieldPrintButton')
-                    ->removeComponentsByType('GridFieldDetailForm')
-                    ->removeComponentsByType('GridFieldAddNewButton')
-                    ->addComponents(
-                        $record_editor,
-                        $add_button,
-                        GridFieldLevelup::create($this->currentCategoryID())->setLinkSpec('admin/products/ProductCategory/?ParentID=%d')
-                    );
-
-                // Find data colums, so we can add link to view children
-                $columns = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
-
-                // Don't allow navigating into children nodes on filtered lists
-                $fields = array(
-                    'Title' => 'Title',
-                    'URLSegment' => 'URLSegement'
+            // Tidy up category config
+            $field_config = $gridField->getConfig();
+            $field_config
+                ->removeComponentsByType('GridFieldExportButton')
+                ->removeComponentsByType('GridFieldPrintButton')
+                ->removeComponentsByType('GridFieldDetailForm')
+                ->removeComponentsByType('GridFieldAddNewButton')
+                ->addComponents(
+                    $record_editor,
+                    $add_button,
+                    GridFieldOrderableRows::create('Sort')
                 );
 
-                if(!$params) {
-                    $fields = array_merge(array('listChildrenLink' => ''), $fields);
+            // Setup hierarchy view
+            $parentID = $this->request->requestVar('ParentID');
+
+            if($parentID){
+                $field_config->addComponent(
+                    GridFieldLevelup::create($parentID)
+                        ->setLinkSpec('?ParentID=%d')
+                        ->setAttributes(array(
+                            'data-pjax' => 'ListViewForm,Breadcrumbs'
+                        ))
+                );
+            }
+
+            // Find data colums, so we can add link to view children
+            $columns = $gridField->getConfig()->getComponentByType('GridFieldDataColumns');
+
+            // Don't allow navigating into children nodes on filtered lists
+            $fields = array(
+                'Title' => 'Title',
+                'URLSegment' => 'URLSegement'
+            );
+
+            if(!$params) {
+                $fields = array_merge(array('listChildrenLink' => ''), $fields);
+            }
+
+            $columns->setDisplayFields($fields);
+            $columns->setFieldCasting(array('Title' => 'HTMLText', 'URLSegment' => 'Text'));
+
+            $controller = $this;
+            $columns->setFieldFormatting(array(
+                'listChildrenLink' => function($value, &$item) use($controller) {
+                    return sprintf(
+                        '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">&#9658;</a>',
+                        $controller->Link(),
+                        $item->ID
+                    );
                 }
-
-                $columns->setDisplayFields($fields);
-                $columns->setFieldCasting(array('Title' => 'HTMLText', 'URLSegment' => 'Text'));
-
-                $controller = $this;
-                $columns->setFieldFormatting(array(
-                    'Title' => function($value, &$item) use($controller) {
-                        return sprintf(
-                            '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->Title . '</a>',
-                            $controller->Link(),
-                            $item->ID,
-                            null
-                        );
-                    },
-                    'URLSegment' => function($value, &$item) use($controller) {
-                        return sprintf(
-                            '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">' . $item->URLSegment . '</a>',
-                            $controller->Link(),
-                            $item->ID,
-                            null
-                        );
-                    },
-                    'listChildrenLink' => function($value, &$item) use($controller) {
-                        $num = $item ? $item->numChildren() : null;
-                        if($num) {
-                            return sprintf(
-                                '<a class="list-children-link" data-pjax-target="ListViewForm" href="%s?ParentID=%d">%s</a>',
-                                $controller->Link(),
-                                $item->ID,
-                                $num
-                            );
-                        }
-                    }
-                ));
-
+            ));
         }
 
         return $form;
@@ -147,24 +145,13 @@ class ProductAdmin extends ModelAdmin {
         else
             return 'Product';
     }
-
-    /**
-     * Return fake-ID "root" if no ID is found (needed to upload files into the root-folder)
-     */
-    public function currentCategoryID() {
-        if(is_numeric($this->request->requestVar('ParentID'))) {
-            return $this->request->requestVar('ParentID');
-        } elseif (isset($this->urlParams['ParentID']) && is_numeric($this->urlParams['ID'])) {
-            return $this->urlParams['ID'];
-        } elseif(Session::get("{$this->class}.currentCategory")) {
-            return Session::get("{$this->class}.currentCategory");
-        } else {
-            return 0;
-        }
-    }
 }
 
 class ProductCategory_ItemRequest extends GridFieldDetailForm_ItemRequest {
+    private static $allowed_actions = array(
+        "ItemEditForm"
+    );
+
     /**
      *
      * @param GridFIeld $gridField
