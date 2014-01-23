@@ -8,7 +8,9 @@
 
 class ProductAdmin extends ModelAdmin {
     private static $url_segment = 'products';
+
     private static $menu_title = 'Products';
+
     private static $menu_priority = 11;
 
     private static $managed_models = array(
@@ -29,12 +31,9 @@ class ProductAdmin extends ModelAdmin {
         // Filter categories
         if($this->modelClass == 'ProductCategory') {
             $parentID = $this->request->requestVar('ParentID');
+            if(!$parentID) $parentID = 0;
 
-            if($parentID) {
-                $list
-                    ->where("'ParentID' = " . $parentID)
-                    ->sort('Sort','DESC');
-            }
+            $list = $list->where("'ParentID' = {$parentID}");
         }
 
         return $list;
