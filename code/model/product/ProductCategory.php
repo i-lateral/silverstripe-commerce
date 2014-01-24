@@ -118,37 +118,6 @@ class ProductCategory extends DataObject {
         }
     }
 
-    /**
-     * Return the title, description, keywords and language metatags.
-     *
-     * @todo Move <title> tag in separate getter for easier customization and more obvious usage
-     *
-     * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
-     * @param boolean $includeTitle Show default <title>-tag, set to false for
-     *                              custom templating
-     * @return string The XHTML metatags
-     */
-    public function MetaTags($includeTitle = true) {
-        $tags = "";
-        if($includeTitle === true || $includeTitle == 'true') {
-            $tags .= "<title>" . Convert::raw2xml(($this->MetaTitle)
-                ? $this->MetaTitle
-                : $this->Title) . "</title>\n";
-        }
-
-        $charset = ContentNegotiator::get_encoding();
-        $tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
-
-        if(Permission::check('CMS_ACCESS_CMSMain') && in_array('CMSPreviewable', class_implements($this))) {
-            $tags .= "<meta name=\"x-page-id\" content=\"{$this->ID}\" />\n";
-            $tags .= "<meta name=\"x-cms-edit-link\" content=\"" . $this->CMSEditLink() . "\" />\n";
-        }
-
-        $this->extend('MetaTags', $tags);
-
-        return $tags;
-    }
-
     public function canView($member = false) {
         return true;
     }
