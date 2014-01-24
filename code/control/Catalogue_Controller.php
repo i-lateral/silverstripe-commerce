@@ -59,7 +59,7 @@ class Catalogue_Controller extends Controller {
             $form = AddItemToCartForm::create($this, $this->dataRecord, "AddItemForm")
                 ->addExtraClass('commerce-additemtocartform')
                 ->addExtraClass('forms')
-                ->addExtraClass('forms-columnar');;
+                ->addExtraClass('forms-columnar');
 
             $this->extend("updateAddItemForm", $form);
 
