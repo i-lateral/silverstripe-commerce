@@ -3,7 +3,7 @@
 /**
  * Adds some basic subsites options that can be added to all commerce objects
  */
-class Subsites_CommerceObject extends DataExtension {
+class Ext_Subsites_CommerceObject extends DataExtension {
     private static $has_one=array(
         'Subsite' => 'Subsite', // The subsite that this page belongs to
     );

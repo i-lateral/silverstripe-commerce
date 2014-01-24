@@ -3,14 +3,14 @@
 class Product extends DataObject {
     private static $db = array(
         'Title'         => 'Varchar',
-        'URLSegment'    => 'Varchar',
+        'SKU'           => 'Varchar(99)',
+        'Quantity'      => 'Int',
         'Price'         => 'Decimal',
+        'URLSegment'    => 'Varchar',
         'Description'   => 'HTMLText',
         'Sort'          => 'Int',
-        'Quantity'      => 'Int',
         'PackSize'      => 'Varchar',
-        'Weight'        => 'Int',
-        'SKU'           => 'Varchar(99)'
+        'Weight'        => 'Int'
     );
 
     private static $has_many = array(
@@ -44,7 +44,7 @@ class Product extends DataObject {
         'CategoriesList'=> 'Categories'
     );
 
-    private static $default_sort = "\"Sort\" DESC";
+    private static $default_sort = "\"Title\" ASC";
 
     /**
      * Return a URL to link to this product (via Catalog_Controller)

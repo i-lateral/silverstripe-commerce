@@ -4,7 +4,7 @@
  *
  * @author morven
  */
-class Commerce_SiteConfig extends DataExtension {
+class Ext_Commerce_SiteConfig extends DataExtension {
     private static $db = array(
         // Commerce Configs
         'ContactEmail'          => 'Varchar(100)',

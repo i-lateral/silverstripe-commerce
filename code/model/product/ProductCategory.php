@@ -3,7 +3,6 @@
 class ProductCategory extends DataObject {
     private static $db = array(
         'Title'         => 'Varchar',
-        'Content'       => 'HTMLText',
         'URLSegment'    => 'Varchar',
         'Sort'          => 'Int'
     );
@@ -41,42 +40,6 @@ class ProductCategory extends DataObject {
     }
 
     /**
-     * Returns TRUE if this is the currently active category.
-     *
-     * @return bool
-     */
-    public function isCurrent() {
-        return ($this->ID && Category_Controller::get_current_category()) ? $this->ID == Category_Controller::get_current_category()->ID : $this === Category_Controller::get_current_category();
-    }
-
-    /**
-     * Check if current category is a child of selected category
-     *
-     * @return bool
-     */
-    public function isSection() {
-        return $this->isCurrent() || (
-            Category_Controller::get_current_category() instanceof ProductCategory && in_array($this->ID, Category_Controller::get_current_category()->getAncestors()->column())
-        );
-    }
-
-    /**
-     * Return "link", "current" or section depending on if this category is the
-     * current category, or a child of the current category.
-     *
-     * @return string
-     */
-    public function LinkingMode() {
-        if($this->isCurrent()) {
-            return 'current';
-        } elseif($this->isSection()) {
-            return 'section';
-        } else {
-            return 'link';
-        }
-    }
-
-    /**
      * Returns the product in the current page stack of the given level.
      * Level(1) will return the main menu item that we're currently inside, etc.
      */
@@ -94,16 +57,28 @@ class ProductCategory extends DataObject {
         $fields = parent::getCMSFields();
 
         $fields->removeByName('Sort');
+        $fields->removeByName('Products');
 
         $url_field = TextField::create('URLSegment')
             ->setReadonly(true)
             ->performReadonlyTransformation();
 
+        $products_field = GridField::create(
+            "Products",
+            "",
+            $this->Products(),
+            new GridFieldConfig_RelationEditor()
+        );
+
+        $parent_field = TreeDropdownField::create('ParentID', 'Parent Category', 'ProductCategory')
+            ->setLabelField("Title");
+
         // Add fields to the CMS
         $fields->addFieldToTab('Root.Main', TextField::create('Title'));
         $fields->addFieldToTab('Root.Main', $url_field);
-        $fields->addFieldToTab('Root.Main', HTMLEditorField::create('Content')->setRows(20)->addExtraClass('stacked'));
-        $fields->addFieldToTab('Root.Main', HiddenField::create('ParentID', 'Parent Category'));
+        $fields->addFieldToTab('Root.Main', $parent_field);
+        $fields->addFieldToTab("Root.Main", HeaderField::create("ProductsHeader", "Products in this category"));
+        $fields->addFieldToTab('Root.Main', $products_field);
 
         $this->extend('updateCMSFields', $fields);
 
@@ -141,24 +116,6 @@ class ProductCategory extends DataObject {
                 $child->delete();
             }
         }
-    }
-
-    public function populateDefaults() {
-        $parentParam = Controller::curr()->request->requestVar('ParentID');
-
-        if($parentParam && is_numeric($parentParam))
-            $this->ParentID = $parentParam;
-
-        parent::populateDefaults();
-    }
-
-    public function ChildrenOrProducts() {
-        if($this->Children()->exists())
-            return $this->Children();
-        elseif($this->Products()->exists())
-            return $this->Products();
-        else
-            return false;
     }
 
     /**

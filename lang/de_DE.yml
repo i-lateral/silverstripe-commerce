@@ -21,6 +21,7 @@ de_DE:
     ADDTOCART: 'In den Warenkorb'
     PLEASESELECT: 'Bitte auswählen'
     # Shopping Cart
+    ADDEDITEMTOCART: 'Zu Ihrem Warenkorb hinzugefügt Artikel'
     CARTISEMPTY: 'Ihr Warenkorb ist derzeit leer'
     CARTQTY: 'Anzahl'
     CARTCOST: 'Preis'

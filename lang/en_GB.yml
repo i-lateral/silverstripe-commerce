@@ -21,6 +21,7 @@ en_GB:
     ADDTOCART: 'Add to Cart'
     PLEASESELECT: 'Please Select'
     # Shopping Cart
+    ADDEDITEMTOCART: 'Added item to your shopping cart'
     CARTISEMPTY: 'Your cart is currently empty'
     CARTQTY: 'Qty'
     CARTCOST: 'Cost'

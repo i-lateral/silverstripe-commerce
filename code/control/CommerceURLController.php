@@ -12,34 +12,34 @@ class CommerceURLController extends Controller {
         parent::init();
     }
 
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
-	    $this->request = $request;
-		$this->setDataModel($model);
-		
-		$this->pushCurrent();
+    public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+        $this->pushCurrent();
+        $this->urlParams = $request->allParams();
+        $this->request = $request;
+        $this->response = new SS_HTTPResponse();
+        $this->setDataModel($model);
+        $urlsegment = $request->param('URLSegment');
 
-		// Create a response just in case init() decides to redirect
-		$this->response = new SS_HTTPResponse();
+        $this->extend('onBeforeInit');
 
-		$this->init();
-	    
-	    $urlsegment = $request->param('URLSegment');
-	    
-	    // First check products against URL segment
+        $this->init();
+
+        $this->extend('onAfterInit');
+
+        // First check products against URL segment
         if($product = Product::get()->filter('URLSegment',$urlsegment)->first()) {
-            $controller = new Product_Controller($product);
+            $controller = Catalogue_Controller::create($product);
         } elseif($category = ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
-            $controller = new Category_Controller($category);
-	    } else {
-	        // If CMS is installed
-	        if(class_exists('ModelAsController'))
-		        $controller = new ModelAsController();
+            $controller = Catalogue_Controller::create($category);
+        } else {
+            // If CMS is installed
+            if(class_exists('ModelAsController')) $controller = ModelAsController::create();
         }
-        
+
         $result = $controller->handleRequest($request, $model);
-        
-		$this->popCurrent();
-        
+
+        $this->popCurrent();
+
         return $result;
-	}
+    }
 }

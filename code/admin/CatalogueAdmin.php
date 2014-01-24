@@ -32,7 +32,7 @@ class CatalogueAdmin extends ModelAdmin {
             $parentID = $this->request->requestVar('ParentID');
             if(!$parentID) $parentID = 0;
 
-            $list = $list->where("'ParentID' = {$parentID}");
+            $list = $list->filter('ParentID',$parentID);
         }
 
         return $list;
@@ -55,8 +55,7 @@ class CatalogueAdmin extends ModelAdmin {
                 ->removeComponentsByType('GridFieldPrintButton')
                 ->removeComponentsByType('GridFieldAddNewButton')
                 ->addComponents(
-                    $add_button,
-                    GridFieldOrderableRows::create('Sort')
+                    $add_button
                 );
 
         }
@@ -205,6 +204,14 @@ class ProductCategory_ItemRequest extends GridFieldDetailForm_ItemRequest {
 
     public function ItemEditForm() {
         $form = parent::ItemEditForm();
+
+        // Update the default parent field
+        $parentParam = Controller::curr()->request->requestVar('ParentID');
+        $parent_field = $form->Fields()->dataFieldByName("ParentID");
+
+        if($parent_field) {
+            $parent_field->setValue($parentParam);
+        }
 
         return $form;
     }
