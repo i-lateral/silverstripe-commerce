@@ -28,6 +28,10 @@ class ProductCategory extends DataObject {
         'URLSegment'    => 'URLSegment'
     );
 
+    private static $casting = array(
+        "AllProducts"   => "ArrayList"
+    );
+
     private static $default_sort = "\"Sort\" DESC";
 
     /**
@@ -51,6 +55,31 @@ class ProductCategory extends DataObject {
         }
 
         return isset($stack[$level-1]) ? $stack[$level-1] : null;
+    }
+
+    /**
+     * Get a list of all products from this category and it's children
+     * categories.
+     *
+     * @return ArrayList
+     */
+    public function AllProducts() {
+        $products = new ArrayList();
+
+        // First add all products from this category
+        foreach($this->Products() as $product) {
+            $products->add($product);
+        }
+
+        // Now loop each child product
+        foreach($this->Children() as $child) {
+            // First add all products from this category
+            foreach($child->Products() as $product) {
+                $products->add($product);
+            }
+        }
+
+        return $products;
     }
 
     public function getCMSFields() {

@@ -1,30 +1,35 @@
-<div class="commerce-content-container typography">	
-	<h1>$Title</h1>
-	
-	<% if $Content %>$Content<% end_if %>
-	
-	<div class="commerce-list commerce-list-children">
-	
-        <% if Children %>
-            <% loop Children %>
-                <div class="commerce-list-child site-float-left">
-                    <% if $Top.Category.ListOrGrid = "Grid" %>
-                        <% if Images %>
-                            <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
-                        <% else %>
-                            <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
-                        <% end_if %>
-                    <% end_if %>
-                    
+<div class="commerce-content-container typography">
+    <h1>$Title</h1>
+
+    <div class="units-row commerce-list commerce-list-children">
+        <% if Children.exists %>
+            <nav class="nav-g">
+                <ul>
+                    <% loop Children %>
+                        <li><a href="$Link">$Title</a></li>
+                    <% end_loop %>
+                </ul>
+            </nav>
+        <% end_if %>
+    </div>
+
+    <% if $AllProducts.exists %>
+        <div class="units-row commerce-list commerce-list-products">
+            <% loop $AllProducts %>
+                <div class="unit-25 commerce-list-child">
                     <h2><a href="$Link">$Title</a></h2>
-                    <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>
+
+                    <p>
+                        <a href="$Link">$Images.First.CroppedImage(250,250)</a>
+
+                        <span class="price label label-green big">
+                            {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}
+                        </span>
+                    </p>
                 </div>
             <% end_loop %>
-        <% else %>
-            <p>Unable to find any products.</p>
-        <% end_if %>
-	
-	</div>
+        </div>
+    <% end_if %>
 </div>
 
 <% include SideBar %>
