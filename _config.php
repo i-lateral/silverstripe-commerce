@@ -4,6 +4,7 @@ SiteConfig::add_extension('Ext_Commerce_SiteConfig');
 Image::add_extension('Ext_Commerce_Image');
 Controller::add_extension('Ext_Commerce_Controller');
 Group::add_extension('Ext_Commerce_Group');
+Member::add_extension('Ext_Commerce_Member');
 
 // If subsites is installed
 if(class_exists('Subsite')) {

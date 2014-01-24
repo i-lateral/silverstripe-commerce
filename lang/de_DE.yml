@@ -72,3 +72,11 @@ de_DE:
     EMAIL: 'Email'
     CHECKORDER: 'Bitte prüfen Sie Ihre Erkennungsmarken sorgfältig, sobald Sie sie erhalten, und kontaktieren Sie uns bei Problemen so schnell wie möglich'
     FINALTHANKS: 'Vielen Dank'
+  CommerceAccount:
+    # Sign in and Register
+    SIGNIN: 'Anmelden'
+    REGISTER: 'Registrieren'
+    ORDERHISTORY: 'Bestellverlauf'
+    OUTSTANDINGORDERS: 'Offene aufträge'
+    EDITDETAILS: 'Kontodetails bearbeiten'
+    NOORDERS: "Es liegen noch keine Bestellungen"

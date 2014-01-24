@@ -27,11 +27,12 @@ class Order extends DataObject {
         'DeliveryCountry'   => 'Varchar',
         'EmailDispatchSent' => 'Boolean',
         'GatewayData'       => 'Text',
-        'Status'            => "Enum('incomplete,failed,paid,processing,dispatched','incomplete')"
+        'Status'            => "Enum('incomplete,failed,canceled,paid,processing,dispatched','incomplete')"
     );
 
     private static $has_one = array(
-        'Postage' => 'PostageArea'
+        'Postage' => 'PostageArea',
+        "Customer"=> "Member"
     );
 
     private static $has_many = array(

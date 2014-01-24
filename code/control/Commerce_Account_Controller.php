@@ -12,11 +12,9 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
 
     private static $allowed_actions = array(
         "editdetails",
-        "editaddress",
-        "ordersoutstanding",
-        "ordershistory",
-        "EditDetailsForm",
-        "EditAddressForm"
+        "history",
+        "order",
+        "EditForm",
     );
 
     public function init() {
@@ -29,9 +27,55 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
         $this->member = Member::currentUser();
     }
 
+    /**
+     * Display the currently outstanding orders for the current user
+     *
+     */
     public function index() {
+        $orders = new PaginatedList($this->member->getHistoricOrders(), $this->request);
+        $content = new HTMLText();
+
+        if(!$orders->exists()) {
+            $message = '<p class="message message-info">';
+            $message .= _t("NOORDERS","There are currently no orders");
+            $message .= '</p>';
+
+            $content->setValue($message);
+        }
+
         $this->customise(array(
-            "Title" => $this->member->FirstName . " " . $this->member->Surname
+            "Title" => _t('CommerceAccount.OUTSTANDINGORDERS','Outstanding Orders'),
+            "Content" => $content,
+            "Orders" => $orders
+        ));
+
+        return $this->renderWith(array(
+            "Commerce_account",
+            "Commerce",
+            "Page"
+        ));
+    }
+
+    /**
+     * Display all outstanding orders for the current user
+     *
+     */
+    public function history() {
+        $orders = new PaginatedList($this->member->getHistoricOrders(), $this->request);
+        $content = new HTMLText();
+
+        if(!$orders->exists()) {
+            $message = '<p class="message message-info">';
+            $message .= _t("NOORDERS","There are currently no orders");
+            $message .= '</p>';
+
+            $content->setValue($message);
+        }
+
+        $this->customise(array(
+            "Title" => _t('CommerceAccount.ORDERHISTORY','Order History'),
+            "Content" => $content,
+            "Orders" => $orders
         ));
 
         return $this->renderWith(array(
@@ -42,30 +86,10 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
     }
 
     public function editdetails() {
-        return $this->renderWith(array(
-            "Commerce_account",
-            "Commerce",
-            "Page"
+        $this->customise(array(
+            "Title" => _t('CommerceAccount.EDITDETAILS','Edit account details')
         ));
-    }
 
-    public function editaddress() {
-        return $this->renderWith(array(
-            "Commerce_account",
-            "Commerce",
-            "Page"
-        ));
-    }
-
-    public function ordersoutstanding() {
-        return $this->renderWith(array(
-            "Commerce_account",
-            "Commerce",
-            "Page"
-        ));
-    }
-
-    public function ordershistory() {
         return $this->renderWith(array(
             "Commerce_account",
             "Commerce",
@@ -99,23 +123,21 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
 
         // Add account links
         $menu->add(new ArrayData(array(
-            "Title" => "Edit Account Details",
+            "ID"    => 0,
+            "Title" => _t('CommerceAccount.OUTSTANDINGORDERS',"Outstanding orders"),
+            "Link"  => $this->Link()
+        )));
+
+        $menu->add(new ArrayData(array(
+            "ID"    => 1,
+            "Title" => _t('CommerceAccount.ORDERHISTORY',"Order history"),
+            "Link"  => $this->Link("history")
+        )));
+
+        $menu->add(new ArrayData(array(
+            "ID"    => 2,
+            "Title" => _t('CommerceAccount.EDITDETAILS',"Edit account Details"),
             "Link"  => $this->Link("editdetails")
-        )));
-
-        $menu->add(new ArrayData(array(
-            "Title" => "Edit Billing Details",
-            "Link"  => $this->Link("editaddress")
-        )));
-
-        $menu->add(new ArrayData(array(
-            "Title" => "Outstanding Orders",
-            "Link"  => $this->Link("ordersoutstanding")
-        )));
-
-        $menu->add(new ArrayData(array(
-            "Title" => "Order History",
-            "Link"  => $this->Link("ordershistory")
         )));
 
         $this->extend("updateAccountMenu", $menu);

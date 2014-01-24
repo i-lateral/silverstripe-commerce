@@ -72,3 +72,12 @@ en_GB:
     EMAIL: 'Email'
     CHECKORDER: 'Please check your order carefully when it arrives and contact us as soon as possible if there are any problems'
     FINALTHANKS: 'Many thanks'
+  CommerceAccount:
+    # Sign in and Register
+    SIGNIN: 'Sign in'
+    REGISTER: 'Register'
+    ORDERHISTORY: 'Order History'
+    OUTSTANDINGORDERS: 'Outstanding Orders'
+    EDITDETAILS: 'Edit account details'
+    NOORDERS: "There are currently no orders"
+

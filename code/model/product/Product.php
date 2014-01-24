@@ -14,12 +14,12 @@ class Product extends DataObject {
     );
 
     private static $has_many = array(
-        'Attributes'        => 'ProductAttribute',
-        'Customisations'    => 'ProductCustomisation'
+        'Attributes'    => 'ProductAttribute',
+        'Customisations'=> 'ProductCustomisation'
     );
 
     private static $many_many = array(
-        'Images' => 'Image'
+        'Images'        => 'Image'
     );
 
     private static $many_many_extraFields = array(
