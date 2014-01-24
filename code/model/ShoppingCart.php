@@ -16,8 +16,11 @@ class ShoppingCart extends ViewableData {
 
     protected $items;
 
-    public function __construct(ArrayList $items) {
-        $this->items = (Session::get('commerce-shoppingcart')) ? Session::get('commerce-shoppingcart') : new ArrayList();
+    public function __construct() {
+        if(Session::get('commerce.shoppingcart'))
+            $this->items = Session::get('commerce.shoppingcart');
+        else
+            $this->items = new ArrayList();
     }
 
     /**
@@ -162,8 +165,8 @@ class ShoppingCart extends ViewableData {
      *
      */
     public function clear() {
-        Session::clear('commerce-shoppingcart');
-        unset($_SESSION['commerce-shoppingcart']);
+        Session::clear('commerce.shoppingcart');
+        unset($_SESSION['commerce.shoppingcart']);
     }
 
     /**
@@ -199,7 +202,7 @@ class ShoppingCart extends ViewableData {
      *
      */
     public function save() {
-        Session::set("commerce-shoppingcart",$this->items);
+        Session::set("commerce.shoppingcart",$this->items);
     }
 
 

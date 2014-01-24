@@ -39,8 +39,10 @@ class Ext_Commerce_Controller extends Extension {
      * @param Parent the ID of a parent cetegory
      * @return DataList
      */
-    public function getProductCategories($ParentID = 0) {
-        return ProductCategory::get()->where("ParentID = {$ParentID}")->sort('Sort','DESC');
+    public function getCommerceCategories($ParentID = 0) {
+        return ProductCategory::get()
+            ->filter("ParentID",$ParentID)
+            ->sort('Sort','DESC');
     }
 
     /**
@@ -48,7 +50,7 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @param ParentCategory the ID of
      */
-    public function getProducts($ParentCategory = null) {
+    public function getCommerceProducts($ParentCategory = null) {
         $products = Product::get();
 
         if(isset($ParentCategory) && is_int($ParentCategory))
@@ -62,28 +64,48 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @return HTML
      */
-    public function getProductCategoryNav($ParentID = 0) {
+    public function getCommerceCategoryNav($ParentID = 0) {
         $vars = array(
-            'ProductCategories' => $this->owner->getProductCategories($ParentID)
+            'ProductCategories' => $this->owner->getCommerceCategories($ParentID)
         );
 
-        return $this->owner->renderWith('ProductCategoryNav_List',$vars);
+        return $this->owner->renderWith('Commerce_CategoryNav',$vars);
     }
+
 
     /**
      * Return a URL to link to this controller
      *
      * @return string URL to cart controller
      */
-    public function getShoppingCartLink(){
-        return BASE_URL . '/' . ShoppingCart_Controller::$url_slug;
+    public function getCommerceCartLink(){
+        return Controller::join_links(
+            BASE_URL,
+            ShoppingCart_Controller::$url_slug
+        );
     }
+
+
+    /**
+     * Return a rendered button for the shopping cart
+     *
+     * @return string Rendered HTML of cart button
+     */
+    public function getCommerceCartButton(){
+        $vars = array(
+            'Link'  => $this->owner->getCommerceCartLink(),
+            'Cart' => $this->owner->getCommerceCart()
+        );
+
+        return $this->owner->renderWith('Commerce_CartButton',$vars);
+    }
+
 
     /**
      * Return a list of all items in the shopping cart
      *
      */
-    public function getShoppingCart() {
+    public function getCommerceCart() {
         return ShoppingCart::get();
     }
 
@@ -91,58 +113,7 @@ class Ext_Commerce_Controller extends Extension {
      * Checks to see if the shopping cart functionality is enabled
      *
      */
-    public function ShoppingCartEnabled() {
+    public function getCommerceCartEnabled() {
         return ShoppingCart::isEnabled();
-    }
-
-    /**
-     * Get the 'no-product' image from the DB
-     *
-     */
-    public function getCommerceNoImage() {
-        $config = SiteConfig::current_site_config();
-        if($config->NoProductImageID) // If image attached via the CMS
-            return $config->NoProductImage();
-        elseif($image = Image::get()->filter('Name','no-image.png')->first()) // Else see if image exists in database
-            return $image;
-        else
-            return false;
-    }
-
-    /**
-     * Determin if you should show the Subsites Menu
-     *
-     * @return boolean
-     */
-    public function ShowSitesMenu() {
-        $sites_num = $this->owner->getTotalSites();
-
-        if($sites_num > 1)
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * Get the total number of Subsites and return as an int
-     *
-     * @return int Total number of sites
-     */
-    public function getTotalSites() {
-        $sites = DataObject::get('Subsite');
-
-        if($sites->exists())
-            return $sites->Count();
-        else
-            return 0;
-    }
-
-    /**
-     * Get a list of all subsites and return as a DataObjectSet
-     *
-     * @return DataObjectSet of all Subsites
-     */
-    public function getAllSites() {
-        return (DataObject::get('Subsite')) ? DataObject::get('Subsite') : false;
     }
 }
