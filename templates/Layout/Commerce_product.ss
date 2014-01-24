@@ -5,47 +5,57 @@
 
         <div class="units-row">
             <div class="unit-50 commerce-product-images">
-                <div class="firstimage">
-                    <% if $Images %>
-                        <a href="$Images.First.SetRatioSize(900,550).Link">$Images.First.PaddedImage(400,400)</a>
-                    <% else_if $Category.Thumbnail %>
-                        $Category.Thumbnail.PaddedImage(400,400)
-                    <% else %>
-                        <div class="commerce-noimage">$CommerceNoImage.PaddedImage(400,400)</div>
+                <a href="$Images.First.SetRatioSize(900,550).Link">
+                    $Images.First.PaddedImage(550,550)
+                </a>
+
+                <div class="units-row-end">
+                    <% if $Images.Count > 1 %>
+                        <div class="thumbs">
+                            <% loop $Images %>
+                                <% if not $First %>
+                                    <a href="$SetRatioSize(900,550).Link">
+                                        $PaddedImage(75,75)
+                                    </a>
+                                <% end_if %>
+                            <% end_loop %>
+                        </div>
                     <% end_if %>
                 </div>
-
-                <% if $HasMultipleImages %>
-                    <div class="thumbs">
-                        <% loop $Images %>
-                            <% if not $First %><a href="$SetRatioSize(900,550).Link">$PaddedImage(75,75)</a><% end_if %>
-                        <% end_loop %>
-                    </div>
-                <% end_if %>
             </div>
 
             <div class="unit-50 commerce-product-summary">
-                <p class="price">
-                    <span class="label"><% _t('Commerce.PRICE','Price') %>:</span>
-                    <span class="currency">{$SiteConfig.Currency.HTMLNotation.RAW}</span>
-                    <span class="value">{$Price}</span>
+                <p>
+                    <span class="price label big label-green">
+                        <span class="title"><% _t('Commerce.PRICE','Price') %>:</span>
+                        <span class="value">
+                            {$SiteConfig.Currency.HTMLNotation.RAW}
+                            {$Price}
+                        </span>
+                    </span>
+
+                    <% if $PackSize %>
+                        <span class="packsize label big">
+                            <span class="title bold"><% _t('Commerce.PACKSIZE','Pack Size') %>:</span>
+                            <span class="value">{$PackSize}</span>
+                        </span>
+                    <% end_if %>
+
+                    <% if $Weight %>
+                        <span class="weight label big">
+                            <span class="title bold"><% _t('Commerce.WEIGHT','Weight') %>:</span>
+                            <span class="value">{$Weight}{$SiteConfig.Weight.Unit}</span>
+                        </span>
+                    <% end_if %>
                 </p>
-
-                <% if $PackSize %><p class="packsize">
-                    <span class="label"><% _t('Commerce.PACKSIZE','Pack Size') %>:</span>
-                    <span class="value">{$PackSize}</span>
-                </p><% end_if %>
-
-                <% if $Weight %><p class="weight">
-                    <span class="label"><% _t('Commerce.WEIGHT','Weight') %>:</span>
-                    <span class="value">{$Weight}</span>
-                </p><% end_if %>
 
                 <% if $Description %>
                     <div class="description">
                         <p>
                             $Description.Summary(50)
-                            <a href="#commerce-product-description" title="<% _t('Commerce.READMORE','Read More') %>: {$Title}"><% _t('Commerce.READMORE','Read More') %></a>
+                            <a href="{$Top.Link()}#commerce-product-description" title="<% _t('Commerce.READMORE','Read More') %>: {$Title}">
+                                <% _t('Commerce.READMORE','Read More') %>
+                            </a>
                         </p>
                     </div>
                 <% end_if %>
@@ -66,7 +76,7 @@
                 <% end_if %>
 
                 <% if $Attributes %>
-                    <div class="attributes">
+                    <div id="commerce-product-attributes" class="attributes">
                         <h2><% _t('Commerce.ATTRIBUTES','Attributes') %></h2>
                         <ul>
                             <% loop $Attributes %><li class="feature">
