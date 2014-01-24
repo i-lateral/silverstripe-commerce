@@ -86,8 +86,8 @@ class ProductCustomisation extends DataObject {
             switch($this->DisplayAs) {
                 case 'Dropdown':
                     $field = DropdownField::create($name, $title, $options, $default)
-                                ->setEmptyString(_t('Commerce.PLEASESELECT','Please Select')
-                    );
+                                ->setEmptyString(_t('Commerce.PLEASESELECT','Please Select'))
+                                ->setAttribute("class", "dropdown btn");
                     break;
                 case 'Radio':
                     $field = OptionSetField::create($name, $title, $options, $default);
