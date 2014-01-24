@@ -1,1 +1,0 @@
-<a href="$CartLink"><% _t('Commerce.VIEWCART','View Cart') %>({$CartItemsTotal})</a>
