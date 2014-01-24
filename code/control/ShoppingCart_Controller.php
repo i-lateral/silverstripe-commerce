@@ -4,10 +4,8 @@
  *
  * @author morven
  */
-class ShoppingCart_Controller extends Page_Controller {
-    public static $url_segment = 'cart';
-
-    public static $url_slug = 'cart';
+class ShoppingCart_Controller extends Commerce_Controller {
+    public static $url_segment = 'commerce/cart';
 
     private static $allowed_actions = array(
         'add',
@@ -28,16 +26,18 @@ class ShoppingCart_Controller extends Page_Controller {
     public function index() {
         $cart_copy = (SiteConfig::current_site_config()->CartCopy) ? SiteConfig::current_site_config()->CartCopy : '';
 
-        $vars = array(
-            'Title' => $this->getTitle(),
-            'Content' => $cart_copy
-        );
+        $this->customise(array(
+            'ClassName' => "ShoppingCart",
+            'Title'     => _t('Commerce.CARTNAME', 'Shopping Cart'),
+            'MetaTitle' => _t('Commerce.CARTNAME', 'Shopping Cart'),
+            'Content'   => $cart_copy
+        ));
 
-        return $this->renderWith(array('ShoppingCart','Page'), $vars);
-    }
-
-    public function Link($action = null) {
-        return Controller::join_links(Director::baseURL(), self::$url_slug);
+        return $this->renderWith(array(
+            'Commerce_shoppingcart',
+            'Commerce',
+            'Page'
+        ));
     }
 
     /**
@@ -58,20 +58,8 @@ class ShoppingCart_Controller extends Page_Controller {
     }
 
     public function CartForm() {
-        return CartForm::create($this, 'CartForm')
+        return Commerce_ShoppingCartForm::create($this, 'CartForm')
             ->addExtraClass('forms')
             ->addExtraClass('commerce-cart-form');
-    }
-
-    public function getTitle() {
-        return _t('Commerce.CARTNAME', 'Shopping Cart');
-    }
-
-    public function getMetaTitle() {
-        return _t('Commerce.CARTNAME', 'Shopping Cart');
-    }
-
-    public function getClassName() {
-        return "CartController";
     }
 }

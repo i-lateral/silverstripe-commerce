@@ -7,8 +7,8 @@
  * @package commerce
  */
 
-class Payment_Controller extends Page_Controller {
-    public static $url_segment = "payment";
+class Payment_Controller extends Commerce_Controller {
+    public static $url_segment = "commerce/payment";
 
     private static $allowed_actions = array(
         'index',

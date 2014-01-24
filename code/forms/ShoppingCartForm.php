@@ -4,10 +4,10 @@
  *
  * @author morven
  */
-class CartForm extends Form {
+class Commerce_ShoppingCartForm extends Form {
     protected $cart;
 
-    public function __construct($controller, $name) {
+    public function __construct($controller, $name = "Commerce_ShoppingCartForm") {
         // Set shopping cart
         $this->cart = ShoppingCart::get();
 
@@ -36,7 +36,9 @@ class CartForm extends Form {
             // Postage
             HeaderField::create('PostageHeading', _t('Commerce.POSTAGE', 'Postage'), 2),
             DropdownField::create('Postage', _t('Commerce.CARTLOCATION', 'Please choose location to post to'), $postage_map)
-                ->addExtraClass('btn'),
+                ->addExtraClass('btn')
+                ->setValue($postage_value)
+                ->setEmptyString(_t('Commerce.PLEASESELECT','Please Select')),
 
             // Payment Gateways
             HeaderField::create('PaymentHeading', _t('Commerce.PAYMENT', 'Payment'), 2),
@@ -66,11 +68,6 @@ class CartForm extends Form {
 
         parent::__construct($controller, $name, $fields, $actions, $validator);
 
-        // Fix to get corect postage location to load from session
-        $fields->dataFieldByName('Postage')
-            ->setValue($postage_value)
-            ->setEmptyString(_t('Commerce.PLEASESELECT','Please Select'));
-
         // If postage is in session, overwrite default error message
         if($postage_value) $fields->dataFieldByName('Postage')->setError(null,null);
     }
@@ -93,10 +90,6 @@ class CartForm extends Form {
      */
     public function getCurrencySymbol() {
         return (SiteConfig::current_site_config()->Currency()) ? SiteConfig::current_site_config()->Currency()->HTMLNotation : false;
-    }
-
-    public function Link($action = null) {
-        return Controller::join_links(Director::baseURL(), ShoppingCart_Controller::$url_slug);
     }
 
     /**
@@ -128,48 +121,6 @@ class CartForm extends Form {
         // If set, update Postage
         if($data['Postage'])
             Session::set('PostageID', $data['Postage']);
-    }
-
-    /**
-     * Action that will update cart
-     *
-     * @param type $data
-     * @param type $form
-     */
-    public function doUpdate($data, $form) {
-        $this->update_cart($data);
-
-        $this->controller->redirectBack();
-    }
-
-    /**
-     * Action that will update cart and move to checkout
-     *
-     * @param type $data
-     * @param type $form
-     */
-    public function doCheckout($data, $form) {
-        $this->update_cart($data);
-
-        Session::set('PaymentMethod', $data['PaymentMethod']);
-
-        $this->controller->redirect(BASE_URL . '/' . Checkout_Controller::$url_segment);
-    }
-
-    /**
-     * Action that will clear shopping cart and associated sessions
-     *
-     */
-    public function doEmpty() {
-        $this->cart->clear();
-
-        Session::clear('PostageID');
-        unset($_SESSION['PostageID']);
-
-        Session::clear('PaymentMethod');
-        unset($_SESSION['PaymentMethod']);
-
-        return $this->controller->redirectBack();
     }
 
     public function getItems() {
@@ -209,7 +160,6 @@ class CartForm extends Form {
     public function getCartTotal() {
         $total = $this->cart->TotalPrice();
 
-
         if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0)
             $total += PostageArea::get()->byID(Session::get('PostageID'))->Cost;
 
@@ -218,9 +168,58 @@ class CartForm extends Form {
     }
 
     public function getPostageCost() {
-        if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0)
-            return money_format('%i',DataObject::get_by_id('PostageArea', Session::get('PostageID'))->Cost);
-        else
+        if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0) {
+            return money_format(
+                '%i',
+                DataObject::get_by_id('PostageArea',
+                Session::get('PostageID'))->Cost
+            );
+        } else
             return false;
+    }
+
+    /**
+     * Action that will update cart
+     *
+     * @param type $data
+     * @param type $form
+     */
+    public function doUpdate($data) {
+        $this->update_cart($data);
+
+        $this->controller->redirectBack();
+    }
+
+    /**
+     * Action that will update cart and move to checkout
+     *
+     * @param type $data
+     * @param type $form
+     */
+    public function doCheckout($data) {
+        $this->update_cart($data);
+
+        Session::set('PaymentMethod', $data['PaymentMethod']);
+
+        $this->controller->redirect(Controller::join_links(
+            BASE_URL,
+            Checkout_Controller::$url_segment
+        ));
+    }
+
+    /**
+     * Action that will clear shopping cart and associated sessions
+     *
+     */
+    public function doEmpty() {
+        $this->cart->clear();
+
+        Session::clear('PostageID');
+        unset($_SESSION['PostageID']);
+
+        Session::clear('PaymentMethod');
+        unset($_SESSION['PaymentMethod']);
+
+        return $this->controller->redirectBack();
     }
 }

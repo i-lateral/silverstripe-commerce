@@ -4,9 +4,10 @@ After: framework/routes#rootroutes
 ---
 Director:
   rules:
-    'cart/$Action/$ID/$Quantity': 'ShoppingCart_Controller'
-    'checkout/$Action/$ID': 'Checkout_Controller'
-    'payment/$Action/$ID': 'Payment_Controller'
+    'commerce/cart//$Action/$ID/$Quantity': 'ShoppingCart_Controller'
+    'commerce/checkout//$Action/$ID': 'Checkout_Controller'
+    'commerce/payment//$Action/$ID': 'Payment_Controller'
+    'commerce/account//$Action/$ID': 'Commerce_Account_Controller'
 ---
 Name: modelascontrollerroutes
 After: cms/routes#modelascontrollerroutes

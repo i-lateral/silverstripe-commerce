@@ -4,8 +4,8 @@
  *
  * @author morven
  */
-class CheckoutForm extends Form {
-    public function __construct($controller, $name) {
+class Commerce_CheckoutForm extends Form {
+    public function __construct($controller, $name = "Commerce_CheckoutForm") {
         // If cart is empty, re-direct to homepage
         if(!ShoppingCart::get()->Items())
             $this->redirect(BASE_URL);
@@ -50,37 +50,47 @@ class CheckoutForm extends Form {
         ');
 
         $billing_fields = FieldGroup::create(
-                HeaderField::create('BillingHeader', _t('Commerce.BILLINGDETAILS','Billing Details'), 2),
-                TextField::create('BillingFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
-                TextField::create('BillingSurname',_t('Commerce.SURNAME','Surname') . '*'),
-                EmailField::create('BillingEmail',_t('Commerce.EMAIL','Email') . '*'),
-                TextField::create('BillingPhone',_t('Commerce.PHONE','Phone Number')),
-                TextField::create('BillingAddress1',_t('Commerce.ADDRESS1','Address Line 1') . '*'),
-                TextField::create('BillingAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
-                TextField::create('BillingCity',_t('Commerce.CITY','City') . '*'),
-                TextField::create('BillingPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
-                CountryDropdownField::create('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')->addExtraClass('btn')
-            )->addExtraClass('billing_fields');
+            HeaderField::create('BillingHeader', _t('Commerce.BILLINGDETAILS','Billing Details'), 2),
+            TextField::create('BillingFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
+            TextField::create('BillingSurname',_t('Commerce.SURNAME','Surname') . '*'),
+            EmailField::create('BillingEmail',_t('Commerce.EMAIL','Email') . '*'),
+            TextField::create('BillingPhone',_t('Commerce.PHONE','Phone Number')),
+            TextField::create('BillingAddress1',_t('Commerce.ADDRESS1','Address Line 1') . '*'),
+            TextField::create('BillingAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
+            TextField::create('BillingCity',_t('Commerce.CITY','City') . '*'),
+            TextField::create('BillingPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
+            CountryDropdownField::create('BillingCountry',_t('Commerce.COUNTRY','Country') . '*',null,'GB')->addExtraClass('btn')
+        )->addExtraClass('billing_fields')
+        ->addExtraClass('unit-50');
 
         $delivery_fields = FieldGroup::create(
-                HeaderField::create('DeliveryHeader', _t('Commerce.DELIVERYDETAILS','Delivery Details') . '(' . _t('Commerce.IFDIFFERENT','if different') . ')', 2),
-                TextField::create('DeliveryFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)')),
-                TextField::create('DeliverySurname',_t('Commerce.SURNAME','Surname')),
-                TextField::create('DeliveryAddress1',_t('Commerce.ADDRESS1','Address Line 1')),
-                TextField::create('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
-                TextField::create('DeliveryCity',_t('Commerce.CITY','City')),
-                TextField::create('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code')),
-                CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')->addExtraClass('btn')
-            )
-            ->addExtraClass('delivery_fields');
+            HeaderField::create('DeliveryHeader', _t('Commerce.DELIVERYDETAILS','Delivery Details') . '(' . _t('Commerce.IFDIFFERENT','if different') . ')', 2),
+            TextField::create('DeliveryFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)')),
+            TextField::create('DeliverySurname',_t('Commerce.SURNAME','Surname')),
+            TextField::create('DeliveryAddress1',_t('Commerce.ADDRESS1','Address Line 1')),
+            TextField::create('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
+            TextField::create('DeliveryCity',_t('Commerce.CITY','City')),
+            TextField::create('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code')),
+            CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')->addExtraClass('btn')
+        )
+        ->addExtraClass('delivery_fields')
+        ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
             $billing_fields,
             $delivery_fields
         );
 
+        $cart_url = Controller::join_links(
+            BASE_URL,
+            ShoppingCart_Controller::$url_segment
+        );
+
         $actions = FieldList::create(
-            LiteralField::create('BackButton','<a href="' . BASE_URL . '/' . ShoppingCart_Controller::$url_segment . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            LiteralField::create(
+                'BackButton',
+                '<a href="' . $cart_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'
+            ),
             FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
                 ->addExtraClass('btn')
                 ->addExtraClass('commerce-action-next')

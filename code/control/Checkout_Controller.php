@@ -1,30 +1,36 @@
 <?php
 
-
-class Checkout_Controller extends Page_Controller {
-    public static $url_segment = "checkout";
-
-    private static $allowed_actions = array(
-        'CheckoutForm'
-    );
+/**
+ * Controller used to render the checkout process
+ *
+ */
+class Checkout_Controller extends Commerce_Controller {
+    public static $url_segment = "commerce/checkout";
 
     public function init() {
         parent::init();
 
         // If no shopping cart doesn't exist, redirect to base
         if(!ShoppingCart::get()->Items()->exists())
-            return $this->redirect(Director::BaseURL());
+            return $this->redirect(BASE_URL);
     }
 
     public function index() {
-        return array(
+        $this->customise(array(
             'ClassName' => "Checkout",
             'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
             'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
-        );
+        ));
+
+        return $this->renderWith(array(
+            'Commerce_checkout',
+            'Commerce',
+            'Page'
+        ));
     }
 
-    public function CheckoutForm() {
-        return CheckoutForm::create($this, 'CheckoutForm')->addExtraClass('forms')->addExtraClass('columnar');
+    public function Form() {
+        return Commerce_CheckoutForm::create($this, 'Form')
+            ->addExtraClass('forms');
     }
 }

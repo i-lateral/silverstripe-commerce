@@ -81,7 +81,7 @@ class Ext_Commerce_Controller extends Extension {
     public function getCommerceCartLink(){
         return Controller::join_links(
             BASE_URL,
-            ShoppingCart_Controller::$url_slug
+            ShoppingCart_Controller::$url_segment
         );
     }
 
