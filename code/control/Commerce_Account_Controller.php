@@ -4,7 +4,7 @@
  * Controller that is used to allow commerce users to manage their accounts
  *
  */
-class Commerce_Account_Controller extends Commerce_Controller  implements PermissionProvider {
+class Commerce_Account_Controller extends Commerce_Controller implements PermissionProvider {
 
     protected $member;
 
@@ -32,8 +32,10 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
      *
      */
     public function index() {
-        $orders = new PaginatedList($this->member->getHistoricOrders(), $this->request);
+        $orders = new PaginatedList($this->member->getOutstandingOrders(), $this->request);
         $content = new HTMLText();
+
+        $this->extend("updateOutstandingOrders", $orders);
 
         if(!$orders->exists()) {
             $message = '<p class="message message-info">';
@@ -64,6 +66,8 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
         $orders = new PaginatedList($this->member->getHistoricOrders(), $this->request);
         $content = new HTMLText();
 
+        $this->extend("updateHistoricOrders", $orders);
+
         if(!$orders->exists()) {
             $message = '<p class="message message-info">';
             $message .= _t("NOORDERS","There are currently no orders");
@@ -80,6 +84,42 @@ class Commerce_Account_Controller extends Commerce_Controller  implements Permis
 
         return $this->renderWith(array(
             "Commerce_account",
+            "Commerce",
+            "Page"
+        ));
+    }
+
+    /**
+     * Display the currently selected order from the URL
+     *
+     */
+    public function order() {
+        $orderID = $this->request->param("ID");
+        $order = Order::get()->byID($orderID);
+        $content = new HTMLText();
+
+        $this->extend("updateOrderInfo", $order);
+
+        if(!$order || ($order && !$order->canView())) {
+            $message = '<p class="message message-error">';
+            $message .= _t("NOTFOUND","Order not found");
+            $message .= '</p>';
+
+            $title = _t("NOTFOUND","Order not found");
+            $content->setValue($message);
+            $order = null;
+        } else {
+            $title =  _t('Commerce.ORDER','Order') . ': ' . $order->OrderNumber;
+        }
+
+        $this->customise(array(
+            "Title" => $title,
+            "Content" => $content,
+            "Order" => $order
+        ));
+
+        return $this->renderWith(array(
+            "Commerce_order",
             "Commerce",
             "Page"
         ));

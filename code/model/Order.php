@@ -14,9 +14,10 @@
  * @author morven
  */
 class Order extends DataObject implements PermissionProvider {
+
     private static $db = array(
         'OrderNumber'       => 'Varchar',
-        'PaymentID'         => 'Varchar(99)', // ID number returned by the payment gateway (if any)
+        'Status'            => "Enum('incomplete,failed,canceled,paid,processing,dispatched','incomplete')",
         'BillingFirstnames' => 'Varchar',
         'BillingSurname'    => 'Varchar',
         'BillingAddress1'   => 'Varchar',
@@ -35,11 +36,13 @@ class Order extends DataObject implements PermissionProvider {
         'DeliveryCountry'   => 'Varchar',
         'EmailDispatchSent' => 'Boolean',
         'GatewayData'       => 'Text',
-        'Status'            => "Enum('incomplete,failed,canceled,paid,processing,dispatched','incomplete')"
+        'PostageType'       => 'Varchar',
+        'PostageCost'       => 'Currency',
+        'PaymentID'         => 'Varchar(99)', // ID number returned by the payment gateway (if any)
     );
 
     private static $has_one = array(
-        'Postage'           => 'PostageArea',
+        "Postage"           => "PostageArea",
         "Customer"          => "Member"
     );
 
@@ -51,9 +54,8 @@ class Order extends DataObject implements PermissionProvider {
     private static $casting = array(
         'BillingAddress'    => 'Text',
         'DeliveryAddress'   => 'Text',
-        'PostageCost'       => 'Decimal',
         'SubTotal'          => 'Currency',
-        'OrderTotal'        => 'Currency',
+        'Total'             => 'Currency',
         'ItemSummary'       => 'HTMLText',
         'TranslatedStatus'  => 'Varchar'
     );
@@ -184,10 +186,6 @@ class Order extends DataObject implements PermissionProvider {
         return $fields;
     }
 
-    public function getPostageCost() {
-        return $this->Postage()->Cost;
-    }
-
     public function getBillingAddress() {
         $address = ($this->BillingAddress1) ? $this->BillingAddress1 . ",\n" : '';
         $address .= ($this->BillingAddress2) ? $this->BillingAddress2 . ",\n" : '';
@@ -208,14 +206,36 @@ class Order extends DataObject implements PermissionProvider {
         return $address;
     }
 
-    public function getOrderTotal() {
-        $total = $this->SubTotal;
+    /**
+     * Total values of items in this order
+     *
+     * @return Currency
+     */
+    public function getSubTotal() {
+        $total = 0;
 
-        // Add postage
-        if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0)
-            $total += DataObject::get_by_id('PostageArea', Session::get('PostageID'))->Cost;
+        // Calculate total from items in the list
+        foreach($this->Items() as $item) {
+            $total += $item->getTotal();
+        }
 
-        return number_format($total,2);
+        $currency = new Currency();
+        $currency->setValue($total);
+
+        return $currency;
+    }
+
+    /**
+     * Total of order including postage
+     *
+     * @return Decimal
+     */
+    public function getTotal() {
+        $value = $this->SubTotal->Value + $this->PostageCost;
+        $currency = new Currency();
+        $currency->setValue($value);
+
+        return $currency;
     }
 
     public function getItemSummary() {
@@ -226,17 +246,6 @@ class Order extends DataObject implements PermissionProvider {
         }
 
         return $return;
-    }
-
-    public function getSubTotal() {
-        $total = 0;
-
-        // Calculate total from items in the list
-        foreach($this->Items() as $order_item) {
-            $total += $order_item->getTotal();
-        }
-
-        return $total;
     }
 
     public function getTranslatedStatus() {
@@ -336,7 +345,6 @@ class Order extends DataObject implements PermissionProvider {
             $item->delete();
         }
     }
-
 
     public function providePermissions() {
         return array(

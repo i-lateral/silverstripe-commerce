@@ -7,6 +7,10 @@
 class Checkout_Controller extends Commerce_Controller {
     public static $url_segment = "commerce/checkout";
 
+    private static $allowed_actions = array(
+        "Form"
+    );
+
     public function init() {
         parent::init();
 

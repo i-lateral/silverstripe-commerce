@@ -30,7 +30,7 @@ class SagePayFormsHandler extends CommercePaymentHandler {
         );
 
         $strPost = "VendorTxCode=" . $order->OrderNumber;
-        $strPost .= "&Amount=" . $order->getOrderTotal();
+        $strPost .= "&Amount=" . $order->Total;
         $strPost .= "&Currency=" . $site->Currency()->GatewayCode;
         $strPost .= "&Description=" . $this->payment_gateway->GatewayMessage;
         $strPost .= "&SuccessURL=" . $callback_url;

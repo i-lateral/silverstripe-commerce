@@ -44,6 +44,20 @@ abstract class Commerce_Controller extends Controller {
     }
 
     /**
+     * Init actions that happen globally to all commerce interfaces.
+     *
+     * At the moment this is used to set config where database access is required
+     */
+    public function init() {
+        // Set the default currency symbol
+        if($siteconfig = SiteConfig::current_site_config()) {
+            Currency::config()->currency_symbol = $siteconfig->Currency()->HTMLNotation;
+        }
+
+        parent::init();
+    }
+
+    /**
      * Returns a fixed navigation menu of the given level.
      * @return SS_List
      */

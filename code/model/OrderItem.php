@@ -19,7 +19,8 @@ class OrderItem extends DataObject {
     );
 
     private static $casting = array(
-        'CustomDetails'    => 'HTMLText'
+        'CustomDetails' => 'HTMLText',
+        'MatchProduct'  => 'Product'
     );
 
     private static $summary_fields = array(
@@ -30,9 +31,28 @@ class OrderItem extends DataObject {
         'Total'
     );
 
+    /**
+     * Get the total cost of this item based on the quantity
+     *
+     * @return Currency
+     */
     public function getTotal() {
         return $this->Quantity * $this->Price;
     }
+
+    /**
+     * Find any items in the product catalogue with a matching SKU, good for
+     * adding "Order again" links in account panels or finding "Most ordered"
+     * etc.
+     *
+     * @return Product
+     */
+     public function getMatchProduct() {
+        if($this->SKU)
+            return Product::get()->filter("SKU",$this->SKU)->first();
+        else
+            return Product::create(); // Create an empry product to return
+     }
 
     /**
      * Unserialise the list of customisations and rendering into a basic HTML
