@@ -5,6 +5,7 @@
   * @package Commerce
   */
 class OrderAdmin extends ModelAdmin {
+
     private static $url_segment = 'orders';
     private static $menu_title = 'Orders';
     private static $menu_priority = 4;

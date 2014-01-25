@@ -3,9 +3,17 @@
  * Order objects track all the details of an order and if they were completed or
  * not.
  *
+ * Makes use of permissions provider to lock out users who have not got the
+ * relevent COMMERCE permissions for:
+ *   VIEW
+ *   EDIT
+ *   DELETE
+ *
+ * Any user can create an order (this allows us to support "guest" users).
+ *
  * @author morven
  */
-class Order extends DataObject {
+class Order extends DataObject implements PermissionProvider {
     private static $db = array(
         'OrderNumber'       => 'Varchar',
         'PaymentID'         => 'Varchar(99)', // ID number returned by the payment gateway (if any)
@@ -31,12 +39,12 @@ class Order extends DataObject {
     );
 
     private static $has_one = array(
-        'Postage' => 'PostageArea',
-        "Customer"=> "Member"
+        'Postage'           => 'PostageArea',
+        "Customer"          => "Member"
     );
 
     private static $has_many = array(
-        'Items' => 'OrderItem'
+        'Items'             => 'OrderItem'
     );
 
     // Cast method calls nicely
@@ -55,12 +63,12 @@ class Order extends DataObject {
     );
 
     private static $summary_fields = array(
-        "OrderNumber" => "Order Number",
+        "OrderNumber"       => "Order Number",
         "BillingFirstnames" => "First Name(s)",
-        "BillingSurname" => "Surname",
-        "BillingEmail" => "Email",
-        "Status" => "Status",
-        "Created" => "Created"
+        "BillingSurname"    => "Surname",
+        "BillingEmail"      => "Email",
+        "Status"            => "Status",
+        "Created"           => "Created"
     );
 
     private static $default_sort = "Created DESC";
@@ -329,15 +337,99 @@ class Order extends DataObject {
         }
     }
 
+
+    public function providePermissions() {
+        return array(
+            "COMMERCE_VIEW_ORDERS" => array(
+                'name' => 'View any order',
+                'help' => 'Allow user to view any commerce order',
+                'category' => 'Commerce',
+                'sort' => 99
+            ),
+            "COMMERCE_EDIT_ORDERS" => array(
+                'name' => 'Edit any order',
+                'help' => 'Allow user to edit any commerce order',
+                'category' => 'Commerce',
+                'sort' => 98
+            ),
+            "COMMERCE_DELETE_ORDERS" => array(
+                'name' => 'Delete any order',
+                'help' => 'Allow user to delete any commerce order',
+                'category' => 'Commerce',
+                'sort' => 97
+            ),
+        );
+    }
+
+    /**
+     * Anyone can create orders, even guest users
+     *
+     * @return Boolean
+     */
     public function canCreate($member = null) {
+        return true;
+    }
+
+    /**
+     * Only order creaters or users with VIEW admin rights can view an order
+     *
+     * @return Boolean
+     */
+    public function canView($member = null) {
+        if($member instanceof Member)
+            $memberID = $member->ID;
+        else if(is_numeric($member))
+            $memberID = $member;
+        else
+            $memberID = Member::currentUserID();
+
+        if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_VIEW_ORDERS")))
+            return true;
+        else if($memberID && $memberID == $this->CustomerID)
+            return true;
+
         return false;
     }
 
+    /**
+     * Only order creaters or users with EDIT admin rights can view an order
+     *
+     * @return Boolean
+     */
     public function canEdit($member = null) {
-        return true;
+        if($member instanceof Member)
+            $memberID = $member->ID;
+        else if(is_numeric($member))
+            $memberID = $member;
+        else
+            $memberID = Member::currentUserID();
+
+        if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_EDIT_ORDERS")))
+            return true;
+        else if($memberID && $memberID == $this->CustomerID)
+            return true;
+
+        return false;
     }
 
+    /**
+     * Only order creaters or users with DELETE admin rights can view an order
+     *
+     * @return Boolean
+     */
     public function canDelete($member = null) {
-        return true;
+        if($member instanceof Member)
+            $memberID = $member->ID;
+        else if(is_numeric($member))
+            $memberID = $member;
+        else
+            $memberID = Member::currentUserID();
+
+        if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_DELETE_ORDERS")))
+            return true;
+        else if($memberID && $memberID == $this->CustomerID)
+            return true;
+
+        return false;
     }
 }
