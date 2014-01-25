@@ -5,8 +5,10 @@ en_GB:
     DATE: 'Date'
     PRICE: 'Price'
     COST: 'Cost'
+    QTY: 'Qty'
     PACKSIZE: 'Pack Size'
     WEIGHT: 'Weight'
+    ITEM: 'Item'
     DESCRIPTION: 'Description'
     ATTRIBUTES: 'Attributes'
     READMORE: 'Read More'
@@ -14,6 +16,9 @@ en_GB:
     PLEASESELECT: 'Please Select'
     CHANGELOCATION: 'Change Location'
     CHANGELLANGUAGE: 'Change Language'
+    STATUS: 'Status'
+    REORDER: 'Reorder'
+    TOTAL: 'Total'
     # Order Status
     INCOMPLETE: 'Incomplete'
     FAILED: 'Failed'
@@ -82,3 +87,4 @@ en_GB:
     OUTSTANDINGORDERS: 'Outstanding Orders'
     EDITDETAILS: 'Edit account details'
     NOORDERS: "There are currently no orders"
+    NOTFOUND: "Order not found"

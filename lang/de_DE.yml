@@ -5,8 +5,10 @@ de_DE:
     DATE: 'Datum'
     PRICE: 'Preis'
     COST: 'Preis'
+    QTY: 'Anzahl'
     PACKSIZE: 'Gebindegröße'
     WEIGHT: 'Gewicht'
+    ITEM: 'Artikel'
     DESCRIPTION: 'Beschreibung'
     ATTRIBUTES: 'Eigenschaften'
     READMORE: 'Lesen Sie mehr'
@@ -14,6 +16,9 @@ de_DE:
     PLEASESELECT: 'Bitte auswählen'
     CHANGELOCATION: 'Region auswählen'
     CHANGELLANGUAGE: 'Sprache auswählen'
+    STATUS: 'Status'
+    REORDER: 'Nachbestellung'
+    TOTAL: 'Gesamt'
     # Order Status
     INCOMPLETE: 'Unfertig'
     FAILED: 'Gescheitert'
@@ -82,3 +87,4 @@ de_DE:
     OUTSTANDINGORDERS: 'Offene aufträge'
     EDITDETAILS: 'Kontodetails bearbeiten'
     NOORDERS: "Es liegen noch keine Bestellungen"
+    NOTFOUND: "Bestellen sie nicht gefunden"
