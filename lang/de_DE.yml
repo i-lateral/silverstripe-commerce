@@ -13,6 +13,7 @@ de_DE:
     ATTRIBUTES: 'Eigenschaften'
     READMORE: 'Lesen Sie mehr'
     BACK: 'Zurück'
+    CANCEL: 'Abbrechen'
     PLEASESELECT: 'Bitte auswählen'
     CHANGELOCATION: 'Region auswählen'
     CHANGELLANGUAGE: 'Sprache auswählen'
@@ -88,3 +89,6 @@ de_DE:
     EDITDETAILS: 'Kontodetails bearbeiten'
     NOORDERS: "Es liegen noch keine Bestellungen"
     NOTFOUND: "Bestellen sie nicht gefunden"
+    EMAIL: 'Email'
+    DETAILSUPDATED: 'Kontodaten aktualisiert'
+    CANNOTEDIT: 'Sie können dieses Konto nicht bearbeiten'

@@ -11,10 +11,12 @@ class Commerce_Account_Controller extends Commerce_Controller implements Permiss
     public static $url_segment = "commerce/account";
 
     private static $allowed_actions = array(
-        "editdetails",
+        "edit",
+        "changepassword",
         "history",
         "order",
-        "EditForm",
+        "EditAccountForm",
+        "ChangePasswordForm",
     );
 
     public function init() {
@@ -125,9 +127,12 @@ class Commerce_Account_Controller extends Commerce_Controller implements Permiss
         ));
     }
 
-    public function editdetails() {
+    public function edit() {
+        $member = Member::currentUser();
+
         $this->customise(array(
-            "Title" => _t('CommerceAccount.EDITDETAILS','Edit account details')
+            "Title" => _t('CommerceAccount.EDITDETAILS','Edit account details'),
+            "Form"  => $this->EditAccountForm()->loadDataFrom($member)
         ));
 
         return $this->renderWith(array(
@@ -137,7 +142,15 @@ class Commerce_Account_Controller extends Commerce_Controller implements Permiss
         ));
     }
 
-    public function EditDetailsForm() {
+    public function changepassword() {
+        // Set the back URL for this form
+        Session::set("BackURL",$this->Link("changepassword"));
+
+        $this->customise(array(
+            "Title" => _t('Security.CHANGEPASSWORDHEADER','Change your password'),
+            "Form"  => $this->ChangePasswordForm()
+        ));
+
         return $this->renderWith(array(
             "Commerce_account",
             "Commerce",
@@ -145,12 +158,47 @@ class Commerce_Account_Controller extends Commerce_Controller implements Permiss
         ));
     }
 
-    public function EditAddressForm() {
-        return $this->renderWith(array(
-            "Commerce_account",
-            "Commerce",
-            "Page"
-        ));
+    /**
+     * Factory for generating a profile form. The form can be expanded using an
+     * extension class and calling the updateEditProfileForm method.
+     *
+     * @return Form
+     */
+    public function EditAccountForm() {
+        $form = EditAccountForm::create($this, "EditAccountForm");
+
+        $this->extend("updateEditProfileForm", $form);
+
+        return $form;
+    }
+
+    /**
+     * Factory for generating a change password form. The form can be expanded
+     * using an extension class and calling the updateChangePasswordForm method.
+     *
+     * @return Form
+     */
+    public function ChangePasswordForm() {
+        $form = ChangePasswordForm::create($this,"ChangePasswordForm");
+
+        $form
+            ->Actions()
+            ->find("name","action_doChangePassword")
+            ->addExtraClass("btn")
+            ->addExtraClass("btn-green");
+
+        $cancel_btn = LiteralField::create(
+            "CancelLink",
+            '<a href="' . $this->Link() . '" class="btn btn-red">'. _t("Commerce.CANCEL", "Cancel") .'</a>'
+        );
+
+        $form
+            ->Actions()
+            ->insertBefore($cancel_btn,"action_doChangePassword");
+
+        $this->extend("updateChangePasswordForm", $form);
+
+        return $form;
     }
 
     /**
@@ -176,8 +224,14 @@ class Commerce_Account_Controller extends Commerce_Controller implements Permiss
 
         $menu->add(new ArrayData(array(
             "ID"    => 2,
-            "Title" => _t('CommerceAccount.EDITDETAILS',"Edit account Details"),
-            "Link"  => $this->Link("editdetails")
+            "Title" => _t('CommerceAccount.EDITDETAILS',"Edit account details"),
+            "Link"  => $this->Link("edit")
+        )));
+
+        $menu->add(new ArrayData(array(
+            "ID"    => 3,
+            "Title" => _t('CommerceAccount.CHANGEPASSWORD',"Change password"),
+            "Link"  => $this->Link("changepassword")
         )));
 
         $this->extend("updateAccountMenu", $menu);
