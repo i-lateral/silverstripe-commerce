@@ -17,7 +17,7 @@ class Commerce_ShoppingCartForm extends Form {
         // Deal with setting up postage areas
         if($postage_areas->exists()) {
             $postage_map = $postage_areas->map('ID','Location');
-            $postage_value = Session::get('PostageID');
+            $postage_value = Session::get('Commerce.PostageID');
         } else {
             $postage_map = array();
             $postage_value = 0;
@@ -72,13 +72,6 @@ class Commerce_ShoppingCartForm extends Form {
         if($postage_value) $fields->dataFieldByName('Postage')->setError(null,null);
     }
 
-    public function forTemplate() {
-        return $this->renderWith(array(
-            $this->class,
-            'Form'
-        ));
-    }
-
     public function getCart() {
         return $this->cart;
     }
@@ -89,7 +82,7 @@ class Commerce_ShoppingCartForm extends Form {
      * @return string
      */
     public function getCurrencySymbol() {
-        return (SiteConfig::current_site_config()->Currency()) ? SiteConfig::current_site_config()->Currency()->HTMLNotation : false;
+        return (SiteConfig::current_site_config()->Currency()) ? SiteConfig::current_site_config()->Currency()->HTMLNotation : "";
     }
 
     /**
@@ -120,7 +113,7 @@ class Commerce_ShoppingCartForm extends Form {
 
         // If set, update Postage
         if($data['Postage'])
-            Session::set('PostageID', $data['Postage']);
+            Session::set('Commerce.PostageID', $data['Postage']);
     }
 
     public function getItems() {
@@ -160,19 +153,19 @@ class Commerce_ShoppingCartForm extends Form {
     public function getCartTotal() {
         $total = $this->cart->TotalPrice();
 
-        if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0)
-            $total += PostageArea::get()->byID(Session::get('PostageID'))->Cost;
+        if(is_int((int)Session::get('Commerce.PostageID')) && (int)Session::get('Commerce.PostageID') > 0)
+            $total += PostageArea::get()->byID(Session::get('Commerce.PostageID'))->Cost;
 
         return money_format('%i',$total);
 
     }
 
     public function getPostageCost() {
-        if(is_int((int)Session::get('PostageID')) && (int)Session::get('PostageID') > 0) {
+        if(is_int((int)Session::get('Commerce.PostageID')) && (int)Session::get('Commerce.PostageID') > 0) {
             return money_format(
                 '%i',
                 DataObject::get_by_id('PostageArea',
-                Session::get('PostageID'))->Cost
+                Session::get('Commerce.PostageID'))->Cost
             );
         } else
             return false;
@@ -199,7 +192,7 @@ class Commerce_ShoppingCartForm extends Form {
     public function doCheckout($data) {
         $this->update_cart($data);
 
-        Session::set('PaymentMethod', $data['PaymentMethod']);
+        Session::set('Commerce.PaymentMethod', $data['PaymentMethod']);
 
         $this->controller->redirect(Controller::join_links(
             BASE_URL,
@@ -214,11 +207,11 @@ class Commerce_ShoppingCartForm extends Form {
     public function doEmpty() {
         $this->cart->clear();
 
-        Session::clear('PostageID');
-        unset($_SESSION['PostageID']);
+        Session::clear('Commerce.PostageID');
+        unset($_SESSION['Commerce.PostageID']);
 
-        Session::clear('PaymentMethod');
-        unset($_SESSION['PaymentMethod']);
+        Session::clear('Commerce.PaymentMethod');
+        unset($_SESSION['Commerce.PaymentMethod']);
 
         return $this->controller->redirectBack();
     }

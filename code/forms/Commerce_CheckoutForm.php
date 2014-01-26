@@ -92,33 +92,15 @@ class Commerce_CheckoutForm extends Form {
         parent::__construct($controller, $name, $fields, $actions, $validator);
     }
 
-    public function doPost($data) {
-        $order = $this->save_data_to_order();
-
-        Session::set('Order',$order);
-
-        $payment_url = Controller::join_links(
-            BASE_URL,
-            Commerce_Payment_Controller::$url_segment
-        );
-
-        return $this->controller->redirect($payment_url);
-    }
-
     /**
-     * Method that is responsible for saving subbmited checkout data into an
-     * order object
+     * Create a new order from the post data, save it to a session and forward
+     * payment getway controller.
      *
-     * @param type $form Form submitted
-     * @return Order Object
      */
-    private function save_data_to_order() {
+    public function doPost($data) {
         // Work out if an order prefix string has been set in siteconfig
         $config = SiteConfig::current_site_config();
         $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
-
-        // Check if delivery details are set. If not, set to billing details.
-        $data = $this->getData();
 
         $data['DeliveryFirstnames'] = ($data['DeliveryFirstnames']) ? $data['DeliveryFirstnames'] : $data['FirstName'];
         $data['DeliverySurname'] = ($data['DeliverySurname']) ? $data['DeliverySurname'] : $data['Surname'];
@@ -133,8 +115,13 @@ class Commerce_CheckoutForm extends Form {
         // Save form data into an order object
         $order = new Order();
         $this->saveInto($order);
-        $order->Status      = 'incomplete';
-        $order->PostageID   = Session::get('PostageID');
+        $order->Status = 'incomplete';
+
+        // Load postage data
+        $postage = PostageArea::get()->byID(Session::get('Commerce.PostageID'));
+        $order->PostageType = $postage->Location;
+        $order->PostageCost = $postage->Cost;
+
         $order->write(); // Write so we can setup our foreign keys
 
         // Loop through each session cart item and add that item to the order
@@ -149,6 +136,13 @@ class Commerce_CheckoutForm extends Form {
             $order->Items()->add($order_item);
         }
 
-        return $order;
+        Session::set('Commerce.Order',$order);
+
+        $payment_url = Controller::join_links(
+            BASE_URL,
+            Commerce_Payment_Controller::$url_segment
+        );
+
+        return $this->controller->redirect($payment_url);
     }
 }

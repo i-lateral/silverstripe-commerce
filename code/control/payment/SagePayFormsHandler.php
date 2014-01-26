@@ -24,24 +24,24 @@ class SagePayFormsHandler extends CommercePaymentHandler {
 
         $callback_url = Controller::join_links(
             Director::absoluteBaseURL(),
-            Payment_Controller::$url_segment,
+            Commerce_Payment_Controller::$url_segment,
             "callback",
             $this->payment_gateway->ID
         );
 
         $strPost = "VendorTxCode=" . $order->OrderNumber;
-        $strPost .= "&Amount=" . $order->Total;
+        $strPost .= "&Amount=" . $order->Total->Value;
         $strPost .= "&Currency=" . $site->Currency()->GatewayCode;
         $strPost .= "&Description=" . $this->payment_gateway->GatewayMessage;
         $strPost .= "&SuccessURL=" . $callback_url;
         $strPost .= "&FailureURL=" . $callback_url;
-        $strPost .= "&CustomerName=" . $order->BillingFirstnames . " " . $order->BillingSurname;
+        $strPost .= "&CustomerName=" . $order->FirstName . " " . $order->Surname;
 
         // Email settings:
         $strPost .= "&SendEMail=" . $this->payment_gateway->SendEmail;
 
         if($order->BillingEmail)
-            $strPost .= "&CustomerEMail=" . $order->BillingEmail;
+            $strPost .= "&CustomerEMail=" . $order->Email;
 
         if($this->payment_gateway->EmailRecipient)
             $strPost .= "&VendorEMail=" . $this->payment_gateway->EmailRecipient;
@@ -160,13 +160,13 @@ class SagePayFormsHandler extends CommercePaymentHandler {
     public function ProcessCallback($data = null, $success_data, $error_data) {
         $successs_url = Controller::join_links(
             Director::BaseURL(),
-            Payment_Controller::$url_segment,
+            Commerce_Payment_Controller::$url_segment,
             'complete'
         );
 
         $error_url = Controller::join_links(
             Director::BaseURL(),
-            Payment_Controller::$url_segment,
+            Commerce_Payment_Controller::$url_segment,
             'complete',
             'error'
         );

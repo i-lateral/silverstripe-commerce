@@ -16,18 +16,14 @@ class SagePayServerHandler extends CommercePaymentHandler {
         $order = Session::get('Order');
         $site = SiteConfig::current_site_config();
 
-        $error_url = Controller::join_links(
-            Director::absoluteBaseURL(),
-            Payment_Controller::$url_segment,
-            "callback"
-        );
-
         $callback_url = Controller::join_links(
             Director::absoluteBaseURL(),
-            Payment_Controller::$url_segment,
+            Commerce_Payment_Controller::$url_segment,
             "callback",
             $this->payment_gateway->ID
         );
+
+        Debug::show($callback_url);
 
         $payload_data = array();
 
@@ -37,27 +33,27 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
         // Order details
         $payload_data["VendorTxCode"] = $order->OrderNumber;
-        $payload_data["Amount"] = $order->getOrderTotal();
+        $payload_data["Amount"] = $order->Total->Value;
         $payload_data["Currency"] = $site->Currency()->GatewayCode;
         $payload_data["Description"] = $this->payment_gateway->GatewayMessage;
         $payload_data["NotificationURL"] = $callback_url;
         $payload_data["SuccessURL"] = $callback_url;
         $payload_data["FailureURL"] = $callback_url;
-        $payload_data["CustomerName"] = $order->BillingFirstnames . " " . $order->BillingSurname;
+        $payload_data["CustomerName"] = $order->FirstName . " " . $order->Surname;
         $payload_data["SendEMail"] = $this->payment_gateway->SendEmail;
-        $payload_data["CustomerEMail"] = $order->BillingEmail;
+        $payload_data["CustomerEMail"] = $order->Email;
         $payload_data["VendorEMail"] = $this->payment_gateway->EmailRecipient;
 
         // Billing details
-        $payload_data["BillingFirstnames"] = $order->BillingFirstnames;
-        $payload_data["BillingSurname"] = $order->BillingSurname;
-        $payload_data["BillingAddress1"] = $order->BillingAddress1;
-        $payload_data["BillingAddress2"] = $order->BillingAddress2;
-        $payload_data["BillingCity"] = $order->BillingCity;
-        $payload_data["BillingPostCode"] = $order->BillingPostCode;
-        $payload_data["BillingCountry"] = $order->BillingCountry;
-        $payload_data["BillingState"] = $order->BillingState;
-        $payload_data["BillingPhone"] = $order->BillingPhone;
+        $payload_data["BillingFirstnames"] = $order->FirstName;
+        $payload_data["BillingSurname"] = $order->Surname;
+        $payload_data["BillingAddress1"] = $order->Address1;
+        $payload_data["BillingAddress2"] = $order->Address2;
+        $payload_data["BillingCity"] = $order->City;
+        $payload_data["BillingPostCode"] = $order->PostCode;
+        $payload_data["BillingCountry"] = $order->Country;
+        $payload_data["BillingState"] = $order->State;
+        $payload_data["BillingPhone"] = $order->PhoneNumber;
 
         // Delivery details
         $payload_data["DeliveryFirstnames"] = $order->DeliveryFirstnames;
@@ -107,7 +103,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
         $socket = fsockopen("ssl://{$host}", $port, $errno, $errstr, 30);
 
         if(!$socket)
-            return $this->redirect($error_url);
+            return null;
 
         for($written = 0; $written < strlen($request); $written += $fwrite) {
             $fwrite = fwrite($socket, substr($request, $written));
@@ -128,9 +124,11 @@ class SagePayServerHandler extends CommercePaymentHandler {
             }
         }
 
+        Debug::show($response_data);
+
         // Check our data was recieved ok
         if(strpos($response_data['Status'],'OK') === false) {
-            return $this->redirect($error_url);
+            return array();
         } else {
             $order->PaymentID = $response_data['VPSTxId'];
             Session::set('Order',$order);
@@ -159,14 +157,14 @@ class SagePayServerHandler extends CommercePaymentHandler {
         $vars = $error_data;
 
         $success_url = Controller::join_links(
-            Director::absoluteBaseURL(),
-            Payment_Controller::$url_segment,
+            BASE_URL,
+            Commerce_Payment_Controller::$url_segment,
             'complete'
         );
 
         $error_url = Controller::join_links(
-            Director::absoluteBaseURL(),
-            Payment_Controller::$url_segment,
+            BASE_URL,
+            Commerce_Payment_Controller::$url_segment,
             'complete',
             'error'
         );

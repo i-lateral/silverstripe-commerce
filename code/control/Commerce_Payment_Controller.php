@@ -7,7 +7,7 @@
  * @package commerce
  */
 
-class Payment_Controller extends Commerce_Controller {
+class Commerce_Payment_Controller extends Commerce_Controller {
     public static $url_segment = "commerce/payment";
 
     private static $allowed_actions = array(
@@ -76,22 +76,33 @@ class Payment_Controller extends Commerce_Controller {
         // Perform pre gateway action and return data (if any)
         $data = $this->payment_handler->onBeforeGateway();
 
-        // Setup gateway form
-        $form = $this->payment_handler->GatewayForm($data);
+        if(is_array($data)) {
 
-        // Finally, save order to database before transport
-        $order = $this->getOrder();
-        $order->write();
+            // Setup gateway form
+            $form = $this->payment_handler->GatewayForm($data);
 
-        $vars = array(
-            'ClassName'   => "Payment",
-            'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            'GatewayForm' => $form,
-            'Order'       => $order
-        );
+            // Finally, save order to database before transport
+            $order = $this->getOrder();
+            $order->write();
 
-        return $this->renderWith(array('Payment','Page'), $vars);
+            $vars = array(
+                'ClassName'   => "Payment",
+                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                'GatewayForm' => $form,
+                'Order'       => $order
+            );
+
+            return $this->renderWith(array('Payment','Page'), $vars);
+        } else {
+            $error_url = Controller::join_links(
+                Director::absoluteBaseURL(),
+                Commerce_Payment_Controller::$url_segment,
+                "callback"
+            );
+
+            return $this->redirect($error_url);
+         }
     }
 
     /**
