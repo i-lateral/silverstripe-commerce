@@ -18,15 +18,17 @@ class Order extends DataObject implements PermissionProvider {
     private static $db = array(
         'OrderNumber'       => 'Varchar',
         'Status'            => "Enum('incomplete,failed,canceled,paid,processing,dispatched','incomplete')",
-        'BillingFirstnames' => 'Varchar',
-        'BillingSurname'    => 'Varchar',
-        'BillingAddress1'   => 'Varchar',
-        'BillingAddress2'   => 'Varchar',
-        'BillingCity'       => 'Varchar',
-        'BillingPostCode'   => 'Varchar',
-        'BillingCountry'    => 'Varchar',
-        'BillingEmail'      => 'Varchar',
-        'BillingPhone'      => 'Varchar',
+        // Billing Details
+        'FirstName'         => 'Varchar',
+        'Surname'           => 'Varchar',
+        'Address1'          => 'Varchar',
+        'Address2'          => 'Varchar',
+        'City'              => 'Varchar',
+        'PostCode'          => 'Varchar',
+        'Country'           => 'Varchar',
+        'Email'             => 'Varchar',
+        'PhoneNumber'       => 'Varchar',
+        // Delivery Details
         'DeliveryFirstnames'=> 'Varchar',
         'DeliverySurname'   => 'Varchar',
         'DeliveryAddress1'  => 'Varchar',
@@ -34,15 +36,16 @@ class Order extends DataObject implements PermissionProvider {
         'DeliveryCity'      => 'Varchar',
         'DeliveryPostCode'  => 'Varchar',
         'DeliveryCountry'   => 'Varchar',
-        'EmailDispatchSent' => 'Boolean',
-        'GatewayData'       => 'Text',
+        // Postage and Email notification
         'PostageType'       => 'Varchar',
         'PostageCost'       => 'Currency',
-        'PaymentID'         => 'Varchar(99)', // ID number returned by the payment gateway (if any)
+        'EmailDispatchSent' => 'Boolean',
+        // Payment Gateway Info
+        'GatewayData'       => 'Text',
+        'PaymentID'         => 'Varchar(99)' // ID number returned by the payment gateway (if any)
     );
 
     private static $has_one = array(
-        "Postage"           => "PostageArea",
         "Customer"          => "Member"
     );
 
@@ -187,11 +190,11 @@ class Order extends DataObject implements PermissionProvider {
     }
 
     public function getBillingAddress() {
-        $address = ($this->BillingAddress1) ? $this->BillingAddress1 . ",\n" : '';
-        $address .= ($this->BillingAddress2) ? $this->BillingAddress2 . ",\n" : '';
-        $address .= ($this->BillingCity) ? $this->BillingCity . ",\n" : '';
-        $address .= ($this->BillingPostCode) ? $this->BillingPostCode . ",\n" : '';
-        $address .= ($this->BillingCountry) ? $this->BillingCountry : '';
+        $address = ($this->Address1) ? $this->Address1 . ",\n" : '';
+        $address .= ($this->Address2) ? $this->Address2 . ",\n" : '';
+        $address .= ($this->City) ? $this->City . ",\n" : '';
+        $address .= ($this->PostCode) ? $this->PostCode . ",\n" : '';
+        $address .= ($this->Country) ? $this->Country : '';
 
         return $address;
     }
