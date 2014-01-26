@@ -45,7 +45,7 @@ class Commerce_CheckoutForm extends Form {
             ),
             ToggleCompositeField::create(
                 "Delivery",
-                "Edit delivery details",
+                _t("Commerce.EDITDELIVERYDETAILS","Edit delivery details"),
                 array(
                     LiteralField::create("DeliveryOpen", '<div class="units-row">'),
                     FieldGroup::create(

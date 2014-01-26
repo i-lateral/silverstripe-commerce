@@ -55,6 +55,7 @@ de_DE:
     COUNTRY: 'Land'
     DELIVERYDETAILS: 'Lieferanschrift'
     IFDIFFERENT: 'sofern abweichend'
+    EDITDELIVERYDETAILS: 'Lieferdetails bearbeiten'
     PAYMENTDETAILS: 'Zahlungsangaben eingeben'
     ERRORMESSAGE: 'Bitte füllen Sie jetzt alle erforderlichen Felder aus'
     SUMMARY: 'Zusammenfassung'

@@ -55,6 +55,7 @@ en_GB:
     COUNTRY: 'Country'
     DELIVERYDETAILS: 'Delivery Details'
     IFDIFFERENT: 'if different'
+    EDITDELIVERYDETAILS: 'Edit delivery details'
     PAYMENTDETAILS: 'Enter Payment Details'
     ERRORMESSAGE: 'Please complete all the required fields below'
     SUMMARY: 'Summary'
