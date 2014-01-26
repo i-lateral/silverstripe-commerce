@@ -34,7 +34,14 @@ class Checkout_Controller extends Commerce_Controller {
     }
 
     public function Form() {
-        return Commerce_CheckoutForm::create($this, 'Form')
+        $form = Commerce_CheckoutForm::create($this, 'Form')
             ->addExtraClass('forms');
+
+        if(Member::currentUserID()) {
+            $member = Member::currentUser();
+            $form->loadDataFrom($member);
+        }
+
+        return $form;
     }
 }

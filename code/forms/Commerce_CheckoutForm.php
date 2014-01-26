@@ -99,7 +99,7 @@ class Commerce_CheckoutForm extends Form {
 
         $payment_url = Controller::join_links(
             BASE_URL,
-            Payment_Controller::$url_segment
+            Commerce_Payment_Controller::$url_segment
         );
 
         return $this->controller->redirect($payment_url);
@@ -118,23 +118,17 @@ class Commerce_CheckoutForm extends Form {
         $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
 
         // Check if delivery details are set. If not, set to billing details.
-        $formData = $this->getData();
+        $data = $this->getData();
 
-        $delivery_address = '';
+        $data['DeliveryFirstnames'] = ($data['DeliveryFirstnames']) ? $data['DeliveryFirstnames'] : $data['FirstName'];
+        $data['DeliverySurname'] = ($data['DeliverySurname']) ? $data['DeliverySurname'] : $data['Surname'];
+        $data['DeliveryAddress1'] = ($data['DeliveryAddress1']) ? $data['DeliveryAddress1'] : $data['Address1'];
+        $data['DeliveryAddress2'] = ($data['DeliveryAddress1']) ? $data['DeliveryAddress2'] : $data['Address2'];
+        $data['DeliveryCity'] = ($data['DeliveryCity']) ? $data['DeliveryCity'] : $data['City'];
+        $data['DeliveryPostCode'] = ($data['DeliveryPostCode']) ? $data['DeliveryPostCode'] : $data['PostCode'];
+        $data['DeliveryCountry'] = ($data['DeliveryCountry']) ? $data['DeliveryCountry'] : $data['Country'];
 
-        foreach($formData as $key => $value) {
-            if($key == 'DeliveryCountry' && !$delivery_address)
-                $formData[$key] = $formData[str_replace('Delivery', 'Billing', $key)];
-
-            if(strstr($key, 'Delivery')) {
-                if(!$value)
-                    $formData[$key] = $formData[str_replace('Delivery', 'Billing', $key)];
-                else
-                    $delivery_address .= $value;
-            }
-        }
-
-        $this->loadDataFrom($formData);
+        $this->loadDataFrom($data);
 
         // Save form data into an order object
         $order = new Order();
