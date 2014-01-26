@@ -89,6 +89,8 @@ de_DE:
     EDITDETAILS: 'Kontodetails bearbeiten'
     NOORDERS: "Es liegen noch keine Bestellungen"
     NOTFOUND: "Bestellen sie nicht gefunden"
+    COMPANY: 'Firma'
     EMAIL: 'Email'
+    PHONENUMBER: 'Telefonnummer'
     DETAILSUPDATED: 'Kontodaten aktualisiert'
     CANNOTEDIT: 'Sie können dieses Konto nicht bearbeiten'

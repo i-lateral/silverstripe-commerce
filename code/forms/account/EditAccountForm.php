@@ -6,9 +6,11 @@ class EditAccountForm extends Form {
         $fields = new FieldList();
 
         $fields->add(HiddenField::create("ID"));
+        $fields->add(TextField::create("Company", _t('CommerceAccount.COMPANY',"Company")));
         $fields->add(TextField::create("FirstName", _t('Member.FIRSTNAME',"First Name")));
         $fields->add(TextField::create("Surname", _t('Member.SURNAME',"Surname")));
         $fields->add(EmailField::create("Email", _t("Member.EMAIL","Email")));
+        $fields->add(TextField::create("PhoneNumber", _t("CommerceAccount.PHONENUMBER","Phone Number")));
 
         $cancel_url = Controller::join_links($controller->Link());
 
@@ -25,7 +27,8 @@ class EditAccountForm extends Form {
         $required = new RequiredFields(array(
             "FirstName",
             "Surname",
-            "Email"
+            "Email",
+            "PhoneNumber"
         ));
 
         parent::__construct($controller, $name, $fields, $actions, $required);

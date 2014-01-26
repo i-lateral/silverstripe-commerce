@@ -89,6 +89,8 @@ en_GB:
     EDITDETAILS: 'Edit account details'
     NOORDERS: "There are currently no orders"
     NOTFOUND: "Order not found"
+    COMPANY: 'Company'
     EMAIL: 'Email'
+    PHONENUMBER: 'Phone number'
     DETAILSUPDATED: 'Account details updated'
     CANNOTEDIT: "You cannot edit this account"
