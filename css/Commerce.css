@@ -152,35 +152,3 @@ commerce-action-back {
     .commerce-cart .commerce-cart-actions .action {
         display: inline;
     }
-
-
-/* Checkout Page
------------------------------------------ */
-#CheckoutForm_CheckoutForm .fieldgroup-field {
-    clear: both;
-    padding-bottom: 0.5em;
-}
-#CheckoutForm_CheckoutForm .fieldgroup-field label {
-    width: 26%;
-}
-#CheckoutForm_CheckoutForm .fieldgroup-field input {
-    width: 55%;
-}
-#CheckoutForm_CheckoutForm .fieldgroup-field select {
-    width: 56%;
-    padding: 3px;
-}
-
-#CheckoutForm_CheckoutForm fieldset div.billing_fields {
-    float: left;
-    width: 49%;
-}
-#CheckoutForm_CheckoutForm fieldset div.delivery_fields {
-    float: right;
-    width: 49%;
-}
-
-#CheckoutForm_CheckoutForm .message {
-    font-weight: bold;
-    font-size: 1.1em !important;
-}
