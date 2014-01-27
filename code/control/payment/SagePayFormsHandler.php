@@ -29,51 +29,61 @@ class SagePayFormsHandler extends CommercePaymentHandler {
             $this->payment_gateway->ID
         );
 
-        $strPost = "VendorTxCode=" . $order->OrderNumber;
-        $strPost .= "&Amount=" . $order->Total->Value;
-        $strPost .= "&Currency=" . $site->Currency()->GatewayCode;
-        $strPost .= "&Description=" . $this->payment_gateway->GatewayMessage;
-        $strPost .= "&SuccessURL=" . $callback_url;
-        $strPost .= "&FailureURL=" . $callback_url;
-        $strPost .= "&CustomerName=" . $order->FirstName . " " . $order->Surname;
+        $post = array(
+            "VendorTxCode" => $order->OrderNumber,
+            "Amount" => $order->Total->Value,
+            "Currency" => $site->Currency()->GatewayCode,
+            "Description" => $this->payment_gateway->GatewayMessage,
+            "SuccessURL" => $callback_url,
+            "FailureURL" => $callback_url,
+            "CustomerName" => $order->FirstName . " " . $order->Surname,
 
-        // Email settings:
-        $strPost .= "&SendEMail=" . $this->payment_gateway->SendEmail;
+            // Email settings:
+            "SendEMail" => $this->payment_gateway->SendEmail,
 
-        if($order->BillingEmail)
-            $strPost .= "&CustomerEMail=" . $order->Email;
+            // Billing Details:
+            "BillingFirstnames" => $order->FirstName,
+            "BillingSurname" => $order->Surname,
+            "BillingAddress1" => $order->Address1,
+            "BillingAddress2" => $order->Address2,
+            "BillingCity" => $order->City,
+            "BillingPostCode" => $order->PostCode,
+            "BillingCountry" => $order->Country,
 
-        if($this->payment_gateway->EmailRecipient)
-            $strPost .= "&VendorEMail=" . $this->payment_gateway->EmailRecipient;
+            // Delivery Details:
+            "DeliveryFirstnames"=> $order->DeliveryFirstnames,
+            "DeliverySurname" => $order->DeliverySurname,
+            "DeliveryAddress1" => $order->DeliveryAddress1,
+            "DeliveryAddress2" => $order->DeliveryAddress2,
+            "DeliveryCity" => $order->DeliveryCity,
+            "DeliveryPostCode" => $order->DeliveryPostCode,
+            "DeliveryCountry" => $order->DeliveryCountry,
 
-        $strPost .= "&BillingFirstnames=" . $order->BillingFirstnames;
-        $strPost .= "&BillingSurname=" . $order->BillingSurname;
-        $strPost .= "&BillingAddress1=" . $order->BillingAddress1;
-        $strPost .= "&BillingAddress2=" . $order->BillingAddress2;
-        $strPost .= "&BillingCity=" . $order->BillingCity;
-        $strPost .= "&BillingPostCode=" . $order->BillingPostCode;
-        $strPost .= "&BillingCountry=" . $order->BillingCountry;
+            // Additional
+            "AllowGiftAid" => 0,
+            "Apply3DSecure" => 0
+        );
 
-        if (strlen($order->BillingState) > 0) $strPost .= "&BillingState=" . $order->BillingState;
-        if (strlen($order->BillingPhone) > 0) $strPost .= "&BillingPhone=" . $order->BillingPhone;
+        // Add non required elements
+        if($order->Email) $post["CustomerEMail"] = $order->Email;
 
-        // Delivery Details:
-        $strPost .= "&DeliveryFirstnames=" . $order->DeliveryFirstnames;
-        $strPost .= "&DeliverySurname=" . $order->DeliverySurname;
-        $strPost .= "&DeliveryAddress1=" . $order->DeliveryAddress1;
-        $strPost .= "&DeliveryAddress2=" . $order->DeliveryAddress2;
-        $strPost .= "&DeliveryCity=" . $order->DeliveryCity;
-        $strPost .= "&DeliveryPostCode=" . $order->DeliveryPostCode;
-        $strPost .= "&DeliveryCountry=" . $order->DeliveryCountry;
+        if($this->payment_gateway->EmailRecipient) $post["VendorEMail"] = $this->payment_gateway->EmailRecipient;
 
-        if (strlen($order->DeliveryState) > 0) $strPost .= "&DeliveryState=" . $order->DeliveryState;
-        if (strlen($order->DeliveryPhone) > 0) $strPost .= "&DeliveryPhone=" . $order->DeliveryPhone;
+        if($order->State) $post["BillingState"] = $order->State;
+        if($order->PhoneNumber) $post["BillingPhone"] = $order->PhoneNumber;
 
-        $strPost .= "&AllowGiftAid=0";
-        $strPost .= "&Apply3DSecure=0";
+
+        if($order->DeliveryState) $post["DeliveryState"] = $order->DeliveryState;
+        if($order->DeliveryPhone) $post["DeliveryPhone"] = $order->DeliveryPhone;
+
+        $result = "";
+
+        foreach ($post as $key => $value) {
+            $result .= $key . "=" . $value . '&';
+        }
 
         // Encrypt the plaintext string for inclusion in the hidden field
-        $encrypted_data = StringEncryptor::create($strPost)
+        $encrypted_data = StringEncryptor::create($result)
             ->setHash($this->payment_gateway->EncryptedPassword)
             ->setEncryption('MCRYPT')
             ->encrypt()
