@@ -6,10 +6,25 @@
     $Content
 
     <% if $Order %><% with $Order %>
-        <p>
-            <strong><% _t("Commerce.DATE","Date") %>:</strong> $Created.Nice <br/>
-            <strong><% _t("Commerce.STATUS","Status") %>:</strong> $TranslatedStatus
-        </p>
+        <div class="units-row-end">
+            <p class="unit-50">
+                <strong><% _t("Commerce.DATE","Date") %>:</strong> $Created.Nice <br/>
+                <strong><% _t("Commerce.STATUS","Status") %>:</strong> $TranslatedStatus<br/>
+                <strong><% _t("Commerce.FIRSTNAMES","First Name(s)") %>:</strong> $FirstName <br/>
+                <strong><% _t("Commerce.SURNAME","Surname") %>:</strong> $Surname <br/>
+                <strong><% _t("Commerce.EMAIL","Email") %>:</strong> $Email <br/>
+                <strong><% _t("Commerce.PHONE","Phone Number") %>:</strong> $PhoneNumber <br/>
+            </p>
+
+            <p class="unit-50">
+                <strong><% _t("Commerce.DELIVERYDETAILS","Delivery Details") %></strong><br/>
+                <strong><% _t("Commerce.ADDRESS1","Address Line 1") %>:</strong> $DeliveryAddress1 <br/>
+                <strong><% _t("Commerce.ADDRESS2","Address Line 2") %>:</strong> $DeliveryAddress1 <br/>
+                <strong><% _t("Commerce.CITY","City") %>:</strong> $DeliveryCity <br/>
+                <strong><% _t("Commerce.POSTCODE","Post Code") %>:</strong> $DeliveryPostCode <br/>
+                <strong><% _t("Commerce.COUNTRY","Country") %>:</strong> $DeliveryCountry
+            </p>
+        </div>
 
         <hr/>
 
