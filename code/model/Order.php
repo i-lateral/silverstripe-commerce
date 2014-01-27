@@ -19,6 +19,7 @@ class Order extends DataObject implements PermissionProvider {
         'OrderNumber'       => 'Varchar',
         'Status'            => "Enum('incomplete,failed,canceled,paid,processing,dispatched','incomplete')",
         // Billing Details
+        'Company'           => 'Varchar',
         'FirstName'         => 'Varchar',
         'Surname'           => 'Varchar',
         'Address1'          => 'Varchar',
@@ -89,13 +90,11 @@ class Order extends DataObject implements PermissionProvider {
         $fields->removeByName('GatewayData');
 
         // Remove Billing Details
-        $fields->removeByName('BillingFirstnames');
-        $fields->removeByName('BillingSurname');
-        $fields->removeByName('BillingAddress1');
-        $fields->removeByName('BillingAddress2');
-        $fields->removeByName('BillingCity');
-        $fields->removeByName('BillingPostCode');
-        $fields->removeByName('BillingCountry');
+        $fields->removeByName('Address1');
+        $fields->removeByName('Address2');
+        $fields->removeByName('City');
+        $fields->removeByName('PostCode');
+        $fields->removeByName('Country');
 
         // Remove Delivery Details
         $fields->removeByName('DeliveryFirstnames');
@@ -143,13 +142,11 @@ class Order extends DataObject implements PermissionProvider {
         // Structure billing details
         $billing_fields = ToggleCompositeField::create('BillingDetails', 'Billing Details',
             array(
-                TextField::create('BillingFirstnames', 'First Name(s)'),
-                TextField::create('BillingSurname', 'Surname'),
-                TextField::create('BillingAddress1', 'Address 1'),
-                TextField::create('BillingAddress2', 'Address 2'),
-                TextField::create('BillingCity', 'City'),
-                TextField::create('BillingPostCode', 'Post Code'),
-                TextField::create('BillingCountry', 'Country')
+                TextField::create('Address1', 'Address 1'),
+                TextField::create('Address2', 'Address 2'),
+                TextField::create('City', 'City'),
+                TextField::create('PostCode', 'Post Code'),
+                TextField::create('Country', 'Country')
             )
         )->setHeadingLevel(4);
 
@@ -158,14 +155,13 @@ class Order extends DataObject implements PermissionProvider {
         // Structure delivery details
         $delivery_fields = ToggleCompositeField::create('DeliveryDetails', 'Delivery Details',
             array(
-                DropdownField::create('PostageID', 'Postage', PostageArea::get()->map('ID', 'Location')),
                 TextField::create('DeliveryFirstnames', 'First Name(s)'),
                 TextField::create('DeliverySurname', 'Surname'),
                 TextField::create('DeliveryAddress1', 'Address 1'),
                 TextField::create('DeliveryAddress2', 'Address 2'),
                 TextField::create('DeliveryCity', 'City'),
                 TextField::create('DeliveryPostCode', 'Post Code'),
-                TextField::create('DeliveryCountry', 'Country')
+                TextField::create('DeliveryCountry', 'Country'),
             )
         )->setHeadingLevel(4);
 

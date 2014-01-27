@@ -22,6 +22,7 @@ class Commerce_CheckoutForm extends Form {
             ),
             LiteralField::create("BillingOpen", '<div class="units-row">'),
             FieldGroup::create(
+                TextField::create('Company',_t('CommerceAccount.Company','Company')),
                 TextField::create('FirstName',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
                 TextField::create('Surname',_t('Commerce.SURNAME','Surname') . '*'),
                 EmailField::create('Email',_t('Commerce.EMAIL','Email') . '*'),
