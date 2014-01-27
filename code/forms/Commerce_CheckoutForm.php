@@ -122,6 +122,9 @@ class Commerce_CheckoutForm extends Form {
         $order->PostageType = $postage->Location;
         $order->PostageCost = $postage->Cost;
 
+        // If user logged in, track it against an order
+        if(Member::currentUserID()) $order->CustomerID = Member::currentUserID();
+
         $order->write(); // Write so we can setup our foreign keys
 
         // Loop through each session cart item and add that item to the order

@@ -68,12 +68,12 @@ class Order extends DataObject implements PermissionProvider {
     );
 
     private static $summary_fields = array(
-        "OrderNumber"       => "Order Number",
-        "BillingFirstnames" => "First Name(s)",
-        "BillingSurname"    => "Surname",
-        "BillingEmail"      => "Email",
-        "Status"            => "Status",
-        "Created"           => "Created"
+        "OrderNumber"   => "Order Number",
+        "FirstName"     => "First Name(s)",
+        "Surname"       => "Surname",
+        "Email"         => "Email",
+        "Status"        => "Status",
+        "Created"       => "Created"
     );
 
     private static $default_sort = "Created DESC";

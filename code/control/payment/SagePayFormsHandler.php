@@ -19,7 +19,7 @@ class SagePayFormsHandler extends CommercePaymentHandler {
      *
      */
     private function gateway_data() {
-        $order = Session::get('Order');
+        $order = Session::get('Commerce.Order');
         $site = SiteConfig::current_site_config();
 
         $callback_url = Controller::join_links(
