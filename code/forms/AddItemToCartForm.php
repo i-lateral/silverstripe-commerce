@@ -15,7 +15,6 @@ class AddItemToCartForm extends Form {
 
         $actions = FieldList::create(
             FormAction::create('doAddItemToCart',_t('Commerce.ADDTOCART','Add to Cart'))
-                ->addExtraClass('commerce-button')
                 ->addExtraClass('btn')
         );
 

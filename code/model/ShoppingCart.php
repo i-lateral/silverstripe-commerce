@@ -110,6 +110,7 @@ class ShoppingCart extends ViewableData {
                 'Key'           => $product_key,
                 'ProductID'     => $add_item->ID,
                 'Title'         => $add_item->Title,
+                'SKU'           => $add_item->SKU,
                 'Description'   => $add_item->Description,
                 'Weight'        => $add_item->Weight,
                 'Price'         => $price,

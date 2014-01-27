@@ -1,4 +1,4 @@
-<% if $Cart.Items %>
+<% if $Items.exists %>
     <form $FormAttributes>
         <fieldset class="commerce-cart-items">
             $Fields.dataFieldByName(SecurityID)
@@ -27,7 +27,7 @@
                         </td>
                         <td class="quantity"><input type="text" name="Quantity_{$Key}" value="{$Quantity}" /></td>
                         <td class="total">{$Top.CurrencySymbol}{$Price}</td>
-                        <td class="remove"><a href="{$Top.Link}/remove/{$Key}"><img src="commerce/images/delete_medium.png" alt="remove" /></a></td>
+                        <td class="remove"><a href="{$Top.Controller.Link('remove')}/{$Key}"><img src="commerce/images/delete_medium.png" alt="remove" /></a></td>
                     </tr>
                 <% end_loop %>
 

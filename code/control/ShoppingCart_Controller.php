@@ -18,9 +18,6 @@ class ShoppingCart_Controller extends Commerce_Controller {
 
     public function init() {
         parent::init();
-
-        // Add Javascript
-        Requirements::javascript("commerce/js/CartPage.js");
     }
 
     public function index() {
@@ -59,7 +56,6 @@ class ShoppingCart_Controller extends Commerce_Controller {
 
     public function CartForm() {
         return Commerce_ShoppingCartForm::create($this, 'CartForm')
-            ->addExtraClass('forms')
-            ->addExtraClass('commerce-cart-form');
+            ->addExtraClass('forms');
     }
 }

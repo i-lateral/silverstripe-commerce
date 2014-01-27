@@ -131,6 +131,7 @@ class Commerce_CheckoutForm extends Form {
         foreach(ShoppingCart::get()->Items() as $cart_item) {
             $order_item = new OrderItem();
             $order_item->Title          = $cart_item->Title;
+            $order_item->SKU            = $cart_item->SKU;
             $order_item->Price          = $cart_item->Price;
             $order_item->Customisation  = serialize($cart_item->Customised);
             $order_item->Quantity       = $cart_item->Quantity;

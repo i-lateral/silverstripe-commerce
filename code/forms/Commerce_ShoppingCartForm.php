@@ -135,6 +135,7 @@ class Commerce_ShoppingCartForm extends Form {
             $items->add(new ArrayData(array(
                 'Key' => $item->Key,
                 'Title' => DBField::create_field('Varchar', $item->Title),
+                'SKU' => DBField::create_field('Varchar', $item->SKU),
                 'Description' => nl2br(Convert::raw2xml($item->Description), true),
                 'Customised' => $customised_list,
                 'Price' => DBField::create_field('Decimal', $item->Price),
