@@ -45,7 +45,7 @@ class Commerce_Payment_Controller extends Commerce_Controller {
      * @return Order
      */
     public function getOrder() {
-        return Session::get('Order');
+        return Session::get('Commerce.Order');
     }
 
     public function init() {
@@ -55,7 +55,7 @@ class Commerce_Payment_Controller extends Commerce_Controller {
         if($this->request->param('ID') && $method = CommercePaymentMethod::get()->byID($this->request->param('ID')))
             $this->payment_method = $method;
         // Then check session
-        elseif($method = CommercePaymentMethod::get()->byID(Session::get('PaymentMethod')))
+        elseif($method = CommercePaymentMethod::get()->byID(Session::get('Commerce.PaymentMethod')))
             $this->payment_method = $method;
 
         // Setup payment handler
@@ -168,9 +168,9 @@ class Commerce_Payment_Controller extends Commerce_Controller {
         // Clear our session data
         if(isset($_SESSION)) {
             ShoppingCart::get()->clear();
-            unset($_SESSION['Order']);
-            unset($_SESSION['PostageID']);
-            unset($_SESSION['PaymentMethod']);
+            unset($_SESSION['Commerce.Order']);
+            unset($_SESSION['Commerce.PostageID']);
+            unset($_SESSION['Commerce.PaymentMethod']);
         }
 
         return $this->customise($return)->renderWith(array("Payment_Response",'Page'));

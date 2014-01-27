@@ -72,7 +72,7 @@ class Commerce_CheckoutForm extends Form {
         $actions = FieldList::create(
             LiteralField::create(
                 'BackButton',
-                '<a href="' . $cart_url . '" class="btn btn-red">' . _t('Commerce.BACK','Back') . '</a>'
+                '<a href="' . $cart_url . '" class="btn">' . _t('Commerce.BACK','Back') . '</a>'
             ),
             FormAction::create('doPost', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
                 ->addExtraClass('btn')
@@ -105,7 +105,7 @@ class Commerce_CheckoutForm extends Form {
         $data['DeliveryFirstnames'] = ($data['DeliveryFirstnames']) ? $data['DeliveryFirstnames'] : $data['FirstName'];
         $data['DeliverySurname'] = ($data['DeliverySurname']) ? $data['DeliverySurname'] : $data['Surname'];
         $data['DeliveryAddress1'] = ($data['DeliveryAddress1']) ? $data['DeliveryAddress1'] : $data['Address1'];
-        $data['DeliveryAddress2'] = ($data['DeliveryAddress1']) ? $data['DeliveryAddress2'] : $data['Address2'];
+        $data['DeliveryAddress2'] = ($data['DeliveryAddress2']) ? $data['DeliveryAddress2'] : $data['Address2'];
         $data['DeliveryCity'] = ($data['DeliveryCity']) ? $data['DeliveryCity'] : $data['City'];
         $data['DeliveryPostCode'] = ($data['DeliveryPostCode']) ? $data['DeliveryPostCode'] : $data['PostCode'];
         $data['DeliveryCountry'] = ($data['DeliveryCountry']) ? $data['DeliveryCountry'] : $data['Country'];

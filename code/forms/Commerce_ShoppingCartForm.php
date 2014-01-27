@@ -57,7 +57,8 @@ class Commerce_ShoppingCartForm extends Form {
         if($payment_methods->exists()) {
             $actions->add(FormAction::create('doCheckout', _t('Commerce.CARTPROCEED','Proceed to Checkout'))
                 ->addExtraClass('btn')
-                ->addExtraClass('highlight')
+                ->addExtraClass('btn-green')
+                ->addExtraClass('btn-big')
             );
         }
 
