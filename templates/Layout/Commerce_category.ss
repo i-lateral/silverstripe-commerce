@@ -1,3 +1,5 @@
+<% require css('commerce/css/Commerce.css') %>
+
 <div class="commerce-content-container typography">
     <h1>$Title</h1>
 

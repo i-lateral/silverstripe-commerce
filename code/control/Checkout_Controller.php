@@ -8,7 +8,9 @@ class Checkout_Controller extends Commerce_Controller {
     public static $url_segment = "commerce/checkout";
 
     private static $allowed_actions = array(
-        "Form"
+        "details",
+        "LoginForm",
+        "CheckoutForm"
     );
 
     public function init() {
@@ -20,10 +22,35 @@ class Checkout_Controller extends Commerce_Controller {
     }
 
     public function index() {
+        if(Member::currentUserID()) {
+            $this->redirect($this->Link('details'));
+        } else {
+            $this->customise(array(
+                'ClassName' => "Checkout",
+                'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
+                'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
+            ));
+
+            return $this->renderWith(array(
+                'Commerce_checkout',
+                'Commerce',
+                'Page'
+            ));
+        }
+    }
+
+    public function details() {
+        $form = $this->CheckoutForm();
+
+        // Pre populate form with member info
+        if(Member::currentUserID())
+            $form->loadDataFrom(Member::currentUser());
+
         $this->customise(array(
             'ClassName' => "Checkout",
             'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
             'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
+            'Form'      => $form
         ));
 
         return $this->renderWith(array(
@@ -33,14 +60,9 @@ class Checkout_Controller extends Commerce_Controller {
         ));
     }
 
-    public function Form() {
-        $form = Commerce_CheckoutForm::create($this, 'Form')
+    public function CheckoutForm() {
+        $form = Commerce_CheckoutForm::create($this, 'CheckoutForm')
             ->addExtraClass('forms');
-
-        if(Member::currentUserID()) {
-            $member = Member::currentUser();
-            $form->loadDataFrom($member);
-        }
 
         return $form;
     }

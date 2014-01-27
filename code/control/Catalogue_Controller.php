@@ -43,7 +43,6 @@ class Catalogue_Controller extends Commerce_Controller {
     public function AddItemForm() {
         if(ShoppingCart::isEnabled()) {
             $form = AddItemToCartForm::create($this, $this->dataRecord, "AddItemForm")
-                ->addExtraClass('commerce-additemtocartform')
                 ->addExtraClass('forms')
                 ->addExtraClass('forms-columnar');
 

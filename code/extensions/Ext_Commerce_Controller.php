@@ -22,18 +22,6 @@ class Ext_Commerce_Controller extends Extension {
     }
 
     /**
-     * @return void
-     */
-    public function onAfterInit(){
-        Requirements::css('commerce/css/Commerce.css');
-
-        Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
-        Requirements::add_i18n_javascript('commerce/lang/js');
-
-        Requirements::javascript('commerce/js/Commerce.js');
-    }
-
-    /**
      * Gets a list of all ProductCategories
      *
      * @param Parent the ID of a parent cetegory
