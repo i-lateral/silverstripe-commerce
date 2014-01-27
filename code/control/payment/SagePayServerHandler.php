@@ -13,7 +13,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
     public function onBeforeGateway() {
         $data = parent::onBeforeGateway();
 
-        $order = Session::get('Order');
+        $order = Session::get('Commerce.Order');
         $site = SiteConfig::current_site_config();
 
         $callback_url = Controller::join_links(
@@ -22,8 +22,6 @@ class SagePayServerHandler extends CommercePaymentHandler {
             "callback",
             $this->payment_gateway->ID
         );
-
-        Debug::show($callback_url);
 
         $payload_data = array();
 
@@ -64,7 +62,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
         $payload_data["DeliveryPostCode"] = $order->DeliveryPostCode;
         $payload_data["DeliveryCountry"] = $order->DeliveryCountry;
         $payload_data["DeliveryState"] = $order->DeliveryState;
-        $payload_data["DeliveryPhone"] = $order->DeliveryPhone;
+        $payload_data["DeliveryPhone"] = $order->PhoneNumber;
 
         // For charities registered for Gift Aid
         $payload_data["AllowGiftAid"] = 0;
@@ -124,11 +122,9 @@ class SagePayServerHandler extends CommercePaymentHandler {
             }
         }
 
-        Debug::show($response_data);
-
         // Check our data was recieved ok
         if(strpos($response_data['Status'],'OK') === false) {
-            return array();
+            return null;
         } else {
             $order->PaymentID = $response_data['VPSTxId'];
             Session::set('Order',$order);
