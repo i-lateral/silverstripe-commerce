@@ -18,7 +18,8 @@
         "silverstripe/framework": ">=3.1",
         "ajshort/silverstripe-gridfieldextensions": "dev-master",
         "colymba/gridfield-bulk-editing-tools": "dev-master",
-        "bummzack/sortablefile": "dev-master"
+        "bummzack/sortablefile": "dev-master",
+        "i-lateral/silverstripe-users": '*'
     },
     "extra": {
         "installer-name": "commerce"
