@@ -1,6 +1,8 @@
 <% require css('commerce/css/Commerce.css') %>
 
 <div class="commerce-content-container typography">
+    <% if Level(2) %><p>$Breadcrumbs</p><% end_if %>
+
     <h1>$Title</h1>
 
     <div class="units-row commerce-list commerce-list-children">

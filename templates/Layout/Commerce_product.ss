@@ -2,6 +2,7 @@
 
 <div class="commerce-content-container typography">
     <div class="commerce-product">
+        <p>$Breadcrumbs</p>
 
         <h1>$Title</h1>
 

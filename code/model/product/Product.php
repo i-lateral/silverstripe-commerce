@@ -31,6 +31,7 @@ class Product extends DataObject {
     );
 
     private static $casting = array(
+        'MenuTitle'         => 'Varchar',
         'CategoriesList'    => 'Varchar',
         'CMSThumbnail'      => 'Varchar'
     );
@@ -62,6 +63,10 @@ class Product extends DataObject {
         return Controller::join_links(BASE_URL , $this->URLSegment);
     }
 
+    public function getMenuTitle() {
+        return $this->Title;
+    }
+
     /**
      * Return sorted images, if no images exist, create a new opbject set
      * with a blank product image in it.
@@ -84,12 +89,31 @@ class Product extends DataObject {
     }
 
     /**
-     * Overwrite default image and load a not found image if not found
+     * Return a breadcrumb trail for this product (which accounts for parent
+     * categories)
      *
+     * @param int $maxDepth The maximum depth to traverse.
+     *
+     * @return string The breadcrumb trail.
      */
-    /*public function getImages() {
+    public function Breadcrumbs($maxDepth = 20) {
+        $items = array();
 
-    }*/
+        if($this->Categories()->exists()) {
+            $items[] = $this;
+            $category = $this->Categories()->first();
+
+            foreach($category->parentStack() as $item) {
+                $items[] = $item;
+            }
+        }
+
+        $template = new SSViewer('BreadcrumbsTemplate');
+
+        return $template->process($this->customise(new ArrayData(array(
+            'Pages' => new ArrayList(array_reverse($items))
+        ))));
+    }
 
     public function getCMSThumbnail() {
         if($this->Images()->exists())

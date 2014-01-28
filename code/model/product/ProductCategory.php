@@ -29,6 +29,7 @@ class ProductCategory extends DataObject {
     );
 
     private static $casting = array(
+        "MenuTitle"     => "Varchar",
         "AllProducts"   => "ArrayList"
     );
 
@@ -41,6 +42,26 @@ class ProductCategory extends DataObject {
     */
     public function Link() {
         return Controller::join_links(BASE_URL , $this->URLSegment);
+    }
+
+    public function getMenuTitle() {
+        return $this->Title;
+    }
+
+    /**
+     * Return a breadcrumb trail for this product (which accounts for parent
+     * categories)
+     *
+     * @param int $maxDepth The maximum depth to traverse.
+     *
+     * @return string The breadcrumb trail.
+     */
+    public function Breadcrumbs($maxDepth = 20) {
+        $template = new SSViewer('BreadcrumbsTemplate');
+
+        return $template->process($this->customise(new ArrayData(array(
+            'Pages' => new ArrayList(array_reverse($this->parentStack()))
+        ))));
     }
 
     /**
