@@ -16,7 +16,6 @@ class Ext_Commerce_Group extends DataExtension {
             $group->Title = "Commerce Customers";
             $group->Sort = 1;
             $group->write();
-            Permission::grant($group->ID, 'COMMERCE_MANAGE_ACCOUNT');
 
             DB::alteration_message('Commerce customers group created', 'created');
         }

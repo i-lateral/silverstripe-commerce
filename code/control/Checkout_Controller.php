@@ -26,9 +26,10 @@ class Checkout_Controller extends Commerce_Controller {
             $this->redirect($this->Link('details'));
         } else {
             $this->customise(array(
-                'ClassName' => "Checkout",
+                'ClassName' => "CheckoutLogin",
                 'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
                 'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
+                'LoginForm' => $this->LoginForm()
             ));
 
             return $this->renderWith(array(
@@ -47,10 +48,10 @@ class Checkout_Controller extends Commerce_Controller {
             $form->loadDataFrom(Member::currentUser());
 
         $this->customise(array(
-            'ClassName' => "Checkout",
-            'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
-            'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
-            'Form'      => $form
+            'ClassName'     => "CheckoutDetails",
+            'Title'         => _t('Commerce.CHECKOUTMETA',"Your Details"),
+            'MetaTitle'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
+            'CheckoutForm'  => $form
         ));
 
         return $this->renderWith(array(
@@ -58,6 +59,23 @@ class Checkout_Controller extends Commerce_Controller {
             'Commerce',
             'Page'
         ));
+    }
+
+    /**
+     * Generate a login form
+     *
+     * @return UsernameOrEmailLoginForm
+     */
+    public function LoginForm() {
+        $form = MemberLoginForm::create($this, 'LoginForm');
+        $form->setAttribute("action", $this->Link("LoginForm"));
+
+        $form
+            ->Actions()
+            ->dataFieldByName('action_dologin')
+            ->addExtraClass("btn");
+
+        return $form;
     }
 
     public function CheckoutForm() {

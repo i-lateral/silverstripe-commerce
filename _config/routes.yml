@@ -7,7 +7,6 @@ Director:
     'commerce/cart//$Action/$ID/$Quantity': 'ShoppingCart_Controller'
     'commerce/checkout//$Action/$ID': 'Checkout_Controller'
     'commerce/payment//$Action/$ID': 'Commerce_Payment_Controller'
-    'commerce/account//$Action/$ID': 'Commerce_Account_Controller'
 ---
 Name: modelascontrollerroutes
 After: cms/routes#modelascontrollerroutes
