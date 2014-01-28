@@ -24,7 +24,7 @@
                     <h2><a href="$Link">$Title</a></h2>
 
                     <p>
-                        <a href="$Link">$Images.First.CroppedImage(250,250)</a>
+                        <a href="$Link">$Images.First.CroppedImage(350,350)</a>
 
                         <span class="price label label-green big">
                             {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}
