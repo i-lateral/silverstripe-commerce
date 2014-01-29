@@ -205,14 +205,16 @@ class ProductCategory_ItemRequest extends GridFieldDetailForm_ItemRequest {
     public function ItemEditForm() {
         $form = parent::ItemEditForm();
 
-        // Update the default parent field
-        $parentParam = Controller::curr()->request->requestVar('ParentID');
-        $parent_field = $form->Fields()->dataFieldByName("ParentID");
+        if($form) {
+            // Update the default parent field
+            $parentParam = Controller::curr()->request->requestVar('ParentID');
+            $parent_field = $form->Fields()->dataFieldByName("ParentID");
 
-        if($parent_field) {
-            $parent_field->setValue($parentParam);
+            if($parent_field) {
+                $parent_field->setValue($parentParam);
+            }
+
+            return $form;
         }
-
-        return $form;
     }
 }
