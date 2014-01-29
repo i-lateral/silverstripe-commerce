@@ -6,6 +6,7 @@ de_DE:
     PRICE: 'Preis'
     COST: 'Preis'
     QTY: 'Anzahl'
+    OR: 'Oder'
     PACKSIZE: 'Gebindegröße'
     WEIGHT: 'Gewicht'
     ITEM: 'Artikel'
@@ -85,6 +86,8 @@ de_DE:
     # Sign in and Register
     SIGNIN: 'Anmelden'
     REGISTER: 'Registrieren'
+    NOACCOUNT: 'Sie haben noch kein Konto'
+    CONTINUEGUEST: 'Weiter als Gast'
     ORDERHISTORY: 'Bestellverlauf'
     OUTSTANDINGORDERS: 'Offene aufträge'
     EDITDETAILS: 'Kontodetails bearbeiten'

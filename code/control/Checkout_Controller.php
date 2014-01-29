@@ -27,10 +27,13 @@ class Checkout_Controller extends Commerce_Controller {
         } else {
             $this->customise(array(
                 'ClassName' => "CheckoutLogin",
-                'Title'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
-                'MetaTitle' => _t('Commerce.CHECKOUTMETA',"Your Details"),
+                'Title'     => _t('CommerceAccount.SIGNIN',"Sign in"),
+                'MetaTitle' => _t('CommerceAccount.SIGNIN',"Sign in"),
+                'Content'   => $this->renderWith("Commerce_Checkout_Login"),
                 'LoginForm' => $this->LoginForm()
             ));
+
+            $this->extend("onBeforeIndex");
 
             return $this->renderWith(array(
                 'Commerce_checkout',
@@ -53,6 +56,8 @@ class Checkout_Controller extends Commerce_Controller {
             'MetaTitle'     => _t('Commerce.CHECKOUTMETA',"Your Details"),
             'CheckoutForm'  => $form
         ));
+
+        $this->extend("onBeforeDetails");
 
         return $this->renderWith(array(
             'Commerce_checkout',

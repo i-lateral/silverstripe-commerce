@@ -6,6 +6,7 @@ en_GB:
     PRICE: 'Price'
     COST: 'Cost'
     QTY: 'Qty'
+    OR: 'Or'
     PACKSIZE: 'Pack Size'
     WEIGHT: 'Weight'
     ITEM: 'Item'
@@ -83,15 +84,17 @@ en_GB:
     FINALTHANKS: 'Many thanks'
   CommerceAccount:
     # Sign in and Register
-    SIGNIN: 'Sign in'
-    REGISTER: 'Register'
-    ORDERHISTORY: 'Order History'
-    OUTSTANDINGORDERS: 'Outstanding Orders'
-    EDITDETAILS: 'Edit account details'
+    SIGNIN: "Sign in"
+    REGISTER: "Register"
+    NOACCOUNT: "Don't have an account"
+    CONTINUEGUEST: "Continue as a Guest"
+    ORDERHISTORY: "Order History"
+    OUTSTANDINGORDERS: "Outstanding Orders"
+    EDITDETAILS: "Edit account details"
     NOORDERS: "There are currently no orders"
     NOTFOUND: "Order not found"
-    COMPANY: 'Company'
-    EMAIL: 'Email'
-    PHONENUMBER: 'Phone number'
-    DETAILSUPDATED: 'Account details updated'
+    COMPANY: "Company"
+    EMAIL: "Email"
+    PHONENUMBER: "Phone number"
+    DETAILSUPDATED: "Account details updated"
     CANNOTEDIT: "You cannot edit this account"
