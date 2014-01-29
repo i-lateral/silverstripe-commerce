@@ -2,7 +2,7 @@
 
 class Product extends DataObject {
     private static $db = array(
-        'Title'         => 'Varchar',
+        'Title'         => 'Varchar(255)',
         'SKU'           => 'Varchar(99)',
         'Quantity'      => 'Int',
         'Price'         => 'Decimal',
@@ -43,6 +43,12 @@ class Product extends DataObject {
         'SKU'           => 'SKU',
         'Price'         => 'Price',
         'CategoriesList'=> 'Categories'
+    );
+
+    private static $searchable_fields = array(
+        'Title',
+        'SKU',
+        'Description'
     );
 
     private static $default_sort = "\"Title\" ASC";
