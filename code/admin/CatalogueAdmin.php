@@ -210,7 +210,7 @@ class ProductCategory_ItemRequest extends GridFieldDetailForm_ItemRequest {
             $parentParam = Controller::curr()->request->requestVar('ParentID');
             $parent_field = $form->Fields()->dataFieldByName("ParentID");
 
-            if($parent_field) {
+            if($parentParam && $parent_field) {
                 $parent_field->setValue($parentParam);
             }
 
