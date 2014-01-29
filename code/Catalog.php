@@ -30,7 +30,17 @@ class Catalog extends Page {
 
         $fields->addFieldToTab('Root.Main', DropDownField::create('Display', 'What will this catalog display?', $display_types), 'Content');
 
-        if($this->Display == 'Category') $fields->addFieldToTab('Root.Main', TreeDropdownField::create("CategoryID", "Choose a category:", "ProductCategory"), 'Content');
+        if($this->Display == 'Category') {
+            $fields->addFieldToTab(
+                'Root.Main',
+                TreeDropdownField::create(
+                    "CategoryID",
+                    "Choose a category:",
+                    "ProductCategory"
+                )->setLabelField("Title"),
+                'Content'
+            );
+        }
 
         $fields->removeByName('Content');
 
