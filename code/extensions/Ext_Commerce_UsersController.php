@@ -37,6 +37,7 @@ class Ext_Commerce_UsersController extends Extension {
         }
 
         $this->owner->customise(array(
+            "ClassName" => "AccountPage",
             "Title" => _t('CommerceAccount.OUTSTANDINGORDERS','Outstanding Orders'),
             "Content" => $content,
             "Orders" => $orders
@@ -73,6 +74,7 @@ class Ext_Commerce_UsersController extends Extension {
         }
 
         $this->owner->customise(array(
+            "ClassName" => "AccountPage",
             "Title" => _t('CommerceAccount.ORDERHISTORY','Order History'),
             "Content" => $content,
             "Orders" => $orders
@@ -107,6 +109,7 @@ class Ext_Commerce_UsersController extends Extension {
         }
 
         $this->owner->customise(array(
+            "ClassName" => "AccountPage",
             "Title" => $title,
             "Content" => $content,
             "Order" => $order
