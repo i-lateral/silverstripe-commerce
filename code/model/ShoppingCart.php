@@ -94,6 +94,9 @@ class ShoppingCart extends ViewableData {
                 } elseif(is_int((int)$custom_value) && $custom_item = ProductCustomisationOption::get()->byID($custom_value)) {
                     $value = $custom_item->Title;
                     $modify_price = $custom_item->ModifyPrice;
+                } else {
+                    $value = $custom_value;
+                    $modify_price = 0;
                 }
 
                 $custom_data->add(new ArrayData(array(

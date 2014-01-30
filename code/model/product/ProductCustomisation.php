@@ -4,7 +4,7 @@ class ProductCustomisation extends DataObject {
     private static $db = array(
         'Title'     => 'Varchar',
         'Required'  => 'Boolean',
-        'DisplayAs' => "Enum('Dropdown,Radio,Checkboxes','Dropdown')",
+        'DisplayAs' => "Enum('Dropdown,Radio,Checkboxes,TextEntry','Dropdown')",
         'Sort'      => 'Int'
     );
 
@@ -30,7 +30,7 @@ class ProductCustomisation extends DataObject {
         $fields->removeByName('ParentID');
         $fields->removeByName('Sort');
 
-        if($this->ID) {
+        if($this->ID && $this->DisplayAs != "TextEntry") {
             $field_types = singleton('ProductCustomisationOption')->getFieldTypes();
 
             // Deal with product features
@@ -94,6 +94,9 @@ class ProductCustomisation extends DataObject {
                     break;
                 case 'Checkboxes':
                     $field = CheckboxSetField::create($name, $title, $options, $defaults->column('ID'));
+                    break;
+                case 'TextEntry':
+                    $field = TextField::create($name, $title);
                     break;
             }
 

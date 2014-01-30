@@ -46,7 +46,7 @@ class AddItemToCartForm extends Form {
         $customisations = array();
 
         foreach($data as $key => $value) {
-            if(!(strpos($key, 'customise') === false))
+            if(!(strpos($key, 'customise') === false) && $value)
                 $customisations[str_replace('customise_','',$key)] = $value;
         }
 
