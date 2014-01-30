@@ -15,7 +15,7 @@
                 <div class="units-row-end">
                     <% if $Images.Count > 1 %>
                         <div class="thumbs">
-                            <% loop $Images %>
+                            <% loop $SortedImages %>
                                 <% if not $First %>
                                     <a href="{$Top.Link('image')}/$ID#commerce-product-image">
                                         $PaddedImage(75,75)
