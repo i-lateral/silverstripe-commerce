@@ -8,16 +8,16 @@
 
         <div class="units-row">
             <div class="unit-50 commerce-product-images">
-                <a href="$Images.First.SetRatioSize(900,550).Link">
-                    $Images.First.PaddedImage(550,550)
-                </a>
+                <div id="commerce-product-image">
+                    $ProductImage.PaddedImage(550,550)
+                </div>
 
                 <div class="units-row-end">
                     <% if $Images.Count > 1 %>
                         <div class="thumbs">
                             <% loop $Images %>
                                 <% if not $First %>
-                                    <a href="$SetRatioSize(900,550).Link">
+                                    <a href="{$Top.Link('image')}/$ID#commerce-product-image">
                                         $PaddedImage(75,75)
                                     </a>
                                 <% end_if %>

@@ -58,15 +58,12 @@ class Product extends DataObject {
      *
      * @return string URL to cart controller
      */
-    public function Link(){
-        if(Controller::curr()->request->Param('ID'))
-            $cat_url = Controller::curr()->request->Param('ID');
-        elseif($this->Categories()->First())
-            $cat_url = $this->Categories()->First()->URLSegment;
-        else
-            $cat_url = 'product';
-
-        return Controller::join_links(BASE_URL , $this->URLSegment);
+    public function Link($action = null){
+        return Controller::join_links(
+            BASE_URL,
+            $this->URLSegment,
+            $action
+        );
     }
 
     public function getMenuTitle() {

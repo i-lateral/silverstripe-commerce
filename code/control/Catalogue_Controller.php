@@ -7,6 +7,7 @@
 class Catalogue_Controller extends Commerce_Controller {
 
     private static $allowed_actions = array(
+        'image',
         'AddItemForm'
     );
 
@@ -38,6 +39,42 @@ class Catalogue_Controller extends Commerce_Controller {
             "Commerce",
             "Page"
         ));
+    }
+
+    /**
+     * Action used to display an image for a product
+     */
+    public function image() {
+        if(!($this->dataRecord instanceOf Product))
+            return $this->redirect(BASE_URL);
+
+        return $this->renderWith(array(
+            "Commerce_product",
+            "Commerce",
+            "Page"
+        ));
+    }
+
+    /**
+     * The productimage action is used to determine the default image that will
+     * appear related to a product
+     *
+     * @return Image
+     */
+    public function ProductImage() {
+        $images = $this->SortedImages();
+        $action = $this->request->param('Action');
+        $id = $this->request->param('ID');
+
+        $image = null;
+
+        if($action && $action == "image" && $id)
+            $image = $images->filter("ID",$id)->first();
+
+        if(!$image)
+            $image = $images->first();
+
+        return $image;
     }
 
     public function AddItemForm() {
