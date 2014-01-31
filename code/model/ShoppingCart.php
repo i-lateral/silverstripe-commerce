@@ -63,7 +63,11 @@ class ShoppingCart extends ViewableData {
      *
      * @param Item Product Object you wish to add
      * @param Quantity number of this item to add
-     * @param Customise array of custom options for this product
+     * @param Customise array of custom options for this product, needs to be a
+     *        multi dimensional array with each item of format:
+     *          -  "Title" => (str)"Item title"
+     *          -  "Value" => (str)"Item Value"
+     *          -  "ModifyPrice" => (float)"Modification to price"
      */
     public function add(Product $add_item, $quantity = 1, $customise = array()) {
         $added = false;
@@ -86,27 +90,15 @@ class ShoppingCart extends ViewableData {
             $custom_data = new ArrayList();
             $price = $add_item->Price;
 
-            foreach($customise as $custom_key => $custom_value) {
-                // Check if customisation is an automated database custom, or an overwrite
-                if(is_array($custom_value)) {
-                    $value = $custom_value['Value'];
-                    $modify_price = $custom_value['Price'];
-                } elseif(is_int((int)$custom_value) && $custom_item = ProductCustomisationOption::get()->byID($custom_value)) {
-                    $value = $custom_item->Title;
-                    $modify_price = $custom_item->ModifyPrice;
-                } else {
-                    $value = $custom_value;
-                    $modify_price = 0;
-                }
-
+            foreach($customise as $custom_item) {
                 $custom_data->add(new ArrayData(array(
-                    'Title' => ucwords(str_replace(array('-','_'), ' ', $custom_key)),
-                    'Value' => $value,
-                    'ModifyPrice' => $modify_price
+                    'Title' => ucwords(str_replace(array('-','_'), ' ', $custom_item["Title"])),
+                    'Value' => $custom_item["Value"],
+                    'ModifyPrice' => $custom_item['ModifyPrice']
                 )));
 
                 // If a customisation modifies price, adjust the price
-                if($modify_price) $price = (float)$price + (float)$modify_price;
+                if($custom_item['ModifyPrice']) $price = (float)$price + (float)$custom_item['ModifyPrice'];
             }
 
             $this->items->add(new ArrayData(array(

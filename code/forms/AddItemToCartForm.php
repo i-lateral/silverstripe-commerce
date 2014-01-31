@@ -46,8 +46,29 @@ class AddItemToCartForm extends Form {
         $customisations = array();
 
         foreach($data as $key => $value) {
-            if(!(strpos($key, 'customise') === false) && $value)
-                $customisations[str_replace('customise_','',$key)] = $value;
+            if(!(strpos($key, 'customise') === false) && $value) {
+                $custom_data = explode("_",$key);
+
+                if($custom_item = ProductCustomisation::get()->byID($custom_data[1])) {
+                    $modify_price = 0;
+
+                    // Check if the current selected option has a price modification
+                    if($custom_item->Options()->exists()) {
+                        $option = $custom_item
+                            ->Options()
+                            ->filter("Title",$value)
+                            ->first();
+                        $modify_price = ($option) ? $option->ModifyPrice : 0;
+                    }
+
+                    $customisations[] = array(
+                        "Title" => $custom_item->Title,
+                        "Value" => $value,
+                        "ModifyPrice" => $modify_price,
+                    );
+                }
+
+            }
         }
 
         if($product) {

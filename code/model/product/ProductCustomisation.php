@@ -77,11 +77,11 @@ class ProductCustomisation extends DataObject {
      */
     public function Field() {
         if($this->Title && $this->DisplayAs) {
-            $name = 'customise_' . Convert::raw2url($this->Title);
+            $name = "customise_{$this->ID}_" . Convert::raw2url($this->Title);
             $title = ($this->Required) ? $this->Title . ' *' : $this->Title;
-            $options = $this->Options()->map('ID','ItemSummary');
+            $options = $this->Options()->map('Title','ItemSummary');
             $defaults = $this->DefaultOptions();
-            $default = ($defaults->first()) ? $defaults->first()->ID : 0;
+            $default = ($defaults->exists()) ? $defaults->first()->Title : null;
 
             switch($this->DisplayAs) {
                 case 'Dropdown':
@@ -162,7 +162,7 @@ class ProductCustomisationOption extends DataObject {
         'Default'       => 'CheckboxField'
     );
 
-    private static $default_sort = "\"Sort\" DESC";
+    private static $default_sort = "\"Sort\" ASC";
 
     /**
      * Use this method to get a full list of field types
