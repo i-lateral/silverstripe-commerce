@@ -12,6 +12,48 @@ class Catalogue_Controller extends Commerce_Controller {
     );
 
     /**
+     * Find the current category via its URL
+     *
+     * @return ProductCategory
+     *
+     */
+    public static function get_current_category() {
+        $segment = Controller::curr()->request->param('URLSegment');
+        $return = null;
+
+        if($segment) {
+            $return = ProductCategory::get()
+                ->filter('URLSegment',$segment)
+                ->first();
+        }
+
+        if(!$return) $return = ProductCategory::create();
+
+        return $return;
+    }
+
+    /**
+     * Find the current category via its URL
+     *
+     * @return Product
+     *
+     */
+    public static function get_current_product() {
+        $segment = Controller::curr()->request->param('URLSegment');
+        $return = null;
+
+        if($segment) {
+            $return = Product::get()
+                ->filter('URLSegment',$segment)
+                ->first();
+        }
+
+        if(!$return) $return = Product::create();
+
+        return $return;
+    }
+
+    /**
      * Return the link to this controller, but force the expanded link to be returned so that form methods and
      * similar will function properly.
      *
@@ -89,4 +131,6 @@ class Catalogue_Controller extends Commerce_Controller {
         } else
             return false;
     }
+
+
 }

@@ -49,6 +49,59 @@ class ProductCategory extends DataObject {
     }
 
     /**
+     * Returns TRUE if this is the currently active category that is being used
+     * to handle a request.
+     *
+     * @return bool
+     */
+    public function isCurrent() {
+        if($this->ID)
+            return $this->ID == Catalogue_Controller::get_current_category()->ID;
+        else
+            return $this === Catalogue_Controller::get_current_category();
+    }
+
+    /**
+     * Check if this category is in the currently active section (e.g. it is
+     * either current or one of it's children or products is currently being
+     * viewed).
+     *
+     * @return bool
+     */
+    public function isSection() {
+        // First check if we are currently viewing a product
+        $product = Catalogue_Controller::get_current_product();
+
+        if($product->ID && $product->Categories()->exists()) {
+            $ancestors = $product->Categories()->first()->getAncestors()->column();
+            $ancestors[] = $product->Categories()->first()->ID;
+        } else {
+            // Get a map of ancestors
+            $ancestors = Catalogue_Controller::get_current_category()->getAncestors()->column();
+
+            if($this->isCurrent()) $ancestors[] = $this->ID;
+        }
+
+        return in_array($this->ID,$ancestors) ? true : false;
+    }
+
+    /**
+     * Return "link", "current" or section depending on if this page is the current page, or not on the current page but
+     * in the current section.
+     *
+     * @return string
+     */
+    public function LinkingMode() {
+        if($this->isCurrent()) {
+            return 'current';
+        } elseif($this->isSection()) {
+            return 'section';
+        } else {
+            return 'link';
+        }
+    }
+
+    /**
      * Return a breadcrumb trail for this product (which accounts for parent
      * categories)
      *
