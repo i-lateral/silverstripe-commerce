@@ -21,7 +21,7 @@ class ProductCustomisation extends DataObject {
         'DisplayAs'
     );
 
-    private static $default_sort = "\"Sort\" DESC";
+    private static $default_sort = "\"Sort\" ASC";
 
     public function getCMSFields() {
         $fields = parent::getCMSFields();
