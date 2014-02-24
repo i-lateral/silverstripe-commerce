@@ -46,7 +46,9 @@ class Order extends DataObject {
         'SubTotal'          => 'Currency',
         'OrderTotal'        => 'Currency',
         'ItemSummary'       => 'HTMLText',
-        'TranslatedStatus'  => 'Varchar'
+        'TranslatedStatus'  => 'Varchar',
+        'NiceBillingCountry'=> 'Varchar',
+        'NiceDeliveryCountry'=> 'Varchar',
     );
 
     public static $defaults = array(
@@ -232,6 +234,32 @@ class Order extends DataObject {
 
     public function getTranslatedStatus() {
         return _t("Commerce." . strtoupper($this->Status), $this->Status);
+    }
+
+    /**
+     * Get a human readable country name for billing country
+     *
+     * @return String
+     */
+    public function getNiceBillingCountry() {
+        if($this->BillingCountry) {
+            $locale = new Zend_Locale($this->BillingCountry);
+            return $locale->getTranslation($this->BillingCountry, 'country');
+        } else
+            return "";
+    }
+
+    /**
+     * Get a human readable country name for billing country
+     *
+     * @return String
+     */
+    public function getNiceDeliveryCountry() {
+        if($this->DeliveryCountry) {
+            $locale = new Zend_Locale($this->DeliveryCountry);
+            return $locale->getTranslation($this->DeliveryCountry, 'country');
+        } else
+            return "";
     }
 
     protected function generate_order_number() {
