@@ -70,7 +70,10 @@ class CheckoutForm extends Form {
                 TextField::create('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
                 TextField::create('DeliveryCity',_t('Commerce.CITY','City')),
                 TextField::create('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code')),
-                CountryDropdownField::create('DeliveryCountry',_t('Commerce.COUNTRY','Country'),null,'GB')->addExtraClass('btn')
+                CountryDropdownField::create(
+                    'DeliveryCountry',
+                    _t('Commerce.COUNTRY','Country')
+                )->addExtraClass('btn')
             )
             ->addExtraClass('delivery_fields');
 
