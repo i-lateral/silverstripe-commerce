@@ -297,7 +297,7 @@ class Order extends DataObject {
         }
 
         // Deal with sending the status email
-        if($this->isChanged('Status') && in_array($this->Status, array('failed','paid','processing','dispatched')) ) {
+        if($this->isChanged('Status') && in_array($this->Status, array('paid','processing','dispatched')) ) {
             $siteconfig = SiteConfig::current_site_config();
 
             $from =  $siteconfig->EmailFromAddress;
