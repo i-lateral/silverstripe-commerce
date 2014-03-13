@@ -33,12 +33,13 @@ en_GB:
     CARTUPDATE: 'Update Cart'
     CARTPROCEED: 'Proceed to Checkout'
     # Checkout
-    CHECKOUTMETA: 'Your Details'
+    PersonalDetails: 'Personal Details'
     BILLINGDETAILS: 'Billing Details'
     FIRSTNAMES: 'First Name(s)'
     SURNAME: 'Surname'
     EMAIL: 'Email'
     PHONE: 'Phone Number'
+    ADDRESS: 'Address'
     ADDRESS1: 'Address Line 1'
     ADDRESS2: 'Address Line 2'
     CITY: 'City'
@@ -51,7 +52,6 @@ en_GB:
     SUMMARY: 'Summary'
     SUMMARYCOPY: 'Please review your personal information before proceeding and entering your payment details'
     FULLNAME: 'Name'
-    ADDRESS: 'Address'
     CONFIRMPAY: 'Confirm and Pay'
     # Completion
     ORDERCOMPLETE: 'Order Complete'

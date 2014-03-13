@@ -33,12 +33,13 @@ de_DE:
     CARTUPDATE: 'Warenkorb aktualisieren'
     CARTPROCEED: 'Zur Kasse gehen'
     # Checkout
-    CHECKOUTMETA: 'Ihre Angaben'
+    PersonalDetails: 'Persönliche'
     BILLINGDETAILS: 'Rechnungsanschrift'
     FIRSTNAMES: 'Vorname(n)'
     SURNAME: 'Familienname'
     EMAIL: 'E-Mail'
     PHONE: 'Telefonnummer'
+    ADDRESS: 'Adresse'
     ADDRESS1: 'Adresszeile 1'
     ADDRESS2: 'Adresszeile 2'
     CITY: 'Stadt'
@@ -51,7 +52,6 @@ de_DE:
     SUMMARY: 'Zusammenfassung'
     SUMMARYCOPY: 'Bitte Überprüfen Sie ihre persönlichen Angaben, bevor Sie fortfahren und Ihre Zahlungsangaben eingeben'
     FULLNAME: 'Name'
-    ADDRESS: 'Adresse'
     CONFIRMPAY: 'Bestätigen und zahlen'
     # Completion
     ORDERCOMPLETE: 'Auftrag fertig'
