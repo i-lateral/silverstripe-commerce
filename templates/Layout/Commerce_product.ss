@@ -69,6 +69,8 @@
 
         <div class="commerce-clear"></div>
 
+
+        <%-- Description & Attributes: Only loaded when added through the CMS --%>
         <div class="units-row">
             <div class="commerce-product-details">
                 <% if $Description %>
@@ -90,6 +92,37 @@
                 <% end_if %>
             </div>
         </div>
+
+        <%-- Related Products: Only loaded when added through the CMS --%>
+        <% if $RelatedProducts.exists %>
+            <hr/>
+
+            <h2><% _t('Commerce.RELATEDPRODUCTS','Related Products') %></h2>
+
+            <div class="units-row commerce-related-products">
+                <% loop $RelatedProducts %>
+                    <div class="unit-20 commerce-list-child">
+                        <h3><a href="$Link">$Title</a></h3>
+
+                        <p>
+                            <a href="$Link">
+                                $SortedImages.First.CroppedImage(200,200)
+                            </a>
+
+                            <span class="price label label-green big">
+                                {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}
+                            </span>
+                        </p>
+                    </div>
+
+                    <% if $MultipleOf(5) && not $Last %>
+                        </div><div class="units-row commerce-related-products">
+                    <% end_if %>
+
+
+                <% end_loop %>
+            </div>
+        <% end_if %>
 
     </div>
 </div>

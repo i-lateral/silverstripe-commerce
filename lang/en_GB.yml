@@ -21,6 +21,7 @@ en_GB:
     STATUS: 'Status'
     REORDER: 'Reorder'
     TOTAL: 'Total'
+    RELATEDPRODUCTS: 'Related Products'
     # Order Status
     INCOMPLETE: 'Incomplete'
     FAILED: 'Failed'
