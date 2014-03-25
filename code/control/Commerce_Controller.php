@@ -56,4 +56,47 @@ abstract class Commerce_Controller extends Controller {
 
         parent::init();
     }
+
+    /**
+     * Process and render search results. This has been hacked a bit to load
+     * products into the list (if they exists). Will need to come up with a more
+     * elegant solution to dealing with complex searches of objects though.
+     *
+     * @param array $data The raw request data submitted by user
+     * @param SearchForm $form The form instance that was submitted
+     * @param SS_HTTPRequest $request Request generated for this action
+     */
+    public function results($data, $form, $request) {
+        $results = $form->getResults();
+
+        // For the moment this will also need to be added to your
+        // Page_Controller::results() method (until a more elegant solution can
+        // be found
+        if(class_exists("Product")) {
+            $products = Product::get()->filterAny(array(
+                "Title:PartialMatch" => $data["Search"],
+                "SKU" => $data["Search"],
+                "Description:PartialMatch" => $data["Search"]
+            ));
+
+            $results->merge($products);
+        }
+
+        $results = $results->sort("Title","ASC");
+
+        $data = array(
+            'Results' => $results,
+            'Query' => $form->getSearchQuery(),
+            'Title' => _t('SearchForm.SearchResults', 'Search Results')
+        );
+
+        return $this
+            ->owner
+            ->customise($data)
+            ->renderWith(array(
+                'Page_results',
+                'SearchResults',
+                'Page'
+            ));
+    }
 }
