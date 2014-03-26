@@ -65,7 +65,7 @@ class DeliveryDetailsForm extends Form {
         Session::set('Order', $order);
 
         $url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseUrl(),
             Payment_Controller::$url_segment
         );
 
