@@ -5,7 +5,10 @@ Image::add_extension('Ext_Commerce_Image');
 Controller::add_extension('Ext_Commerce_Controller');
 Group::add_extension('Ext_Commerce_Group');
 Member::add_extension('Ext_Commerce_Member');
-Users_Account_Controller::add_extension('Ext_Commerce_UsersController');
+
+if(class_exists('Users_Account_Controller')) {
+    Users_Account_Controller::add_extension('Ext_Commerce_UsersController');
+}
 
 // If subsites is installed
 if(class_exists('Subsite')) {
