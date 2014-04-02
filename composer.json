@@ -21,6 +21,11 @@
         "bummzack/sortablefile": "dev-master",
         "i-lateral/silverstripe-users": "dev-master"
     },
+	"suggest": {
+		"silverstripe/cms": "Add full content management support to your site",
+		"i-lateral/silverstripe-siteconfig": "Add site settings support",
+		"i-lateral/silverstripe-middleman": "Add CMS vars, such as menu, searchform, etc to your site"
+	},
     "extra": {
         "installer-name": "commerce"
     }
