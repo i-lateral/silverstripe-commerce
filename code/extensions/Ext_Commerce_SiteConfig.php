@@ -165,12 +165,12 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         );
 
         // Add config sets
-        $fields->addFieldToTab('Root.eCommerce', $contact_fields);
-        $fields->addFieldToTab('Root.eCommerce', $settings_fields);
-        $fields->addFieldToTab('Root.eCommerce', $cart_fields);
-        $fields->addFieldToTab('Root.eCommerce', $email_fields);
-        $fields->addFieldToTab('Root.eCommerce', $postage_fields);
-        $fields->addFieldToTab('Root.eCommerce', $payment_fields);
+        $fields->addFieldToTab('Root.Commerce', $contact_fields);
+        $fields->addFieldToTab('Root.Commerce', $settings_fields);
+        $fields->addFieldToTab('Root.Commerce', $cart_fields);
+        $fields->addFieldToTab('Root.Commerce', $email_fields);
+        $fields->addFieldToTab('Root.Commerce', $postage_fields);
+        $fields->addFieldToTab('Root.Commerce', $payment_fields);
     }
 
     public function requireDefaultRecords() {
