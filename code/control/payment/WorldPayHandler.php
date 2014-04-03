@@ -3,28 +3,35 @@
 class WorldPayHandler extends CommercePaymentHandler {
 
     protected function gateway_fields() {
-        $order = Session::get('Order');
+        $order = Session::get('Commerce.Order');
         $site = SiteConfig::current_site_config();
+
+        $callback_url = Controller::join_links(
+            Director::absoluteBaseURL(),
+            Commerce_Payment_Controller::$url_segment,
+            "callback",
+            $this->payment_gateway->ID
+        );
 
         $fields = new FieldList(
             // Account details
             HiddenField::create('instId', null, $this->payment_gateway->InstallID),
             HiddenField::create('cartId', null, $order->OrderNumber),
-            HiddenField::create('MC_callback', null, Director::absoluteBaseURL() . Payment_Controller::$url_segment),
+            HiddenField::create('MC_callback', null, $callback_url),
 
             // Amount and Currency details
-            HiddenField::create('amount', null, $order->getOrderTotal()),
+            HiddenField::create('amount', null, $order->Total->Value),
             HiddenField::create('currency', null, $site->Currency()->GatewayCode),
 
             // Payee details
-            HiddenField::create('name', null, $order->BillingFirstnames . " " . $order->BillingSurname),
-            HiddenField::create('address1', null, $order->BillingAddress1),
-            HiddenField::create('address2', null, $order->BillingAddress2),
-            HiddenField::create('town', null, $order->BillingCity),
-            HiddenField::create('region', null, $order->BillingState),
-            HiddenField::create('postcode', null, $order->BillingPostCode),
-            HiddenField::create('country', null, $order->BillingCountry),
-            HiddenField::create('email', null, $order->BillingEmail)
+            HiddenField::create('name', null, $order->FirstName . " " . $order->Surname),
+            HiddenField::create('address1', null, $order->Address1),
+            HiddenField::create('address2', null, $order->Address2),
+            HiddenField::create('town', null, $order->City),
+            HiddenField::create('region', null, $order->State),
+            HiddenField::create('postcode', null, $order->PostCode),
+            HiddenField::create('country', null, $order->Country),
+            HiddenField::create('email', null, $order->Email)
         );
 
         if($this->payment_gateway->GatewayMessage)
@@ -36,7 +43,20 @@ class WorldPayHandler extends CommercePaymentHandler {
         return $fields;
     }
 
-    public function ProcessCallback($data = null) {
+    public function ProcessCallback($data = null, $success_data, $error_data) {
+        $success_url = Controller::join_links(
+            BASE_URL,
+            Commerce_Payment_Controller::$url_segment,
+            'complete'
+        );
+
+        $error_url = Controller::join_links(
+            BASE_URL,
+            Commerce_Payment_Controller::$url_segment,
+            'complete',
+            'error'
+        );
+
         // Check if CallBack data exists and install id matches the saved ID
         if(
             isset($data) && // Data and order are set
