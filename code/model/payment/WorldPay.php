@@ -37,7 +37,7 @@ class WorldPay extends CommercePaymentMethod {
 
             $fields->addFieldToTab(
                 'Root.Main',
-                TextField::create('ResponsePassword', 'Payment Response Password)')
+                PasswordField::create('ResponsePassword', 'Payment Response Password)')
             );
         }
 
