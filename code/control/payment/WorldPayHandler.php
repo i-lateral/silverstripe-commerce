@@ -13,6 +13,8 @@ class WorldPayHandler extends CommercePaymentHandler {
             $this->payment_gateway->ID
         );
 
+        $callback_url = $callback_url . "?status=final&order={$order->OrderNumber}";
+
         $fields = new FieldList(
             // Account details
             HiddenField::create('instId', null, $this->payment_gateway->InstallID),
@@ -66,6 +68,36 @@ class WorldPayHandler extends CommercePaymentHandler {
                 else
                     return false;
             }
+        }
+        // Otherwise check that we have hit a URL for the customer set via "MC_callback"
+        elseif (
+            isset($data) && // Data and order are set
+            (isset($data['status']) && isset($data['order'])) &&
+            ($data['status'] == "final")
+        ) {
+            $successs_url = Controller::join_links(
+                Director::BaseURL(),
+                Commerce_Payment_Controller::$url_segment,
+                'complete'
+            );
+
+            $error_url = Controller::join_links(
+                Director::BaseURL(),
+                Commerce_Payment_Controller::$url_segment,
+                'complete',
+                'error'
+            );
+
+            // Find our order from the URL
+            $order = Order::get()->filter("OrderNumber",$data["order"])->first();
+
+            $controller = Controller::curr();
+
+            // If order exists and was ok, redirect to success, else show error
+            if($order && $order->Status == 'paid')
+                return $controller->redirect($successs_url);
+            else
+                return $controller->redirect($error_url);
         }
 
         return false;
