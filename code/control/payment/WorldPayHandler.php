@@ -61,7 +61,8 @@ class WorldPayHandler extends CommercePaymentHandler {
         if(
             isset($data) && // Data and order are set
             (isset($data['instId']) && isset($data['cartId']) && isset($data['transStatus'])) && // required$
-            $this->payment_gateway->InstallID == $data['instId'] // The current install ID matches the postback ID
+            $this->payment_gateway->InstallID == $data['instId'] && // The current install ID matches the postback ID
+            (isset($data["callbackPW"]) && ($this->payment_gateway->ResponsePassword == $data["callbackPW"])
         ) {
             $order = Order::get()->filter('OrderNumber',$data['cartId'])->first();
             $order_status = $data['transStatus'];
