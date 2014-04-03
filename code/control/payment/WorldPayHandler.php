@@ -44,18 +44,6 @@ class WorldPayHandler extends CommercePaymentHandler {
     }
 
     public function ProcessCallback($data = null, $success_data, $error_data) {
-        $success_url = Controller::join_links(
-            BASE_URL,
-            Commerce_Payment_Controller::$url_segment,
-            'complete'
-        );
-
-        $error_url = Controller::join_links(
-            BASE_URL,
-            Commerce_Payment_Controller::$url_segment,
-            'complete',
-            'error'
-        );
 
         // Check if CallBack data exists and install id matches the saved ID
         if(
