@@ -83,7 +83,7 @@ class AddItemToCartForm extends Form {
             $message .= _t('Commerce.VIEWCART', 'View cart');
             $message .= '</a>';
 
-            $this->controller->setFlashMessage(
+            $this->controller->setSessionMessage(
                 "success",
                 $message
             );
