@@ -9,11 +9,12 @@ and PayPal (coming soon).
 ## Dependancies
 
 * SilverStripe Framework 3.1.x
+* [Session Messenger](https://github.com/i-lateral/silverstripe-sessionmessenger)
 * [Grid Field Extensions](https://github.com/ajshort/silverstripe-gridfieldextensions)
 * [Grid Field Bulk Editing Tools](https://github.com/colymba/GridFieldBulkEditingTools)
 * [SortableFile](https://github.com/bummzack/sortablefile)
 
-**NOTE** This module will need **either** the CMS module, or the [siteconfig](https://github.com/i-lateral/silverstripe-siteconfig) 
+**NOTE** This module will need **either** the CMS module, or the [siteconfig](https://github.com/i-lateral/silverstripe-siteconfig)
 modules installed, or you will get an error.
 
 ## Also Integrates With
