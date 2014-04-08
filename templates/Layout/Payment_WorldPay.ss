@@ -1,4 +1,5 @@
 <WPDISPLAY FILE="header.html">
+
     <meta http-equiv="refresh" content="5;url={$RedirectURL}" />
 
     <h1><% _t("Commerce.PROCESSING","Processing") %></h1>

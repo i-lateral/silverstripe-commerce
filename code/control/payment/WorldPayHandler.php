@@ -77,8 +77,7 @@ class WorldPayHandler extends CommercePaymentHandler {
                 $order->GatewayData = json_encode($data);
                 $order->write();
 
-                if($order_status == 'Y')
-                    $vars["RedirectURL"] = $success_url;
+                if($order_status == 'Y') $vars["RedirectURL"] = $success_url;
             }
         }
 
