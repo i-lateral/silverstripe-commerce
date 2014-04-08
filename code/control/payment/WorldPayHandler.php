@@ -46,6 +46,23 @@ class WorldPayHandler extends CommercePaymentHandler {
     }
 
     public function ProcessCallback($data = null, $success_data, $error_data) {
+        $successs_url = Controller::join_links(
+            Director::BaseURL(),
+            Commerce_Payment_Controller::$url_segment,
+            'complete'
+        );
+
+        $error_url = Controller::join_links(
+            Director::BaseURL(),
+            Commerce_Payment_Controller::$url_segment,
+            'complete',
+            'error'
+        );
+
+        $vars = array(
+            "SiteConfig" => SiteConfig::current_site_config(),
+            "RedirectURL" => $error_url
+        );
 
         // Check if CallBack data exists and install id matches the saved ID
         if(
@@ -64,43 +81,13 @@ class WorldPayHandler extends CommercePaymentHandler {
                 $order->write();
 
                 if($order_status == 'Y')
-                    return true;
-                else
-                    return false;
+                    $vars["RedirectURL"] = $success_url;
             }
         }
-        // Otherwise check that we have hit a URL for the customer set via "MC_callback"
-        elseif (
-            isset($data) && // Data and order are set
-            (isset($data['status']) && isset($data['order'])) &&
-            ($data['status'] == "final")
-        ) {
-            $successs_url = Controller::join_links(
-                Director::BaseURL(),
-                Commerce_Payment_Controller::$url_segment,
-                'complete'
-            );
 
-            $error_url = Controller::join_links(
-                Director::BaseURL(),
-                Commerce_Payment_Controller::$url_segment,
-                'complete',
-                'error'
-            );
+        $this->extend("updateCallBack", $vars);
 
-            // Find our order from the URL
-            $order = Order::get()->filter("OrderNumber",$data["order"])->first();
-
-            $controller = Controller::curr();
-
-            // If order exists and was ok, redirect to success, else show error
-            if($order && $order->Status == 'paid')
-                return $controller->redirect($successs_url);
-            else
-                return $controller->redirect($error_url);
-        }
-
-        return false;
+        return $this->renderWith(array("Payment_WorldPay"), $vars);
     }
 
 }
