@@ -1,11 +1,5 @@
 <WPDISPLAY FILE="header.html">
-
-    <script type="text/javascript">
-        function leave() {
-            window.location.replace("{$RedirectURL}");
-        }
-        setTimeout("leave()", 5000);
-    </script>
+    <meta http-equiv="refresh" content="5;url={$RedirectURL}" />
 
     <h1><% _t("Commerce.PROCESSING","Processing") %></h1>
 
