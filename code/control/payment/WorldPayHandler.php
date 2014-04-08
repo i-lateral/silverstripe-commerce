@@ -13,13 +13,10 @@ class WorldPayHandler extends CommercePaymentHandler {
             $this->payment_gateway->ID
         );
 
-        $callback_url = $callback_url . "?status=final&order={$order->OrderNumber}";
-
         $fields = new FieldList(
             // Account details
             HiddenField::create('instId', null, $this->payment_gateway->InstallID),
             HiddenField::create('cartId', null, $order->OrderNumber),
-            HiddenField::create('MC_callback', null, $callback_url),
 
             // Amount and Currency details
             HiddenField::create('amount', null, $order->Total->Value),
@@ -67,9 +64,9 @@ class WorldPayHandler extends CommercePaymentHandler {
         // Check if CallBack data exists and install id matches the saved ID
         if(
             isset($data) && // Data and order are set
-            (isset($data['instId']) && isset($data['cartId']) && isset($data['transStatus'])) && // required$
+            (isset($data['instId']) && isset($data['cartId']) && isset($data['transStatus']) && isset($data["callbackPW"])) && // check required
             $this->payment_gateway->InstallID == $data['instId'] && // The current install ID matches the postback ID
-            (isset($data["callbackPW"]) && ($this->payment_gateway->ResponsePassword == $data["callbackPW"]))
+            $this->payment_gateway->ResponsePassword == $data["callbackPW"]
         ) {
             $order = Order::get()->filter('OrderNumber',$data['cartId'])->first();
             $order_status = $data['transStatus'];
