@@ -43,7 +43,7 @@ class WorldPayHandler extends CommercePaymentHandler {
     }
 
     public function ProcessCallback($data = null, $success_data, $error_data) {
-        $successs_url = Controller::join_links(
+        $success_url = Controller::join_links(
             Director::absoluteBaseURL(),
             Commerce_Payment_Controller::$url_segment,
             'complete'
