@@ -11,6 +11,6 @@
             </div>
         </div>
     <% else %>
-        $CheckoutForm
+        $Form
     <% end_if %>
 </div>
