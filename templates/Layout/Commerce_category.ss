@@ -1,6 +1,8 @@
 <% require css('commerce/css/Commerce.css') %>
 
-<div class="commerce-content-container typography">
+<% include SideBar %>
+
+<div class="commerce-content-container typography <% if $Menu(2) %>unit-75<% end_if %>">
     <% if Level(2) %><p>$Breadcrumbs</p><% end_if %>
 
     <h1>$Title</h1>
@@ -9,6 +11,7 @@
         <% if Children.exists %>
             <nav class="nav-g">
                 <ul>
+                    <li>Filter By:</li>
                     <% loop Children %>
                         <li><a href="$Link">$Title</a></li>
                     <% end_loop %>
@@ -35,5 +38,3 @@
         </div>
     <% end_if %>
 </div>
-
-<% include SideBar %>

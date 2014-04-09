@@ -102,6 +102,15 @@ class ProductCategory extends DataObject {
     }
 
     /**
+     * Return "link" or "section" depending on if this is the current section.
+     *
+     * @return string
+     */
+    public function LinkOrSection() {
+        return $this->isSection() ? 'section' : 'link';
+    }
+
+    /**
      * Return a breadcrumb trail for this product (which accounts for parent
      * categories)
      *
@@ -118,8 +127,8 @@ class ProductCategory extends DataObject {
     }
 
     /**
-     * Returns the product in the current page stack of the given level.
-     * Level(1) will return the main menu item that we're currently inside, etc.
+     * Returns the category in the current stack of the given level.
+     * Level(1) will return the category item that we're currently inside, etc.
      */
     public function Level($level) {
         $parent = $this;
