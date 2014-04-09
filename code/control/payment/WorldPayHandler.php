@@ -72,12 +72,19 @@ class WorldPayHandler extends CommercePaymentHandler {
             $order_status = $data['transStatus'];
 
             if($order) {
-                $order->Status = ($order_status == 'Y') ? 'paid' : 'failed';
+                if($order_status == 'Y') {
+                    $order->Status = 'paid';
+                    $vars = array(
+                        "SiteConfig" => SiteConfig::current_site_config(),
+                        "RedirectURL" => $success_url
+                    );
+                } else {
+                    $order->Status = 'failed';
+                }
+
                 // Store all the data sent from the gateway in a json
                 $order->GatewayData = json_encode($data);
                 $order->write();
-
-                if($order_status == 'Y') $vars["RedirectURL"] = $success_url;
             }
         }
 
