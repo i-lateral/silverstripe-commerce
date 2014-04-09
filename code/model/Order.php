@@ -105,24 +105,9 @@ class Order extends DataObject implements PermissionProvider {
         $fields->removeByName('DeliveryPostCode');
         $fields->removeByName('DeliveryCountry');
 
-        // Add non-editable order number
-        $ordernum_field = TextField::create('OrderNumber')
-            ->setReadonly(true)
-            ->performReadonlyTransformation();
-
-        $fields->addFieldToTab('Root.Main', $ordernum_field, 'BillingEmail');
-
-        // Display the created and last edited dates
-        $lastedited_field = TextField::create('LastEdited', 'Last time order was saved')
-            ->setReadonly(true)
-            ->performReadonlyTransformation();
-
-        $created_field = TextField::create('Created')
-            ->setReadonly(true)
-            ->performReadonlyTransformation();
-
-        $fields->addFieldToTab('Root.Main', $created_field, 'EmailDispatchSent');
-        $fields->addFieldToTab('Root.Main', $lastedited_field, 'EmailDispatchSent');
+        $fields->addFieldToTab('Root.Main', ReadonlyField::create('OrderNumber'), 'Status');
+        $fields->addFieldToTab('Root.Main', ReadonlyField::create('Created'));
+        $fields->addFieldToTab('Root.Main', ReadonlyField::create('LastEdited', 'Last time order was saved'));
 
         // Load basic list of items
         $item_config = GridFieldConfig::create()->addComponents(
