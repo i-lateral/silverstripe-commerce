@@ -13,15 +13,17 @@
 
 <WPDISPLAY FILE="header.html">
 
-    <h1><% _t("Commerce.PROCESSING","Processing") %></h1>
+    <div class="commerce-payment-status">
+        <h1><% _t("Commerce.PROCESSING","Processing") %></h1>
 
-    <p>
-        <% _t("Commerce.REDIRECTINGTOSTORE","We are now redirecting you, if you are not redirected automatically then click the link below.") %>
-    </p>
+        <p>
+            <% _t("Commerce.REDIRECTINGTOSTORE","We are now redirecting you, if you are not redirected automatically then click the link below.") %>
+        </p>
 
-    <p>
-        <a href="{$RedirectURL}">$SiteConfig.Title</a>
-    </p>
+        <p>
+            <a href="{$RedirectURL}">$SiteConfig.Title</a>
+        </p>
+    </div>
 
     <WPDISPLAY ITEM="banner">
 <WPDISPLAY FILE="footer.html">
