@@ -5,6 +5,7 @@ class ProductCustomisation extends DataObject {
         'Title'     => 'Varchar',
         'Required'  => 'Boolean',
         'DisplayAs' => "Enum('Dropdown,Radio,Checkboxes,TextEntry','Dropdown')",
+        'MaxLength' => "Int",
         'Sort'      => 'Int'
     );
 
@@ -29,6 +30,7 @@ class ProductCustomisation extends DataObject {
         $fields->removeByName('Options');
         $fields->removeByName('ParentID');
         $fields->removeByName('Sort');
+        $fields->removeByName('MaxLength');
 
         if($this->ID && $this->DisplayAs != "TextEntry") {
             $field_types = singleton('ProductCustomisationOption')->getFieldTypes();
@@ -52,7 +54,13 @@ class ProductCustomisation extends DataObject {
             );
 
             $fields->addFieldToTab('Root.Main', $options_field);
-        } else {
+        }
+
+        if($this->ID && $this->DisplayAs == "TextEntry") {
+            $fields->addFieldToTab("Root.Main",TextField::create("MaxLength"));
+        }
+
+        if(!$this->ID) {
             $fields->addFieldToTab('Root.Main',LiteralField::create('CreateWarning','<p>You need to create this before you can add options</p>'));
         }
 
@@ -97,6 +105,7 @@ class ProductCustomisation extends DataObject {
                     break;
                 case 'TextEntry':
                     $field = TextField::create($name, $title);
+                    if($this->MaxLength) $field->setMaxLength($this->MaxLength);
                     break;
             }
 
