@@ -405,23 +405,11 @@ class Order extends DataObject implements PermissionProvider {
     }
 
     /**
-     * Only order creaters or users with DELETE admin rights can view an order
+     * No one should be able to delete an order once it has been created
      *
      * @return Boolean
      */
     public function canDelete($member = null) {
-        if($member instanceof Member)
-            $memberID = $member->ID;
-        else if(is_numeric($member))
-            $memberID = $member;
-        else
-            $memberID = Member::currentUserID();
-
-        if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_DELETE_ORDERS")))
-            return true;
-        else if($memberID && $memberID == $this->CustomerID)
-            return true;
-
         return false;
     }
 }
