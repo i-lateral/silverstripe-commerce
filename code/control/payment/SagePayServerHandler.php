@@ -127,7 +127,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
             return null;
         } else {
             $order->PaymentID = $response_data['VPSTxId'];
-            Session::set('Order',$order);
+            Session::set('Commerce.Order',$order);
 
             // Finally, set the GateWay URL for the form
             $data['GatewayURL'] = $response_data['NextURL'];
