@@ -5,6 +5,8 @@ en_GB:
     DATE: 'Date'
     PRICE: 'Price'
     COST: 'Cost'
+    Including: 'Including'
+    Excluding: 'Excluding'
     QTY: 'Qty'
     OR: 'Or'
     PACKSIZE: 'Pack Size'

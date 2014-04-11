@@ -40,6 +40,7 @@ class Order extends DataObject implements PermissionProvider {
         // Postage and Email notification
         'PostageType'       => 'Varchar',
         'PostageCost'       => 'Currency',
+        'PostageTax'        => 'Currency',
         'EmailDispatchSent' => 'Boolean',
         // Payment Gateway Info
         'GatewayData'       => 'Text',
@@ -59,6 +60,8 @@ class Order extends DataObject implements PermissionProvider {
         'BillingAddress'    => 'Text',
         'DeliveryAddress'   => 'Text',
         'SubTotal'          => 'Currency',
+        'Postage'           => 'Currency',
+        'TaxTotal'          => 'Currency',
         'Total'             => 'Currency',
         'ItemSummary'       => 'HTMLText',
         'TranslatedStatus'  => 'Varchar'
@@ -74,6 +77,7 @@ class Order extends DataObject implements PermissionProvider {
         "Surname"       => "Surname",
         "Email"         => "Email",
         "Status"        => "Status",
+        "Total"         => "Total",
         "Created"       => "Created"
     );
 
@@ -191,22 +195,47 @@ class Order extends DataObject implements PermissionProvider {
     }
 
     /**
-     * Total values of items in this order
+     * Total values of items in this order (without any tax)
      *
-     * @return Currency
+     * @return Decimal
      */
     public function getSubTotal() {
         $total = 0;
 
         // Calculate total from items in the list
         foreach($this->Items() as $item) {
-            $total += $item->getTotal();
+            $total += $item->getSubTotal();
         }
 
-        $currency = new Currency();
-        $currency->setValue($total);
+        return $total;
+    }
 
-        return $currency;
+    /**
+     * Total values of items in this order
+     *
+     * @return Decimal
+     */
+    public function getTaxTotal() {
+        $total = 0;
+
+        // Calculate total from items in the list
+        foreach($this->Items() as $item) {
+            $total += $item->getTaxTotal();
+        }
+
+        // Add any tax from postage
+        $total += $this->PostageTax;
+
+        return $total;
+    }
+
+    /**
+     * Get the postage cost for this order
+     *
+     * @return Decimal
+     */
+    public function getPostage() {
+        return $this->PostageCost;
     }
 
     /**
@@ -215,11 +244,7 @@ class Order extends DataObject implements PermissionProvider {
      * @return Decimal
      */
     public function getTotal() {
-        $value = $this->SubTotal->Value + $this->PostageCost;
-        $currency = new Currency();
-        $currency->setValue($value);
-
-        return $currency;
+        return $this->SubTotal + $this->Postage + $this->TaxTotal;
     }
 
     public function getItemSummary() {

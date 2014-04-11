@@ -30,7 +30,7 @@
                         <a href="$Link">$SortedImages.First.CroppedImage(350,350)</a>
 
                         <span class="price label label-green big">
-                            {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}
+                            {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$FrontPrice}
                         </span>
                     </p>
                 </div>

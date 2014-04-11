@@ -19,7 +19,7 @@ class WorldPayHandler extends CommercePaymentHandler {
             HiddenField::create('cartId', null, $order->OrderNumber),
 
             // Amount and Currency details
-            HiddenField::create('amount', null, $order->Total->Value),
+            HiddenField::create('amount', null, $order->Total),
             HiddenField::create('currency', null, $site->Currency()->GatewayCode),
 
             // Payee details

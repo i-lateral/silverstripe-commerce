@@ -19,6 +19,13 @@ class Ext_Commerce_Controller extends Extension {
             if($_SERVER['HTTP_HOST'] != Subsite::currentSubsite()->getPrimaryDomain())
                 Director::redirect(Subsite::currentSubsite()->absoluteBaseURL());
         }
+
+        // Setup currency globally based on what is set in admin
+        $config = SiteConfig::current_site_config();
+
+        if($config->Currency()) {
+            Currency::setCurrencySymbol($config->Currency()->HTMLNotation);
+        }
     }
 
     /**

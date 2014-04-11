@@ -31,7 +31,7 @@ class SagePayFormsHandler extends CommercePaymentHandler {
 
         $post = array(
             "VendorTxCode" => $order->OrderNumber,
-            "Amount" => $order->Total->Value,
+            "Amount" => $order->Total,
             "Currency" => $site->Currency()->GatewayCode,
             "Description" => $this->payment_gateway->GatewayMessage,
             "SuccessURL" => $callback_url,

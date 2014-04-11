@@ -22,7 +22,10 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         'ProcessingEmailAddress'=> "Text",
         'SendDispatchedEmail'   => "Enum('No,Customer,Vendor,Both','Customer')",
         'DispatchedEmailAddress'=> "Text",
-        'VendorEmailFooter'     => "Text"
+        'VendorEmailFooter'     => "Text",
+        'TaxRate'               => "Decimal",
+        "TaxPriceInclude"       => "Boolean",
+        'TaxName'               => "Varchar"
     );
 
     private static $has_one = array(
@@ -35,6 +38,31 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         'PostageAreas'      => 'PostageArea',
         'PaymentMethods'    => 'CommercePaymentMethod'
     );
+
+    private static $defaults = array(
+        "TaxPriceInclude" => true
+    );
+
+    /**
+     * Determine if there is tax name (from site config), if so
+     * include with the string determining if the price includes or exludes
+     * tax and return both.
+     *
+     * @return String
+     */
+    public function getTaxString() {
+        $return = "";
+
+        if($this->owner->TaxName && $this->owner->TaxPriceInclude) {
+            $return .= _t("Commerce.Including", "Including");
+            $return .= " " . $this->owner->TaxName;
+        } elseif($this->owner->TaxName && !$this->owner->TaxPriceInclude) {
+            $return .= _t("Commerce.Excluding", "Excluding");
+            $return .= " " . $this->owner->TaxName;
+        }
+
+        return $return;
+    }
 
     public function sendCommerceEmail($recipient, $status) {
         if($recipient == 'Customer')
@@ -164,6 +192,17 @@ class Ext_Commerce_SiteConfig extends DataExtension {
             array($payment_table)
         );
 
+        // Compress tax fields
+        $tax_fields = ToggleCompositeField::create(
+            'TaxDetails',
+            'Tax',
+            array(
+                NumericField::create('TaxRate'),
+                TextField::create("TaxName","Name of your tax (EG 'VAT')"),
+                CheckboxField::create('TaxPriceInclude', 'Show price including tax?')
+            )
+        )->setHeadingLevel(4);
+
         // Add config sets
         $fields->addFieldToTab('Root.Commerce', $contact_fields);
         $fields->addFieldToTab('Root.Commerce', $settings_fields);
@@ -171,6 +210,7 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         $fields->addFieldToTab('Root.Commerce', $email_fields);
         $fields->addFieldToTab('Root.Commerce', $postage_fields);
         $fields->addFieldToTab('Root.Commerce', $payment_fields);
+        $fields->addFieldToTab('Root.Commerce', $tax_fields);
     }
 
     public function requireDefaultRecords() {

@@ -139,6 +139,7 @@ class Commerce_ShoppingCartForm extends Form {
                 'Description' => nl2br(Convert::raw2xml($item->Description), true),
                 'Customised' => $customised_list,
                 'Price' => DBField::create_field('Decimal', $item->Price),
+                'Tax' => DBField::create_field('Decimal', $item->Tax),
                 'Quantity' => DBField::create_field('Int', $item->Quantity),
                 'Image' => Image::get()->byID($item->ImageID),
             )));

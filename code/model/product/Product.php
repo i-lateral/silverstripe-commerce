@@ -34,7 +34,10 @@ class Product extends DataObject {
     private static $casting = array(
         'MenuTitle'         => 'Varchar',
         'CategoriesList'    => 'Varchar',
-        'CMSThumbnail'      => 'Varchar'
+        'CMSThumbnail'      => 'Varchar',
+        "PriceWithTax"      => 'Decimal',
+        "Tax"               => 'Decimal',
+        "TaxName"           => 'Varchar'
     );
 
     private static $summary_fields = array(
@@ -69,6 +72,58 @@ class Product extends DataObject {
 
     public function getMenuTitle() {
         return $this->Title;
+    }
+
+    /**
+     * Get the amount of tax that the base price of this product produces as a
+     * decimal.
+     *
+     * If tax is not set (or set to 0) then this returns 0.
+     *
+     * @return Decimal
+     */
+    public function getTax() {
+        $config = SiteConfig::current_site_config();
+        (float)$price = $this->Price;
+        (float)$rate = $config->TaxRate;
+
+        if($rate > 0)
+            (float)$tax = ($price / 100) * $rate; // Get our tax amount from the price
+        else
+            (float)$tax = 0;
+
+        return number_format($tax, 2);
+    }
+
+    /**
+     * The price for this product including the percentage cost of the tax
+     * (set in global config).
+     *
+     * This price is based on the tax rates set in the admin and whether or not
+     * the siteconfig is set to include tax or not.
+     *
+     * @return Decimal
+     */
+    public function getPriceWithTax() {
+        (float)$price = $this->Price;
+        (float)$tax = $this->Tax;
+
+        return number_format($price + $tax, 2);
+    }
+
+    /**
+     * Determine if we need to show the product price with or without tax, based
+     * on siteconfig
+     *
+     * @return Decimal
+     */
+    public function getFrontPrice() {
+        $config = SiteConfig::current_site_config();
+
+        if($config->TaxPriceInclude)
+            return $this->getPriceWithTax();
+        else
+            return $this->Price;
     }
 
     /**

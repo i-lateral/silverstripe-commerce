@@ -146,6 +146,9 @@ class BillingDetailsForm extends Form {
         $order->PostageType = $postage->Location;
         $order->PostageCost = $postage->Cost;
 
+        // Add any tax that is needed for postage
+        $order->PostageTax = ($config->TaxRate > 0) ? ((float)$postage->Cost / 100) * $config->TaxRate : 0;
+
         // If user logged in, track it against an order
         if(Member::currentUserID()) $order->CustomerID = Member::currentUserID();
 
@@ -157,6 +160,7 @@ class BillingDetailsForm extends Form {
             $order_item->Title          = $cart_item->Title;
             $order_item->SKU            = $cart_item->SKU;
             $order_item->Price          = $cart_item->Price;
+            $order_item->Tax            = $cart_item->Tax;
             $order_item->Customisation  = serialize($cart_item->Customised);
             $order_item->Quantity       = $cart_item->Quantity;
             $order_item->write();

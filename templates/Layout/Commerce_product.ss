@@ -33,7 +33,8 @@
                         <span class="title"><% _t('Commerce.PRICE','Price') %>:</span>
                         <span class="value">
                             {$SiteConfig.Currency.HTMLNotation.RAW}
-                            {$Price}
+                            {$FrontPrice}
+                            {$SiteConfig.TaxString}
                         </span>
                     </span>
 

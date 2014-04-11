@@ -11,7 +11,8 @@ class OrderItem extends DataObject {
         'Type'          => 'Varchar',
         'Customisation' => 'Text',
         'Quantity'      => 'Int',
-        'Price'         => 'Currency'
+        'Price'         => 'Currency',
+        'Tax'           => 'Currency'
     );
 
     private static $has_one = array(
@@ -20,7 +21,10 @@ class OrderItem extends DataObject {
 
     private static $casting = array(
         'CustomDetails' => 'HTMLText',
-        'MatchProduct'  => 'Product'
+        'MatchProduct'  => 'Product',
+        'SubTotal'      => 'Currency',
+        'TaxTotal'      => 'Currency',
+        'Total'         => 'Currency'
     );
 
     private static $summary_fields = array(
@@ -28,8 +32,28 @@ class OrderItem extends DataObject {
         'SKU',
         'CustomDetails',
         'Quantity',
+        'Price',
+        'Tax',
         'Total'
     );
+
+    /**
+     * Get the total cost of this item based on the quantity, not including tax
+     *
+     * @return Decimal
+     */
+    public function getSubTotal() {
+        return $this->Quantity * $this->Price;
+    }
+
+    /**
+     * Get the total cost of tax for this item based on the quantity
+     *
+     * @return Decimal
+     */
+    public function getTaxTotal() {
+        return $this->Quantity * $this->Tax;
+    }
 
     /**
      * Get the total cost of this item based on the quantity
@@ -37,7 +61,7 @@ class OrderItem extends DataObject {
      * @return Currency
      */
     public function getTotal() {
-        return $this->Quantity * $this->Price;
+        return $this->SubTotal + $this->TaxTotal;
     }
 
     /**

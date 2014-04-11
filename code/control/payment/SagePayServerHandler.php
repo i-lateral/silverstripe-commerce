@@ -31,7 +31,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
         // Order details
         $payload_data["VendorTxCode"] = $order->OrderNumber;
-        $payload_data["Amount"] = $order->Total->Value;
+        $payload_data["Amount"] = $order->Total;
         $payload_data["Currency"] = $site->Currency()->GatewayCode;
         $payload_data["Description"] = $this->payment_gateway->GatewayMessage;
         $payload_data["NotificationURL"] = $callback_url;

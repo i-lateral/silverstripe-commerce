@@ -35,6 +35,12 @@
                         <th class="width-50"><% _t("Commerce.ITEM","Item") %></th>
                         <th><% _t("Commerce.QTY","Qty") %></th>
                         <th><% _t("Commerce.PRICE","Price") %></th>
+                        <% if $Top.SiteConfig.TaxRate > 0 %>
+                            <th class="tax">
+                                <% if $Top.SiteConfig.TaxName %>{$Top.SiteConfig.TaxName}
+                                <% else %><% _t('Commerce.Tax','Tax') %><% end_if %>
+                            </th>
+                        <% end_if %>
                         <th><% _t("Commerce.REORDER","Reorder") %></th>
                     </tr>
                 </thead>
@@ -44,30 +50,71 @@
                             <td>$Title</td>
                             <td>$Quantity</td>
                             <td>$Price.Nice</td>
+                            <% if $Top.SiteConfig.TaxRate > 0 %>
+                                <td class="total">
+                                    {$TaxTotal.Nice}
+                                </td>
+                            <% end_if %>
                             <td><% if $MatchProduct %>
-                                <a href=""><% _t("Commerce.ADDTOCART","Add to cart") %></a>
+                                <a href="$MatchProduct.Link">
+                                    <% _t("Commerce.ADDTOCART","Add to cart") %>
+                                </a>
                             <% end_if %></td>
                         </tr>
                     <% end_loop %>
 
                     <tr>
-                        <td colspan="4">&nbsp;</td>
+                        <td colspan="<% if $Top.SiteConfig.TaxRate > 0 %>5<% else %>4<% end_if %>">&nbsp;</td>
                     </tr>
 
+                    <% if $Top.SiteConfig.TaxRate > 0 %>
+                        <tr>
+                            <td colspan="3" class="text-right">
+                                <% _t("Commerce.SubTotal","Sub Total") %>
+                            </td>
+                            <td class="text-right">$SubTotal.Nice</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="<% if $Top.SiteConfig.TaxRate > 0 %>3<% else %>2<% end_if %>" class="text-right">
+                                <% _t("Commerce.POSTAGE","Postage") %>
+                            </td>
+                            <td class="text-right">$PostageCost.Nice</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3" class="text-right">
+                                <% if $Top.SiteConfig.TaxName %>
+                                    {$Top.SiteConfig.TaxName}
+                                <% else %>
+                                    <% _t('Commerce.Tax','Tax') %>
+                                <% end_if %>
+                            </td>
+                            <td class="text-right">$TaxTotal.Nice</td>
+                            <td></td>
+                        </tr>
+                    <% else %>
+                        <tr>
+                            <td colspan="<% if $Top.SiteConfig.TaxRate > 0 %>3<% else %>2<% end_if %>" class="text-right">
+                                <% _t("Commerce.POSTAGE","Postage") %>
+                            </td>
+                            <td class="text-right">$PostageCost.Nice</td>
+                            <td></td>
+                        </tr>
+                    <% end_if %>
+
                     <tr>
-                        <td colspan="2" class="text-right bold">
-                            <% _t("Commerce.POSTAGE","Postage") %>
-                        </td>
-                        <td>$PostageCost.Nice</td>
-                        <td></td>
+                        <td colspan="<% if $Top.SiteConfig.TaxRate > 0 %>5<% else %>4<% end_if %>">&nbsp;</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="2" class="text-right bold">
+                        <td colspan="<% if $Top.SiteConfig.TaxRate > 0 %>3<% else %>2<% end_if %>" class="text-right bold">
                             <% _t("Commerce.TOTAL","Total") %>
                         </td>
-                        <td>$Total.Nice</td>
+                        <td class="text-right">$Total.Nice</td>
                         <td></td>
                     </tr>
                 </tfoot>

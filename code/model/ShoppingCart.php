@@ -71,6 +71,7 @@ class ShoppingCart extends ViewableData {
      */
     public function add(Product $add_item, $quantity = 1, $customise = array()) {
         $added = false;
+        $config = SiteConfig::current_site_config();
 
         // Make a string to match id's against ones already in the cart
         $product_key = ($customise) ? (int)$add_item->ID . ':' . base64_encode(serialize($customise)) : (int)$add_item->ID;
@@ -89,6 +90,7 @@ class ShoppingCart extends ViewableData {
         if(!$added) {
             $custom_data = new ArrayList();
             $price = $add_item->Price;
+            (float)$tax_rate = $config->TaxRate;
 
             foreach($customise as $custom_item) {
                 $custom_data->add(new ArrayData(array(
@@ -101,6 +103,12 @@ class ShoppingCart extends ViewableData {
                 if($custom_item['ModifyPrice']) $price = (float)$price + (float)$custom_item['ModifyPrice'];
             }
 
+            // Now, caclulate tax based on the new modified price and tax rate
+            if($tax_rate > 0)
+                (float)$tax = ($price / 100) * $tax_rate; // Get our tax amount from the price
+            else
+                (float)$tax = 0;
+
             $this->items->add(new ArrayData(array(
                 'Key'           => $product_key,
                 'ProductID'     => $add_item->ID,
@@ -108,7 +116,8 @@ class ShoppingCart extends ViewableData {
                 'SKU'           => $add_item->SKU,
                 'Description'   => $add_item->Description,
                 'Weight'        => $add_item->Weight,
-                'Price'         => $price,
+                'Price'         => number_format($price,2),
+                'Tax'           => number_format($tax, 2),
                 'Customised'    => ($custom_data) ? $custom_data : '',
                 'ImageID'       => ($add_item->Images()->exists()) ? $add_item->Images()->first()->ID : null,
                 'Quantity'      => $quantity
@@ -180,17 +189,45 @@ class ShoppingCart extends ViewableData {
     }
 
     /**
-     * Find the total quantity of items in the shopping cart
+     * Find the cost of all items in the cart, without any tax.
      *
+     * @return Float
      */
-    public function TotalPrice() {
+    public function SubTotalPrice() {
         $total = 0;
 
         foreach($this->Items() as $item) {
             $total = $total + ($item->Quantity * $item->Price);
         }
 
-        return  money_format('%i',$total);
+        return  number_format($total,2);
+    }
+
+    /**
+     * Find the total cost of tax for all items in the cart.
+     *
+     * @return Float
+     */
+    public function TaxTotalPrice() {
+        $config = SiteConfig::current_site_config();
+        $total = 0;
+
+        if($config->TaxRate > 0) {
+            foreach($this->Items() as $item) {
+                if($item->Tax > 0) $total += ($item->Quantity * $item->Tax);
+            }
+        }
+
+        return  number_format($total,2);
+    }
+
+    /**
+     * Find the total price of items in the shopping cart, including tax.
+     *
+     * @return Float
+     */
+    public function TotalPrice() {
+        return number_format($this->SubTotalPrice() + $this->TaxTotalPrice(), 2);
     }
 
     /**
