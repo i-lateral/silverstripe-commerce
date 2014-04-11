@@ -3,6 +3,19 @@
     <p><% _t('Commerce.SUMMARYCOPY','Please review your personal information before proceeding and entering your payment details') %>.</p>
 
     <% with $Order %>
+        <div class="commerce-summary">
+            <h2><% _t('Commerce.ORDER','Order') %></h2>
+            <p>
+                <strong><%  _t('Commerce.POSTAGE', 'Postage') %>:</strong>
+                $PostageType $PostageCost.Nice
+                <br/>
+                <strong><%  _t('Commerce.TOTAL', 'Total') %>:</strong>
+                $Total.Nice
+            </p>
+        </div>
+
+        <hr/>
+
         <div class="commerce-summary units-row">
             <div class="unit-50">
                 <h2><% _t('Commerce.BILLINGDETAILS','Billing Details') %></h2>
@@ -29,10 +42,6 @@
                     $DeliveryCity<br/>
                     <strong><% _t('Commerce.POSTCODE','Post Code') %>:</strong> $DeliveryPostCode<br/>
                     <strong><% _t('Commerce.COUNTRY','Country') %>:</strong> $DeliveryCountry
-                </p>
-                <p>
-                    <strong><%  _t('Commerce.POSTAGE', 'Postage') %>:</strong>
-                    $PostageType $PostageCost.Nice
                 </p>
             </div>
         </div>
