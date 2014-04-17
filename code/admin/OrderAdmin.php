@@ -7,22 +7,16 @@
 class OrderAdmin extends ModelAdmin {
 
     private static $url_segment = 'orders';
-    private static $menu_title = 'Orders';
-    private static $menu_priority = 4;
 
-    protected $resultsTableClassName = 'OrderTableField';
+    private static $menu_title = 'Orders';
+
+    private static $menu_priority = 4;
 
     private static $managed_models = array(
         'Order'
     );
 
     private static $model_importers = array();
-
-    public function init() {
-        parent::init();
-
-        Requirements::javascript(Director::absoluteBaseURL() . 'commerce/js/OrderAdmin.js');
-    }
 
     public function getList() {
         $list = parent::getList();
@@ -41,14 +35,24 @@ class OrderAdmin extends ModelAdmin {
             $gridField->setAttribute('data-selectable', true);
             $gridField->setAttribute('data-multiselect', true);
 
+            // Bulk manager
+            $manager = new GridFieldBulkManager();
+            $manager->removeBulkAction("bulkedit");
+            $manager->removeBulkAction("unlink");
+            $manager->removeBulkAction("delete");
+
+            $manager->addBulkAction(
+                'dispatched',
+                'Dispatched',
+                'CommerceGridFieldBulkAction_Dispatched'
+            );
+
+
             // Add dispatch button
             $field_config = $gridField->getConfig();
             $field_config
                 ->removeComponentsByType('GridFieldExportButton')
-                ->addComponents(
-                    new GridField_DispatchedButton(),
-                    new GridField_EditSelectable()
-                );
+                ->addComponent($manager);
         }
 
         return $form;
