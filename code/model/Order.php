@@ -109,11 +109,16 @@ class Order extends DataObject implements PermissionProvider {
         $fields->removeByName('DeliveryPostCode');
         $fields->removeByName('DeliveryCountry');
 
+        // Remove default postage fields
+        $fields->removeByName('PostageType');
+        $fields->removeByName('PostageCost');
+        $fields->removeByName('PostageTax');
+
         $fields->addFieldToTab('Root.Main', ReadonlyField::create('OrderNumber'), 'Status');
         $fields->addFieldToTab('Root.Main', ReadonlyField::create('Created'));
         $fields->addFieldToTab('Root.Main', ReadonlyField::create('LastEdited', 'Last time order was saved'));
 
-        // Load basic list of items
+        // Load basic list of ordered items
         $item_config = GridFieldConfig::create()->addComponents(
             new GridFieldSortableHeader(),
             new GridFieldDataColumns(),
@@ -127,6 +132,7 @@ class Order extends DataObject implements PermissionProvider {
             $item_config
         ));
 
+
         // Structure billing details
         $billing_fields = ToggleCompositeField::create('BillingDetails', 'Billing Details',
             array(
@@ -138,7 +144,6 @@ class Order extends DataObject implements PermissionProvider {
             )
         )->setHeadingLevel(4);
 
-        $fields->addFieldToTab('Root.Main', $billing_fields);
 
         // Structure delivery details
         $delivery_fields = ToggleCompositeField::create('DeliveryDetails', 'Delivery Details',
@@ -153,14 +158,26 @@ class Order extends DataObject implements PermissionProvider {
             )
         )->setHeadingLevel(4);
 
+        // Postage details
+        // Structure billing details
+        $postage_fields = ToggleCompositeField::create('Postage', 'Postage Details',
+            array(
+                ReadonlyField::create('PostageType'),
+                ReadonlyField::create('PostageCost'),
+                ReadonlyField::create('PostageTax')
+            )
+        )->setHeadingLevel(4);
+
+        $fields->addFieldToTab('Root.Main', $billing_fields);
         $fields->addFieldToTab('Root.Main', $delivery_fields);
+        $fields->addFieldToTab('Root.Main', $postage_fields);
+
 
         // Add non-editable payment ID
         $paymentid_field = TextField::create('PaymentID', "Payment gateway ID number")
             ->setReadonly(true)
             ->performReadonlyTransformation();
 
-        $fields->addFieldToTab('Root.Gateway', $paymentid_field);
 
         $gateway_data = LiteralField::create(
             "FormattedGatewayData",
@@ -168,6 +185,8 @@ class Order extends DataObject implements PermissionProvider {
             str_replace(",",",<br/>",$this->GatewayData)
         );
 
+
+        $fields->addFieldToTab('Root.Gateway', $paymentid_field);
         $fields->addFieldToTab("Root.Gateway", $gateway_data);
 
         return $fields;
