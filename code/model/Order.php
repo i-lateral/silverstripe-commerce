@@ -277,6 +277,32 @@ class Order extends DataObject implements PermissionProvider {
         return $guidText;
     }
 
+    /**
+     * API Callback before this object is written to the DB
+     *
+     */
+    public function onBeforeWrite() {
+        parent::onBeforeWrite();
+
+        // See if this order was just marked paid, if so reduce quantities for
+        // items.
+        if($this->isChanged("Status") && $this->Status == "paid") {
+            foreach($this->Items() as $item) {
+                $product = $item->MatchProduct;
+
+                if($product->ID && $product->Quantity) {
+                    $new_qty = $product->Quantity - $item->Quantity;
+                    $product->Quantity = ($new_qty > 0) ? $new_qty : 0;
+                    $product->write();
+                }
+            }
+        }
+    }
+
+    /**
+     * API Callback before this object is removed from to the DB
+     *
+     */
     public function onBeforeDelete() {
         // Delete all items attached to this order
         foreach($this->Items() as $item) {
@@ -286,6 +312,11 @@ class Order extends DataObject implements PermissionProvider {
         parent::onBeforeDelete();
     }
 
+
+    /**
+     * API Callback after this object is written to the DB
+     *
+     */
     public function onAfterWrite() {
         parent::onAfterWrite();
 
@@ -347,7 +378,12 @@ class Order extends DataObject implements PermissionProvider {
         }
     }
 
-    protected function onAfterDelete() {
+
+    /**
+     * API Callback after this object is removed from to the DB
+     *
+     */
+    public function onAfterDelete() {
         parent::onAfterDelete();
 
         foreach ($this->Items() as $item) {
