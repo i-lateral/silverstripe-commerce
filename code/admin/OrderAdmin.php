@@ -31,10 +31,6 @@ class OrderAdmin extends ModelAdmin {
             $fields = $form->Fields();
             $gridField = $fields->fieldByName('Order');
 
-            // Enable selectable
-            $gridField->setAttribute('data-selectable', true);
-            $gridField->setAttribute('data-multiselect', true);
-
             // Bulk manager
             $manager = new GridFieldBulkManager();
             $manager->removeBulkAction("bulkedit");
@@ -42,8 +38,20 @@ class OrderAdmin extends ModelAdmin {
             $manager->removeBulkAction("delete");
 
             $manager->addBulkAction(
+                'paid',
+                'Mark Paid',
+                'CommerceGridFieldBulkAction_Paid'
+            );
+
+            $manager->addBulkAction(
+                'processing',
+                'Mark Processing',
+                'CommerceGridFieldBulkAction_Processing'
+            );
+
+            $manager->addBulkAction(
                 'dispatched',
-                'Dispatched',
+                'Mark Dispatched',
                 'CommerceGridFieldBulkAction_Dispatched'
             );
 
