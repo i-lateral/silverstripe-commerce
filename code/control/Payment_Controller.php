@@ -7,7 +7,7 @@
  * @package commerce
  */
 
-class Commerce_Payment_Controller extends Commerce_Controller {
+class Payment_Controller extends Commerce_Controller {
     public static $url_segment = "commerce/payment";
 
     private static $allowed_actions = array(
@@ -97,7 +97,7 @@ class Commerce_Payment_Controller extends Commerce_Controller {
         } else {
             $error_url = Controller::join_links(
                 Director::absoluteBaseURL(),
-                Commerce_Payment_Controller::$url_segment,
+                Payment_Controller::$url_segment,
                 "callback"
             );
 

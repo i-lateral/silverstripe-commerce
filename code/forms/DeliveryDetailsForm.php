@@ -66,7 +66,7 @@ class DeliveryDetailsForm extends Form {
 
         $url = Controller::join_links(
             Director::absoluteBaseUrl(),
-            Commerce_Payment_Controller::$url_segment
+            Payment_Controller::$url_segment
         );
 
         return $this

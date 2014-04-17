@@ -18,7 +18,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
         $callback_url = Controller::join_links(
             Director::absoluteBaseURL(),
-            Commerce_Payment_Controller::$url_segment,
+            Payment_Controller::$url_segment,
             "callback",
             $this->payment_gateway->ID
         );
@@ -154,13 +154,13 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
         $success_url = Controller::join_links(
             BASE_URL,
-            Commerce_Payment_Controller::$url_segment,
+            Payment_Controller::$url_segment,
             'complete'
         );
 
         $error_url = Controller::join_links(
             BASE_URL,
-            Commerce_Payment_Controller::$url_segment,
+            Payment_Controller::$url_segment,
             'complete',
             'error'
         );
