@@ -81,6 +81,10 @@ class Order extends DataObject implements PermissionProvider {
         "Created"       => "Created"
     );
 
+    private static $extensions = array(
+        "Versioned('History')"
+    );
+
     private static $default_sort = "Created DESC";
 
     public function getCMSFields() {
@@ -188,6 +192,39 @@ class Order extends DataObject implements PermissionProvider {
 
         $fields->addFieldToTab('Root.Gateway', $paymentid_field);
         $fields->addFieldToTab("Root.Gateway", $gateway_data);
+
+        // Setup basic history of this order
+        $versions = $this->AllVersions();
+        $curr_version = $versions->First()->Version;
+
+        foreach($versions as $version) {
+            $i = $version->Version;
+            $name = "History_{$i}";
+
+            if($i > 1) {
+                $frm = Versioned::get_version($this->class, $this->ID, $i - 1);
+                $to = Versioned::get_version($this->class, $this->ID, $i);
+                $diff = new DataDifferencer($frm, $to);
+                $message = "<p>{$version->Author()->FirstName} ({$version->LastEdited})</p>";
+
+                if($diff->ChangedFields()->exists()) {
+                    $message .= "<ul>";
+
+                    // Now loop through all changed fields and track as message
+                    foreach($diff->ChangedFields() as $change) {
+                        if($change->Name != "LastEdited")
+                            $message .= "<li>{$change->Title}: {$change->Diff}</li>";
+                    }
+
+                    $message .= "</ul>";
+                }
+            }
+
+            $fields->addFieldToTab("Root.History", LiteralField::create(
+                $name,
+                "<div class=\"field\">{$message}</div>"
+            ));
+        }
 
         return $fields;
     }
