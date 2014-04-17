@@ -120,13 +120,12 @@ class Order extends DataObject implements PermissionProvider {
             new GridFieldFooter()
         );
 
-        $item_field = ToggleCompositeField::create('OrderItems', 'Order Items',
-            array(
-                GridField::create('Items',null,$this->Items(), $item_config)
-            )
-        )->setHeadingLevel(4);
-
-        $fields->addFieldToTab('Root.Main', $item_field);
+        $fields->addFieldToTab('Root.Items', GridField::create(
+            'Items',
+            "Order Items",
+            $this->Items(),
+            $item_config
+        ));
 
         // Structure billing details
         $billing_fields = ToggleCompositeField::create('BillingDetails', 'Billing Details',
