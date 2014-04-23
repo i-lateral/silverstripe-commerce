@@ -10,7 +10,8 @@ class Product extends DataObject {
         'Description'   => 'HTMLText',
         'Sort'          => 'Int',
         'PackSize'      => 'Varchar',
-        'Weight'        => 'Int'
+        'Weight'        => 'Int',
+        "Disabled"      => "Boolean"
     );
 
     private static $has_many = array(
@@ -46,7 +47,8 @@ class Product extends DataObject {
         'Quantity'      => 'Qty',
         'SKU'           => 'SKU',
         'Price'         => 'Price',
-        'CategoriesList'=> 'Categories'
+        'CategoriesList'=> 'Categories',
+        "Disabled"      => "Disabled"
     );
 
     private static $searchable_fields = array(
@@ -243,6 +245,12 @@ class Product extends DataObject {
         )->setHeadingLevel(4);
 
         $fields->addFieldToTab('Root.Main', $additional_field);
+
+        // Add disble product field
+        $fields->addFieldToTab('Root.Main', CheckboxField::create(
+            "Disabled",
+            _t("Commerce.DisableProduct", "Disable this product?")
+        ));
 
         // Once product is saved, deal with more complex associations
         if($this->ID) {

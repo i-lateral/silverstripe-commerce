@@ -151,14 +151,14 @@ class ProductCategory extends DataObject {
 
         // First add all products from this category
         foreach($this->Products() as $product) {
-            $products->add($product);
+            if(!$product->Disabled) $products->add($product);
         }
 
         // Now loop each child product
         foreach($this->Children() as $child) {
             // First add all products from this category
             foreach($child->Products() as $product) {
-                $products->add($product);
+                if(!$product->Disabled) $products->add($product);
             }
         }
 

@@ -44,8 +44,10 @@ class Catalogue_Controller extends Commerce_Controller {
 
         if($segment) {
             $return = Product::get()
-                ->filter('URLSegment',$segment)
-                ->first();
+                ->filter(array(
+                    'URLSegment'=> $segment,
+                    "Disabled"=> 0
+                ))->first();
         }
 
         if(!$return) $return = Product::create();

@@ -27,7 +27,7 @@ class CommerceURLController extends Controller {
         $this->extend('onAfterInit');
 
         // First check products against URL segment
-        if($product = Product::get()->filter('URLSegment',$urlsegment)->first()) {
+        if($product = Product::get()->filter(array('URLSegment'=>$urlsegment,'Disabled'=>0))->first()) {
             $controller = Catalogue_Controller::create($product);
         } elseif($category = ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
             $controller = Catalogue_Controller::create($category);
