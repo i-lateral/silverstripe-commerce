@@ -5,24 +5,25 @@
  * @author morven
  */
 class PostageArea extends DataObject {
+
     private static $db = array(
-        'Location'  => 'Varchar',
-        'Cost'      => 'Decimal'
+        "Title"         => "Varchar",
+        "Country"       => "Varchar",
+        "ZipCode"       => "Varchar",
+        "Calculation"   => "Enum('Price,Weight,Items','Weight')",
+        "Unit"          => "Decimal",
+        "Cost"          => "Decimal"
     );
 
     private static $has_one = array(
-        'Site' => 'SiteConfig',
+        "Site"          => "SiteConfig"
     );
 
-    private static $summary_fields = array(
-        'Location'  => 'Location',
-        'Cost'      => 'Cost'
-    );
+    public function getCMSFields() {
+        $fields = parent::getCMSFields();
 
-    private static $field_types = array(
-        'Location'  => 'TextField',
-        'Cost'      => 'TextField'
-    );
+        return $fields;
+    }
 
     public function canCreate($member = null) {
         return true;
