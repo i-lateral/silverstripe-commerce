@@ -9,19 +9,19 @@ class DeliveryDetailsForm extends Form {
 
         $personal_fields = CompositeField::create(
                 HeaderField::create('PersonalHeader', _t('Commerce.PersonalDetails','Personal Details'), 2),
-                TextField::create('DeliveryFirstnames',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
-                TextField::create('DeliverySurname',_t('Commerce.SURNAME','Surname') . '*')
+                TextField::create('DeliveryFirstnames',_t('Commerce.FirstName','First Name(s)') . '*'),
+                TextField::create('DeliverySurname',_t('Commerce.Surname','Surname') . '*')
             )->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
-                HeaderField::create('AddressHeader', _t('Commerce.ADDRESS','Address'), 2),
-                TextField::create('DeliveryAddress1',_t('Commerce.ADDRESS1','Address Line 1') . '*'),
-                TextField::create('DeliveryAddress2',_t('Commerce.ADDRESS2','Address Line 2')),
-                TextField::create('DeliveryCity',_t('Commerce.CITY','City') . '*'),
-                TextField::create('DeliveryPostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
+                HeaderField::create('AddressHeader', _t('Commerce.Address','Address'), 2),
+                TextField::create('DeliveryAddress1',_t('Commerce.Address1','Address Line 1') . '*'),
+                TextField::create('DeliveryAddress2',_t('Commerce.Address2','Address Line 2')),
+                TextField::create('DeliveryCity',_t('Commerce.City','City') . '*'),
+                TextField::create('DeliveryPostCode',_t('Commerce.PostCode','Post Code') . '*'),
                 CountryDropdownField::create(
                     'DeliveryCountry',
-                    _t('Commerce.COUNTRY','Country')
+                    _t('Commerce.Country','Country')
                 )->setAttribute("class",'countrydropdown dropdown btn')
             )->addExtraClass('unit-50');
 
@@ -38,7 +38,7 @@ class DeliveryDetailsForm extends Form {
                 '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'
             ),
 
-            FormAction::create('doContinue', _t('Commerce.PAYMENTDETAILS','Enter Payment Details'))
+            FormAction::create('doContinue', _t('Commerce.PostageDetails','Select Postage'))
                 ->addExtraClass('btn')
                 ->addExtraClass('commerce-action-next')
                 ->addExtraClass('btn-green')
@@ -56,18 +56,12 @@ class DeliveryDetailsForm extends Form {
         parent::__construct($controller, $name, $fields, $actions, $validator);
     }
 
-    public function doContinue($data, $form) {
-        $order = Session::get("Commerce.Order");
+    public function doContinue($data) {
+        Session::set("Commerce.DeliveryDetailsForm.data",$data);
 
-        $this->saveInto($order);
-        $order->write();
-
-        Session::set('Commerce.Order', $order);
-
-        $url = Controller::join_links(
-            Director::absoluteBaseUrl(),
-            Payment_Controller::$url_segment
-        );
+        $url = $this
+            ->controller
+            ->Link("finish");
 
         return $this
             ->controller

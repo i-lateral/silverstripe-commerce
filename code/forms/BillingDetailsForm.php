@@ -9,21 +9,22 @@ class BillingDetailsForm extends Form {
 
         $personal_fields = CompositeField::create(
                 HeaderField::create('PersonalHeader', _t('Commerce.PersonalDetails','Personal Details'), 2),
-                TextField::create('FirstName',_t('Commerce.FIRSTNAMES','First Name(s)') . '*'),
-                TextField::create('Surname',_t('Commerce.SURNAME','Surname') . '*'),
-                EmailField::create('Email',_t('Commerce.EMAIL','Email') . '*'),
-                TextField::create('Phone',_t('Commerce.PHONE','Phone Number'))
+                TextField::create('FirstName',_t('Commerce.FirstName','First Name(s)') . '*'),
+                TextField::create('Surname',_t('Commerce.Surname','Surname') . '*'),
+                TextField::create("Company",_t('Commerce.Company',"Company")),
+                EmailField::create('Email',_t('Commerce.Email','Email') . '*'),
+                TextField::create('PhoneNumber',_t('Commerce.Phone','Phone Number'))
             )->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
-                HeaderField::create('AddressHeader', _t('Commerce.ADDRESS','Address'), 2),
-                TextField::create('Address1',_t('Commerce.ADDRESS1','Address Line 1') . '*'),
-                TextField::create('Address2',_t('Commerce.ADDRESS2','Address Line 2')),
-                TextField::create('City',_t('Commerce.CITY','City') . '*'),
-                TextField::create('PostCode',_t('Commerce.POSTCODE','Post Code') . '*'),
+                HeaderField::create('AddressHeader', _t('Commerce.Address','Address'), 2),
+                TextField::create('Address1',_t('Commerce.Address1','Address Line 1') . '*'),
+                TextField::create('Address2',_t('Commerce.Address2','Address Line 2')),
+                TextField::create('City',_t('Commerce.Cirt','City') . '*'),
+                TextField::create('PostCode',_t('Commerce.PostCode','Post Code') . '*'),
                 CountryDropdownField::create(
                     'Country',
-                    _t('Commerce.COUNTRY','Country') . '*',
+                    _t('Commerce.Country','Country') . '*',
                     null,
                     'GB'
                 )->setAttribute("class",'countrydropdown dropdown btn')
@@ -77,24 +78,23 @@ class BillingDetailsForm extends Form {
      * @return Redirect
      */
     public function doContinue($data) {
-        $order = $this->save_data_to_order($data);
+        // Set delivery details based billing details
+        $delivery_data = array();
+        $delivery_data['DeliveryFirstnames'] = $data['FirstName'];
+        $delivery_data['DeliverySurname']    = $data['Surname'];
+        $delivery_data['DeliveryAddress1']   = $data['Address1'];
+        $delivery_data['DeliveryAddress2']   = $data['Address2'];
+        $delivery_data['DeliveryCity']       = $data['City'];
+        $delivery_data['DeliveryPostCode']   = $data['PostCode'];
+        $delivery_data['DeliveryCountry']    = $data['Country'];
 
-        $order->DeliveryFirstnames = $data['FirstName'];
-        $order->DeliverySurname    = $data['Surname'];
-        $order->DeliveryAddress1   = $data['Address1'];
-        $order->DeliveryAddress2   = $data['Address2'];
-        $order->DeliveryCity       = $data['City'];
-        $order->DeliveryPostCode   = $data['PostCode'];
-        $order->DeliveryCountry    = $data['Country'];
+        // Save both sets of data to sessions
+        Session::set("Commerce.BillingDetailsForm.data",$data);
+        Session::set("Commerce.DeliveryDetailsForm.data",$delivery_data);
 
-        $order->write();
-
-        Session::set('Commerce.Order',$order);
-
-        $url = Controller::join_links(
-            Director::absoluteBaseUrl(),
-            Payment_Controller::$url_segment
-        );
+        $url = $this
+            ->controller
+            ->Link("finish");
 
         return $this
             ->controller
@@ -110,9 +110,8 @@ class BillingDetailsForm extends Form {
      * @return Redirect
      */
     public function doSetDelivery($data) {
-        $order = $this->save_data_to_order($data);
-
-        Session::set('Commerce.Order',$order);
+        // Save billing data to sessions
+        Session::set("Commerce.BillingDetailsForm.data",$data);
 
         $url = $this
             ->controller
@@ -121,53 +120,5 @@ class BillingDetailsForm extends Form {
         return $this
             ->controller
             ->redirect($url);
-    }
-
-    /**
-     * Method that is responsible for saving subbmited checkout data into an
-     * order object
-     *
-     * @param type $data Array of data submitted
-     *
-     * @return Order Object
-     */
-    private function save_data_to_order($data) {
-        // Work out if an order prefix string has been set in siteconfig
-        $config = SiteConfig::current_site_config();
-        $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
-
-        // Save form data into an order object
-        $order = new Order();
-        $this->saveInto($order);
-        $order->Status      = 'incomplete';
-
-        // Load postage data
-        $postage = PostageArea::get()->byID(Session::get('Commerce.PostageID'));
-        $order->PostageType = $postage->Location;
-        $order->PostageCost = $postage->Cost;
-
-        // Add any tax that is needed for postage
-        $order->PostageTax = ($config->TaxRate > 0) ? ((float)$postage->Cost / 100) * $config->TaxRate : 0;
-
-        // If user logged in, track it against an order
-        if(Member::currentUserID()) $order->CustomerID = Member::currentUserID();
-
-        $order->write(); // Write so we can setup our foreign keys
-
-        // Loop through each session cart item and add that item to the order
-        foreach(ShoppingCart::get()->Items() as $cart_item) {
-            $order_item = new OrderItem();
-            $order_item->Title          = $cart_item->Title;
-            $order_item->SKU            = $cart_item->SKU;
-            $order_item->Price          = $cart_item->Price;
-            $order_item->Tax            = $cart_item->Tax;
-            $order_item->Customisation  = serialize($cart_item->Customised);
-            $order_item->Quantity       = $cart_item->Quantity;
-            $order_item->write();
-
-            $order->Items()->add($order_item);
-        }
-
-        return $order;
     }
 }

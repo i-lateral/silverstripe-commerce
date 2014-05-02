@@ -20,28 +20,29 @@
             <div class="unit-50">
                 <h2><% _t('Commerce.BILLINGDETAILS','Billing Details') %></h2>
                 <p>
-                    <strong><% _t('Commerce.FULLNAME','Name') %>:</strong> $FirstName $Surname<br/>
-                    <strong><% _t('Commerce.EMAIL','Email') %>:</strong> $Email<br/>
-                    <strong><% _t('Commerce.PHONE','Phone Number') %>:</strong> $PhoneNumber<br/>
-                    <strong><% _t('Commerce.ADDRESS','Address') %>:</strong><br/>
+                    <strong><% _t('Commerce.Name','Name') %>:</strong> $FirstName $Surname<br/>
+                    <strong><% _t('Commerce.Email','Email') %>:</strong> $Email<br/>
+                    <strong><% _t('Commerce.Company','Company') %>:</strong> $Company<br/>
+                    <strong><% _t('Commerce.Phone','Phone Number') %>:</strong> $PhoneNumber<br/>
+                    <strong><% _t('Commerce.Address','Address') %>:</strong><br/>
                     $Address1<br/>
                     $Address2<br/>
                     $City<br/>
-                    <strong><% _t('Commerce.POSTCODE','Post Code') %>:</strong> $PostCode<br/>
-                    <strong><% _t('Commerce.COUNTRY','Country') %>:</strong> $Country
+                    <strong><% _t('Commerce.PostCode','Post Code') %>:</strong> $PostCode<br/>
+                    <strong><% _t('Commerce.Country','Country') %>:</strong> $Country
                 </p>
             </div>
 
             <div class="unit-50">
-                <h2><% _t('Commerce.DELIVERYDETAILS','Delivery Details') %></h2>
+                <h2><% _t('Commerce.DeliveryDetails','Delivery Details') %></h2>
                 <p>
-                    <strong><% _t('Commerce.FULLNAME','Name') %>:</strong> $DeliveryFirstnames $DeliverySurname<br/>
-                    <strong><% _t('Commerce.ADDRESS','Address') %></strong><br/>
+                    <strong><% _t('Commerce.Name','Name') %>:</strong> $DeliveryFirstnames $DeliverySurname<br/>
+                    <strong><% _t('Commerce.Address','Address') %></strong><br/>
                     $DeliveryAddress1<br/>
                     $DeliveryAddress2<br/>
                     $DeliveryCity<br/>
-                    <strong><% _t('Commerce.POSTCODE','Post Code') %>:</strong> $DeliveryPostCode<br/>
-                    <strong><% _t('Commerce.COUNTRY','Country') %>:</strong> $DeliveryCountry
+                    <strong><% _t('Commerce.PostCode','Post Code') %>:</strong> $DeliveryPostCode<br/>
+                    <strong><% _t('Commerce.Country','Country') %>:</strong> $DeliveryCountry
                 </p>
             </div>
         </div>

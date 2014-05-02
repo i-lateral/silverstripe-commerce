@@ -55,7 +55,7 @@ class Payment_Controller extends Commerce_Controller {
         if($this->request->param('ID') && $method = CommercePaymentMethod::get()->byID($this->request->param('ID')))
             $this->payment_method = $method;
         // Then check session
-        elseif($method = CommercePaymentMethod::get()->byID(Session::get('Commerce.PaymentMethod')))
+        elseif($method = CommercePaymentMethod::get()->byID(Session::get('Commerce.PaymentMethodID')))
             $this->payment_method = $method;
 
         // Setup payment handler
@@ -72,6 +72,51 @@ class Payment_Controller extends Commerce_Controller {
         // If shopping cart doesn't exist, redirect to base
         if(!ShoppingCart::get()->Items()->exists() || $this->getPaymentHandler() === null)
             return $this->redirect(Director::BaseURL());
+
+        // Work out if an order prefix string has been set in siteconfig
+        $config = SiteConfig::current_site_config();
+        $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
+
+        // Get billing and delivery details and merge into an array
+        $billing_data = Session::get("Commerce.BillingDetailsForm.data");
+        $delivery_data = Session::get("Commerce.DeliveryDetailsForm.data");
+        $data = array_merge((array)$billing_data, (array)$delivery_data);
+
+        // Get postage data
+        $postage = PostageArea::get()->byID(Session::get('Commerce.PostageID'));
+        $data['PostageType'] = $postage->Location;
+        $data['PostageCost'] = $postage->Cost;
+        $data['PostageTax'] = ($config->TaxRate > 0 && $postage->Cost > 0) ? ((float)$postage->Cost / 100) * $config->TaxRate : 0;
+
+        // Set status
+        $data['Status'] = 'incomplete';
+
+        // Setup an order based on the data from the shopping cart and load data
+        $order = new Order();
+        $order->populate($data);
+
+        // If user logged in, track it against an order
+        if(Member::currentUserID()) $order->CustomerID = Member::currentUserID();
+
+        // Write so we can setup our foreign keys
+        $order->write();
+
+        // Loop through each session cart item and add that item to the order
+        foreach(ShoppingCart::get()->Items() as $cart_item) {
+            $order_item = new OrderItem();
+            $order_item->Title          = $cart_item->Title;
+            $order_item->SKU            = $cart_item->SKU;
+            $order_item->Price          = $cart_item->Price;
+            $order_item->Tax            = $cart_item->Tax;
+            $order_item->Customisation  = serialize($cart_item->Customised);
+            $order_item->Quantity       = $cart_item->Quantity;
+            $order_item->write();
+
+            $order->Items()->add($order_item);
+        }
+
+        // Add order to session so our payment handler can process it
+        Session::set("Commerce.Order", $order);
 
         // Perform pre gateway action and return data (if any)
         $data = $this->payment_handler->onBeforeGateway();

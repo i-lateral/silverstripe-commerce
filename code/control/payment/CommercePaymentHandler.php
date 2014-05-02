@@ -88,7 +88,7 @@ abstract class CommercePaymentHandler extends Controller {
         );
 
         $actions = new FieldList(
-            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
             FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
                 ->addExtraClass('btn')
                 ->addExtraClass('btn-green')
