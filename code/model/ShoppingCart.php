@@ -14,11 +14,17 @@ class ShoppingCart extends ViewableData {
      */
     protected static $enabled = true;
 
+    /**
+     * Track all items stored in the current shopping cart
+     *
+     * @var ArrayList
+     */
     protected $items;
 
     public function __construct() {
-        if(Session::get('commerce.shoppingcart'))
-            $this->items = Session::get('commerce.shoppingcart');
+        // If items are stored in a session, get them now
+        if(Session::get('Commerce.ShoppingCart'))
+            $this->items = Session::get('Commerce.ShoppingCart');
         else
             $this->items = new ArrayList();
     }
@@ -165,13 +171,21 @@ class ShoppingCart extends ViewableData {
     }
 
     /**
+     * Save the current products list and postage to a session.
+     *
+     */
+    public function save() {
+        Session::set("Commerce.ShoppingCart",$this->items);
+    }
+
+    /**
      * Clear the shopping cart object and destroy the session. Different to
      * empty, as that retains the session.
      *
      */
     public function clear() {
-        Session::clear('commerce.shoppingcart');
-        unset($_SESSION['commerce.shoppingcart']);
+        Session::clear('Commerce.ShoppingCart');
+        unset($_SESSION['Commerce.ShoppingCart']);
     }
 
     /**
@@ -193,50 +207,64 @@ class ShoppingCart extends ViewableData {
      *
      * @return Float
      */
-    public function SubTotalPrice() {
+    public function SubTotalCost() {
         $total = 0;
 
         foreach($this->Items() as $item) {
             $total = $total + ($item->Quantity * $item->Price);
         }
 
-        return  number_format($total,2);
+        return number_format($total,2);
     }
 
     /**
-     * Find the total cost of tax for all items in the cart.
+     * Get the cost of postage
+     *
+     */
+    public function PostageCost() {
+        if($postage = PostageArea::get()->byID(Session::get("Commerce.PostageID")))
+            $cost = $postage->Cost;
+        else
+            $cost = 0;
+
+        return number_format($cost,2);
+    }
+
+    /**
+     * Find the total cost of tax for the items in the cart, as well as shipping
+     * (if set)
      *
      * @return Float
      */
-    public function TaxTotalPrice() {
+    public function TaxCost() {
+        // Add any tax that is needed for postage
         $config = SiteConfig::current_site_config();
         $total = 0;
 
         if($config->TaxRate > 0) {
+            // Find tax on items
             foreach($this->Items() as $item) {
                 if($item->Tax > 0) $total += ($item->Quantity * $item->Tax);
             }
+
+            // Now find tax on postage
+            $postage = $this->PostageCost();
+            $total += ($postage > 0) ? ((float)$postage / 100) * $config->TaxRate : 0;
         }
 
         return  number_format($total,2);
     }
 
     /**
-     * Find the total price of items in the shopping cart, including tax.
+     * Find the total cost of for all items in the cart, including tax and
+     * shipping (if applicable)
      *
      * @return Float
      */
-    public function TotalPrice() {
-        return number_format($this->SubTotalPrice() + $this->TaxTotalPrice(), 2);
-    }
+    public function getTotalCost() {
+        $total = $this->SubTotalCost() + $this->PostageCost() + $this->TaxCost();
 
-    /**
-     * Save the current products list to a session.
-     *
-     */
-    public function save() {
-        Session::set("commerce.shoppingcart",$this->items);
+        return number_format($total,2);
     }
-
 
 }
