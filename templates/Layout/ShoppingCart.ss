@@ -17,6 +17,8 @@
             </div>
 
             <div class="unit-33">
+                <h2><% _t("Commerce.Total","Total") %></h2>
+
                 <table class="commerce-tax-table width-100">
                     <tr class="subtotal">
                         <td class="right">
