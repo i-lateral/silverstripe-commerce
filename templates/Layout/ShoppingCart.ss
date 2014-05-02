@@ -26,7 +26,7 @@
                                 <% _t('Commerce.SubTotal','Sub Total') %>
                             </strong>
                         </td>
-                        <td>
+                        <td class="right">
                             {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.SubTotalCost}
                         </td>
                     </tr>
@@ -36,7 +36,7 @@
                                 <% _t('Commerce.Shipping','Shipping') %>
                             </strong>
                         </td>
-                        <td>
+                        <td class="right">
                             {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.PostageCost}
                         </td>
                     </tr>
@@ -48,7 +48,7 @@
                                     <% else %><% _t('Commerce.Tax','Tax') %><% end_if %>
                                 </strong>
                             </td>
-                            <td>
+                            <td class="right">
                                 {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.TaxCost}
                             </td>
                         </tr>
