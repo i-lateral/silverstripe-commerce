@@ -1,11 +1,11 @@
 fr_FR:
   Commerce:
     # Order Status
-    INCOMPLETE: 'incompl&egrave;te'
-    FAILED: 'rejet&eacute;e'
-    PAID: 'Pay&eacute;e'
+    INCOMPLETE: 'incomplète'
+    FAILED: 'rejetée'
+    PAID: 'Payée'
     PROCESSING: 'Traitement en cours'
-    DISPATCHED: 'Exp&eacute;di&eacute;e'
+    DISPATCHED: 'Expédiée'
     # Products and Categories
     PRICE: 'Prix'
     PACKSIZE: 'Pack Size'
@@ -13,61 +13,61 @@ fr_FR:
     DESCRIPTION: 'Description'
     ATTRIBUTES: 'Attributes'
     CARTNAME: 'Panier'
-    VIEWCART: 'Voir le panier'
+    VIEWCART: 'Votre panier'
     CHANGELOCATION: 'Changer de site'
-    CHANGELLANGUAGE: 'Changer de langue'
+    CHANGELANGUAGE: 'Choissez votre langue '
     READMORE: 'Lire plus'
     BACK: 'Retour'
     ADDTOCART: 'Ajouter au panier'
-    PLEASESELECT: 'Veuillez s&eacute;lectionner'
+    PLEASESELECT: 'Veuillez sélectionner'
     # Shopping Cart
     CARTISEMPTY: 'Votre panier est actuellement vide'
-    CARTQTY: 'Qt&eacute;'
-    CARTCOST: 'Co&ugrave;t'
-    POSTAGE: 'Frais d'exp&eacute;dition'
-    CARTLOCATION: 'Veuillez choisir une adresse d\'exp&eacute;dition'
+    CARTQTY: 'Qté'
+    CARTCOST: 'Coût'
+    POSTAGE: "Frais d'expédition"
+    CARTLOCATION: "Veuillez choisir une adresse d'expédition"
     CARTTOTAL: 'Total'
     PAYMENT: 'Paiement'
-    PAYMENTSELECTION: 'Veuillez s&eacute;lectionner un mode de paiement'
+    PAYMENTSELECTION: 'Veuillez sélectionner un mode de paiement'
     CARTEMPTY: 'Vider le panier'
-    CARTUPDATE: 'Mettre &agrave; jour le panier'
+    CARTUPDATE: 'Mettre à jour le panier'
     CARTPROCEED: 'Terminer la commande'
     # Checkout
     CHECKOUTMETA: 'Vos informations'
     BILLINGDETAILS: 'Informations de facturation'
-    FIRSTNAMES: 'Pr&eacute;nom(s)'
+    FIRSTNAMES: 'Prénom(s)'
     SURNAME: 'Nom de famille'
     EMAIL: 'E-mail'
-    PHONE: 'Num&eacute;ro de t&eacute;l&eacute;phone'
-    ADDRESS1: 'Ligne d\'adresse 1'
-    ADDRESS2: 'Ligne d\'adresse 2'
+    PHONE: 'Numéro de téléphone'
+    ADDRESS1: "Ligne d'adresse 1"
+    ADDRESS2: "Ligne d'adresse 2"
     CITY: 'Ville'
     POSTCODE: 'Code postal'
     COUNTRY: 'Pays'
     DELIVERYDETAILS: 'Informations de livraison'
-    IFDIFFERENT: 'si diff&eacute;rentes'
+    IFDIFFERENT: 'si différentes'
     PAYMENTDETAILS: 'Veuillez saisir les informations relatives au paiement'
     ERRORMESSAGE: 'Veuillez remplir tous les champs obligatoires ci-dessous'
-    SUMMARY: 'R&eacute;capitulatif'
-    SUMMARYCOPY: 'Veuillez v&eacute;rifier vos informations personnelles avant de valider la commande et proc&eacute;der au paiement'
+    SUMMARY: 'Récapitulatif'
+    SUMMARYCOPY: 'Veuillez vérifier vos informations personnelles avant de valider la commande et procéder au paiement'
     FULLNAME: 'Nom'
     ADDRESS: 'Adresse'
     CONFIRMPAY: 'Confirmation et paiement'
     # Completion
-    ORDERCOMPLETE: 'Commande confirm&eacute;e'
-    ORDERFAILED: 'La commande n'a pas &eacute;t&eacute; prise en compte'
+    ORDERCOMPLETE: 'Commande confirmée'
+    ORDERFAILED: "La commande n'a pas été prise en compte"
     ORDERERROR: 'An error occured, Order ID's do not match'
     ORDERCONTACT: "Veuillez nous contacter avec plus d'informations"
   CommerceEmail:
     # Email Notifications
-    FAILEDNOTICE: 'Malheureusement, votre commande et votre paiement n\'ont pas pu être pris en compte. Pour toute question, veuillez nous contacter.'
-    THANKYOU: 'Merci d'avoir command&eacute; chez {title}'
+    FAILEDNOTICE: "Malheureusement, votre commande et votre paiement n'ont pas pu être pris en compte. Pour toute question, veuillez nous contacter."
+    THANKYOU: "Merci d'avoir commandé chez {title}"
     ORDER: 'Commande'
-    MARKEDAS: 'marqu&eacute;(e) en tant que'
-    ITEMS: 'Articles command&eacute;s'
-    ORDERDISPATCHEDTO: 'Votre commande sera exp&eacute;di&eacute;e &agrave; l\'adresse suivante'
+    MARKEDAS: 'marqué(e) en tant que'
+    ITEMS: 'Articles commandés'
+    ORDERDISPATCHEDTO: "Votre commande sera expédiée à l'adresse suivante"
     CONTACTQUERIES: 'Pour toute question, veuillez contacter'
-    PHONE: 'T&eacute;l&eacute;phone'
+    PHONE: 'Téléphone'
     EMAIL: 'E-mail'
-    CHECKORDER: 'Veuillez v&eacute;rifier votre commande avec attention d&egrave;s sa r&eacute;ception. En cas de probl&egrave;me, contactez-nous dans les plus brefs d&eacute;lais'
+    CHECKORDER: 'Veuillez vérifier votre commande avec attention dès sa réception. En cas de problème, contactez-nous dans les plus brefs délais'
     FINALTHANKS: 'Merci'
