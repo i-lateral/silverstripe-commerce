@@ -189,8 +189,24 @@ class ShoppingCart extends ViewableData {
     }
 
     /**
+     * Find the total weight of all items in the shopping cart
+     *
+     * @return Float
+     */
+    public function TotalWeight() {
+        $total = 0;
+
+        foreach($this->Items() as $item) {
+            $total = $total + ($item->Weight * $item->Quantity);
+        }
+
+        return $total;
+    }
+
+    /**
      * Find the total quantity of items in the shopping cart
      *
+     * @return Int
      */
     public function TotalItems() {
         $total = 0;
@@ -261,8 +277,12 @@ class ShoppingCart extends ViewableData {
      *
      * @return Float
      */
-    public function getTotalCost() {
-        $total = $this->SubTotalCost() + $this->PostageCost() + $this->TaxCost();
+    public function TotalCost() {
+        $total = str_replace(",","",$this->SubTotalCost());
+        $postage = str_replace(",","",$this->PostageCost());
+        $tax = str_replace(",","",$this->TaxCost());
+
+        $total = (float)$total + (float)$postage + (float)$tax;
 
         return number_format($total,2);
     }

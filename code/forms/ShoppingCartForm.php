@@ -91,6 +91,9 @@ class ShoppingCartForm extends Form {
 
         $this->cart->save();
 
+        // Clear and postage data that has been set
+        Session::clear("Commerce.AvailablePostage");
+
         $this->controller->redirectBack();
     }
 

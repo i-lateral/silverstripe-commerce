@@ -71,6 +71,7 @@ abstract class Commerce_Controller extends Controller {
     public function getPostageAreas($country, $zipcode) {
         $return = new ArrayList();
         $countries = new ArrayList();
+        $cart = ShoppingCart::get();
 
         $all_rates = $this
             ->SiteConfig()
@@ -107,6 +108,53 @@ abstract class Commerce_Controller extends Controller {
             foreach($countries as $rate) {
                 if($rate->ZipCode == "*") $return->add($rate);
             }
+        }
+
+        // Now we have a list of locations, start checking for additional
+        // rules an remove if not applicable.
+        $total_cost = str_replace(",","",$cart->SubTotalCost());
+        $total_weight = str_replace(",","",$cart->TotalWeight());
+        $total_items = str_replace(",","",$cart->TotalItems());
+
+        $max_cost = 0;
+        $max_weight = 0;
+        $max_items = 0;
+
+        // First loop through and find items that are invalid
+        foreach($return as $location) {
+            if($location->Calculation == "Price" && ((float)$total_cost < $location->Unit))
+                $return->remove($location);
+
+            if($location->Calculation == "Weight" && ((float)$total_weight < $location->Unit))
+                $return->remove($location);
+
+            if($location->Calculation == "Items" && ((float)$total_items < $location->Unit))
+                $return->remove($location);
+        }
+
+        // Now find max values based on units
+        foreach($return as $location) {
+            if($location->Calculation == "Price" && ($location->Unit > $max_cost))
+                $max_cost = $location->Unit;
+
+            if($location->Calculation == "Weight" && ($location->Unit > $max_weight))
+                $max_weight = $location->Unit;
+
+            if($location->Calculation == "Items" && ($location->Unit > $max_items))
+                $max_items = $location->Unit;
+        }
+
+        // Now loop through again and calculate which brackets each
+        // Location fits in
+        foreach($return as $location) {
+            if($location->Calculation == "Price" && ($location->Unit < $max_cost))
+                $return->remove($location);
+
+            if($location->Calculation == "Weight" && ($location->Unit < $max_weight))
+                $return->remove($location);
+
+            if($location->Calculation == "Items" && ($location->Unit < $max_items))
+                $return->remove($location);
         }
 
         return $return;
