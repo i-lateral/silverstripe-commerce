@@ -48,8 +48,8 @@ de_DE:
     DELIVERYDETAILS: 'Lieferanschrift'
     IFDIFFERENT: 'sofern abweichend'
     PAYMENTDETAILS: 'Zahlungsangaben eingeben'
-    DELIVERANOTHERADDRESS: "Deliver to another address"
-    DELIVERTHISADDRESS: "Deliver to this address"
+    DELIVERANOTHERADDRESS: "An andere Adresse liefern"
+    DELIVERTHISADDRESS: "An dieser Adresse liefern"
     ERRORMESSAGE: 'Bitte füllen Sie jetzt alle erforderlichen Felder aus'
     SUMMARY: 'Zusammenfassung'
     SUMMARYCOPY: 'Bitte Überprüfen Sie ihre persönlichen Angaben, bevor Sie fortfahren und Ihre Zahlungsangaben eingeben'
