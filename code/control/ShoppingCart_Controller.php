@@ -72,43 +72,51 @@ class ShoppingCart_Controller extends Commerce_Controller {
      *
      */
     public function PostageForm() {
-        // Setup user postal details
-        $fields = new FieldList(
-            CompositeField::create(
-                CountryDropdownField::create('Country',_t('Commerce.COUNTRY','Country'))
-                    ->setAttribute("class",'countrydropdown dropdown btn'),
-                TextField::create("ZipCode",_t('Commerce.ZipCode',"Zip/Postal Code"))
-            )->addExtraClass("unit-50")
-        );
+        // Setup default postage fields
+        $country_select = CompositeField::create(
+            CountryDropdownField::create('Country',_t('Commerce.COUNTRY','Country'))
+                ->setAttribute("class",'countrydropdown dropdown btn'),
+            TextField::create("ZipCode",_t('Commerce.ZipCode',"Zip/Postal Code"))
+        )->addExtraClass("unit-50");
 
-        // Add initial actions
-        $actions = new FieldList(
-            CompositeField::create(
-                FormAction::create("doGetPostage", _t('Commerce.Search',"Search"))
-                    ->addExtraClass('btn')
-            )->addExtraClass("unit-50")
-        );
+        $search_action = CompositeField::create(
+            FormAction::create("doGetPostage", _t('Commerce.Search',"Search"))
+                ->addExtraClass('btn')
+        )->addExtraClass("unit-50");
+
 
         // If we have stipulated a search, then see if we have any results
+        // otherwise load empty fieldsets
         if($rates = Session::get("Commerce.AvailablePostage")) {
-            $fields->add(
-                CompositeField::create(
-                    OptionsetField::create(
-                        "PostageID",
-                        _t('Commerce.SelectPostage',"Select Postage"),
-                        $rates->map()
-                    )
-                )->addExtraClass("unit-50")
-            );
+            $postage_select = CompositeField::create(
+                OptionsetField::create(
+                    "PostageID",
+                    _t('Commerce.SelectPostage',"Select Postage"),
+                    $rates->map()
+                )
+            )->addExtraClass("unit-50");
 
-            $actions->add(
-                CompositeField::create(
-                    FormAction::create("doSavePostage", _t('Commerce.Confirm',"Confirm"))
-                        ->addExtraClass('btn')
-                        ->addExtraClass('btn-green')
-                )->addExtraClass("unit-50")
-            );
+            $confirm_action = CompositeField::create(
+                FormAction::create("doSavePostage", _t('Commerce.Confirm',"Confirm"))
+                    ->addExtraClass('btn')
+                    ->addExtraClass('btn-green')
+            )->addExtraClass("unit-50");
+        } else {
+            $postage_select = CompositeField::create()->addExtraClass("unit-50");
+            $confirm_action = CompositeField::create()->addExtraClass("unit-50");
         }
+
+
+        // Setup fields and actions
+        $fields = new FieldList(
+            CompositeField::create($country_select,$postage_select)
+                ->addExtraClass("units-row-end")
+        );
+
+        $actions = new FieldList(
+            CompositeField::create($search_action,$confirm_action)
+                ->addExtraClass("units-row-end")
+        );
 
         $required = RequiredFields::create(array(
             "Country",
