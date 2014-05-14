@@ -47,8 +47,8 @@ fr_FR:
     DELIVERYDETAILS: 'Informations de livraison'
     IFDIFFERENT: 'si différentes'
     PAYMENTDETAILS: 'Veuillez saisir les informations relatives au paiement'
-    DELIVERANOTHERADDRESS: "Expédier à une autre adresse"
-    DELIVERTHISADDRESS: "Expédier à cette adresse"
+    SetDeliveryAddress: "Expédier à une autre adresse"
+    DeliverThisAddress: "Expédier à cette adresse"
     ERRORMESSAGE: 'Veuillez remplir tous les champs obligatoires ci-dessous'
     SUMMARY: 'Recapitulatif'
     SUMMARYCOPY: 'Veuillez vérifier vos informations personnelles avant de valider la commande et procéder au paiement'

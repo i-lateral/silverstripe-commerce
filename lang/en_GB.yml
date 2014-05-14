@@ -48,8 +48,8 @@ en_GB:
     DELIVERYDETAILS: 'Delivery Details'
     IFDIFFERENT: 'if different'
     PAYMENTDETAILS: 'Enter Payment Details'
-    DELIVERANOTHERADDRESS: "Deliver to another address"
-    DELIVERTHISADDRESS: "Deliver to this address"
+    SetDeliveryAddress: "Deliver to another address"
+    DeliverThisAddress: "Deliver to this address"
     ERRORMESSAGE: 'Please complete all the required fields below'
     SUMMARY: 'Summary'
     SUMMARYCOPY: 'Please review your personal information before proceeding and entering your payment details'
