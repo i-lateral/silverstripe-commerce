@@ -33,7 +33,7 @@ de_DE:
     CARTUPDATE: 'Warenkorb aktualisieren'
     CARTPROCEED: 'Zur Kasse gehen'
     # Checkout
-    PersonalDetails: 'Persönliche'
+    PersonalDetails: 'Persoenlichen Angaben'
     BILLINGDETAILS: 'Rechnungsanschrift'
     FIRSTNAMES: 'Vorname(n)'
     SURNAME: 'Familienname'

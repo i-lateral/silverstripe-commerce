@@ -33,6 +33,7 @@ fr_FR:
     CARTUPDATE: 'Mettre à jour le panier'
     CARTPROCEED: 'Terminer la commande'
     # Checkout
+    PersonalDetails: 'Renseignements personnels'
     CHECKOUTMETA: 'Vos informations'
     BILLINGDETAILS: 'Informations de facturation'
     FIRSTNAMES: 'Prénom(s)'
