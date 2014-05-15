@@ -58,7 +58,7 @@ fr_FR:
     CONFIRMPAY: 'Confirmation et paiement'
     # Completion
     ORDERCOMPLETE: 'Commande confirmée'
-    ORDERFAILED: "La commande n'a pas été prise en compte"
+    ORDERFAILED: "La commande n'a pas ete prise en compte"
     ORDERERROR: 'An error occured, Order ID's do not match'
     ORDERCONTACT: "Veuillez nous contacter avec plus d'informations"
   CommerceEmail:
