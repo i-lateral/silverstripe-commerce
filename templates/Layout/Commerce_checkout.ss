@@ -1,7 +1,7 @@
 <div class="commerce-content-container typography">
     <h1>$Title</h1>
 
-    <% if $ClassName = CheckoutLogin %>
+    <% if $Login %>
         <div class="units-row">
             <div class="unit-33">
                 $LoginForm

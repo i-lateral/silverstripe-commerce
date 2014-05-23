@@ -5,6 +5,16 @@
  *
  */
 class Checkout_Controller extends Commerce_Controller {
+
+    /**
+     * Name of the current controller. Mostly used in templates for
+     * targeted styling.
+     *
+     * @var string
+     * @config
+     */
+    private static $class_name = "Checkout";
+
     public static $url_segment = "commerce/checkout";
 
     private static $allowed_actions = array(
@@ -16,6 +26,10 @@ class Checkout_Controller extends Commerce_Controller {
         'DeliveryForm',
         "PostagePaymentForm"
     );
+
+    public function getClassName() {
+        return self::config()->class_name;
+    }
 
     public function init() {
         parent::init();
@@ -29,28 +43,25 @@ class Checkout_Controller extends Commerce_Controller {
      * If user logged in, redirect to billing info, else show login, register
      * or "checkout as guest" options.
      *
-     * @return String
      */
     public function index() {
-        if(Member::currentUserID()) {
-            $this->redirect($this->Link('billing'));
-        } else {
-            $this->customise(array(
-                'ClassName' => "CheckoutLogin",
-                'Title'     => _t('CommerceAccount.SIGNIN',"Sign in"),
-                'MetaTitle' => _t('CommerceAccount.SIGNIN',"Sign in"),
-                'Content'   => $this->renderWith("Commerce_Checkout_Login"),
-                'LoginForm' => $this->LoginForm()
-            ));
+        if(Member::currentUserID())
+            return $this->redirect($this->Link('billing'));
 
-            $this->extend("onBeforeIndex");
+        $this->customise(array(
+            'Title'     => _t('CommerceAccount.SIGNIN',"Sign in"),
+            "Login"     => true,
+            'Content'   => $this->renderWith("Commerce_Checkout_Login"),
+            'LoginForm' => $this->LoginForm()
+        ));
 
-            return $this->renderWith(array(
-                'Commerce_checkout',
-                'Commerce',
-                'Page'
-            ));
-        }
+        $this->extend("onBeforeIndex");
+
+        return $this->renderWith(array(
+            'Commerce_checkout',
+            'Commerce',
+            'Page'
+        ));
     }
 
 
@@ -67,9 +78,7 @@ class Checkout_Controller extends Commerce_Controller {
             $form->loadDataFrom(Member::currentUser());
 
         $this->customise(array(
-            'ClassName' => "Checkout",
             'Title'     => _t('Commerce.BILLINGDETAILS',"Billing Details"),
-            'MetaTitle' => _t('Commerce.BILLINGDETAILS',"Billing Details"),
             'Form'      => $form
         ));
 
@@ -91,9 +100,7 @@ class Checkout_Controller extends Commerce_Controller {
      */
     public function delivery() {
         $this->customise(array(
-            'ClassName' => "Checkout",
             'Title'     => _t('Commerce.DELIVERYDETAILS',"Delivery Details"),
-            'MetaTitle' => _t('Commerce.DELIVERYDETAILS',"Delivery Details"),
             'Form'      => $this->DeliveryForm()
         ));
 
@@ -123,9 +130,7 @@ class Checkout_Controller extends Commerce_Controller {
         $form = $this->PostagePaymentForm();
 
         $this->customise(array(
-            'ClassName' => "Checkout",
             'Title'     => _t('Commerce.PostagePayment',"Postage and Payment"),
-            'MetaTitle' => _t('Commerce.PostagePayment',"Postage and Payment"),
             'Form'      => $form
         ));
 
@@ -141,7 +146,7 @@ class Checkout_Controller extends Commerce_Controller {
     /**
      * Generate a login form
      *
-     * @return UsernameOrEmailLoginForm
+     * @return MemberLoginForm
      */
     public function LoginForm() {
         $form = MemberLoginForm::create($this, 'LoginForm');
@@ -151,6 +156,8 @@ class Checkout_Controller extends Commerce_Controller {
             ->Actions()
             ->dataFieldByName('action_dologin')
             ->addExtraClass("btn");
+
+        $this->extend("updateLoginForm", $form);
 
         return $form;
     }
@@ -196,7 +203,7 @@ class Checkout_Controller extends Commerce_Controller {
     /**
      * Form to find postage options and allow user to select payment
      *
-     * @return Form
+     * @return PostagePaymentForm
      */
     public function PostagePaymentForm() {
         $form = PostagePaymentForm::create($this,"PostagePaymentForm")
