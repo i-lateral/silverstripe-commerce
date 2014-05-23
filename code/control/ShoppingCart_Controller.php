@@ -5,6 +5,16 @@
  * @author morven
  */
 class ShoppingCart_Controller extends Commerce_Controller {
+
+    /**
+     * Name of the current controller. Mostly used in templates for
+     * targeted styling.
+     *
+     * @var string
+     * @config
+     */
+    private static $class_name = "ShoppingCart";
+
     public static $url_segment = 'commerce/cart';
 
     private static $allowed_actions = array(
@@ -19,19 +29,16 @@ class ShoppingCart_Controller extends Commerce_Controller {
         "doSavePostage"
     );
 
+    public function getClassName() {
+        return self::config()->class_name;
+    }
+
     public function init() {
         parent::init();
     }
 
     public function index() {
-        $cart_copy = (SiteConfig::current_site_config()->CartCopy) ? SiteConfig::current_site_config()->CartCopy : '';
-
-        $this->customise(array(
-            'ClassName' => "ShoppingCart",
-            'Title'     => _t('Commerce.CARTNAME', 'Shopping Cart'),
-            'MetaTitle' => _t('Commerce.CARTNAME', 'Shopping Cart'),
-            'Content'   => $cart_copy
-        ));
+        $this->extend("onBeforeIndex");
 
         return $this->renderWith(array(
             'ShoppingCart',
@@ -41,9 +48,11 @@ class ShoppingCart_Controller extends Commerce_Controller {
     }
 
     /**
-     * Remove a product from ShoppingCart Via its ID.
+     * Remove a product from ShoppingCart Via its ID. This action
+     * expects an ID to be sent through the URL that matches a specific
+     * key added to an item in the cart
      *
-     * @param ID product ID
+     * @return Redirect
      */
     public function remove() {
         $key = $this->request->param('ID');
@@ -58,6 +67,12 @@ class ShoppingCart_Controller extends Commerce_Controller {
     }
 
 
+    /**
+     * Form responsible for listing items in the shopping cart and
+     * allowing management (such as addition, removal, etc)
+     *
+     * @return ShoppingCartForm
+     */
     public function CartForm() {
         $form = ShoppingCartForm::create($this, 'CartForm')
             ->addExtraClass('forms');
@@ -68,8 +83,10 @@ class ShoppingCart_Controller extends Commerce_Controller {
     }
 
     /**
+     * Form responsible for estimating shipping based on location and
+     * postal code
      *
-     *
+     * @return Form
      */
     public function PostageForm() {
         // Setup default postage fields
@@ -136,6 +153,7 @@ class ShoppingCart_Controller extends Commerce_Controller {
         $data["PostageID"] = Session::get("Commerce.PostageID");
         if(is_array($data)) $form->loadDataFrom($data);
 
+        // Extension call
         $this->extend("updatePostageForm", $form);
 
         return $form;

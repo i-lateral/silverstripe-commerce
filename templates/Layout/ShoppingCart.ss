@@ -1,10 +1,11 @@
 <% require css('commerce/css/Commerce.css') %>
 
 <div class="commerce-content-container typography commerce-cart">
-    <h1>$Title</h1>
+    <h1><% _t('Commerce.CARTNAME', 'Shopping Cart') %></h1>
 
     <% if $CommerceCart.Items.Exists %>
-        $Content
+
+        $SiteConfig.CartCopy
 
         <div class="form">
             $CartForm
