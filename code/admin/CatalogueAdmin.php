@@ -18,6 +18,10 @@ class CatalogueAdmin extends ModelAdmin {
         'ProductCategory' => array('title' => 'Categories')
     );
 
+    private static $model_importers = array(
+      'Product' => 'ProductCSVBulkLoader',
+   );
+
     public $showImportForm = array('Product');
 
     public function init() {
