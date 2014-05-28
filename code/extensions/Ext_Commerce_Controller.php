@@ -36,8 +36,7 @@ class Ext_Commerce_Controller extends Extension {
      */
     public function getCommerceCategories($ParentID = 0) {
         return ProductCategory::get()
-            ->filter("ParentID",$ParentID)
-            ->sort('Sort','DESC');
+            ->filter("ParentID",$ParentID);
     }
 
     /**

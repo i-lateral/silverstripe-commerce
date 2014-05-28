@@ -33,7 +33,7 @@ class ProductCategory extends DataObject {
         "AllProducts"   => "ArrayList"
     );
 
-    private static $default_sort = "\"Sort\" DESC";
+    private static $default_sort = "\"Sort\" ASC";
 
     /**
     * Return a URL to link to this catagory (via Catalog_Controller)
