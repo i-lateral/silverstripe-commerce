@@ -66,6 +66,46 @@ class Catalogue_Controller extends Commerce_Controller {
     }
 
     /**
+     * Return the title, description, keywords and language metatags.
+     *
+     * @todo Move <title> tag in separate getter for easier
+     * customization and more obvious usage
+     *
+     * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
+     * @param boolean $includeTitle Show default <title>-tag, set to false for custom templating
+     * @return string The XHTML metatags
+     */
+    public function MetaTags($includeTitle = true) {
+        $tags = "";
+        if($includeTitle === true || $includeTitle == 'true') {
+            $tags .= "<title>" . $this->Title . "</title>\n";
+        }
+
+        $generator = trim(Config::inst()->get('SiteTree', 'meta_generator'));
+        if (!empty($generator)) {
+            $tags .= "<meta name=\"generator\" content=\"" . Convert::raw2att($generator) . "\" />\n";
+        }
+
+        $charset = Config::inst()->get('ContentNegotiator', 'encoding');
+        $tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
+        if($this->MetaDescription) {
+            $tags .= "<meta name=\"description\" content=\"" . Convert::raw2att($this->MetaDescription) . "\" />\n";
+        }
+        if($this->ExtraMeta) {
+            $tags .= $this->ExtraMeta . "\n";
+        }
+
+        if(Permission::check('CMS_ACCESS_CMSMain') && in_array('CMSPreviewable', class_implements($this)) && !$this instanceof ErrorPage) {
+            $tags .= "<meta name=\"x-page-id\" content=\"{$this->ID}\" />\n";
+            $tags .= "<meta name=\"x-cms-edit-link\" content=\"" . $this->CMSEditLink() . "\" />\n";
+        }
+
+        $this->extend('MetaTags', $tags);
+
+        return $tags;
+    }
+
+    /**
      * The ContentController will take the URLSegment parameter from the URL and use that to look
      * up a SiteTree record.
      */
