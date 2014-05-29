@@ -16,11 +16,9 @@
                     <% if $Images.Count > 1 %>
                         <div class="thumbs">
                             <% loop $SortedImages %>
-                                <% if not $First %>
-                                    <a href="{$Top.Link('image')}/$ID#commerce-product-image">
-                                        $PaddedImage(75,75)
-                                    </a>
-                                <% end_if %>
+                                <a href="{$Top.Link('image')}/$ID#commerce-product-image">
+                                    $PaddedImage(75,75)
+                                </a>
                             <% end_loop %>
                         </div>
                     <% end_if %>
