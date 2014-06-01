@@ -144,6 +144,8 @@ class ShoppingCart extends ViewableData {
     public function update($item_key, $quantity) {
         foreach($this->items as $item) {
             if ($item->Key === $item_key) {
+                $this->extend("onBeforeUpdate", $item);
+
                 $item->Quantity = $quantity;
                 return true;
             }
