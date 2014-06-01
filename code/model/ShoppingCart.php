@@ -115,7 +115,7 @@ class ShoppingCart extends ViewableData {
             else
                 (float)$tax = 0;
 
-            $this->items->add(new ArrayData(array(
+            $item_to_add = ArrayData::create(array(
                 'Key'           => $product_key,
                 'ProductID'     => $add_item->ID,
                 'Title'         => $add_item->Title,
@@ -127,7 +127,11 @@ class ShoppingCart extends ViewableData {
                 'Customised'    => ($custom_data) ? $custom_data : '',
                 'ImageID'       => ($add_item->Images()->exists()) ? $add_item->Images()->first()->ID : null,
                 'Quantity'      => $quantity
-            )));
+            ));
+
+            $this->extend("onBeforeAdd", $item_to_add);
+
+            $this->items->add($item_to_add);
         }
     }
 
