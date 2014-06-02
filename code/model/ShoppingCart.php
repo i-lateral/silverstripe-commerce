@@ -11,6 +11,8 @@ class ShoppingCart extends ViewableData {
     /**
      * Determines if the shopping cart is currently enabled
      *
+     * @var Boolean
+     * @config
      */
     protected static $enabled = true;
 
@@ -22,6 +24,8 @@ class ShoppingCart extends ViewableData {
     protected $items;
 
     public function __construct() {
+        parent::__construct();
+
         // If items are stored in a session, get them now
         if(Session::get('Commerce.ShoppingCart'))
             $this->items = Session::get('Commerce.ShoppingCart');
@@ -53,7 +57,7 @@ class ShoppingCart extends ViewableData {
      * @return ShoppingCart
      */
     public static function get() {
-        return new ShoppingCart();
+        return ShoppingCart::create();
     }
 
     /**
@@ -132,6 +136,8 @@ class ShoppingCart extends ViewableData {
             $this->extend("onBeforeAdd", $item_to_add);
 
             $this->items->add($item_to_add);
+
+            $this->extend("onAfterAdd");
         }
     }
 
@@ -147,6 +153,8 @@ class ShoppingCart extends ViewableData {
                 $this->extend("onBeforeUpdate", $item);
 
                 $item->Quantity = $quantity;
+
+                $this->extend("onAfterUpdate", $item);
                 return true;
             }
         }
