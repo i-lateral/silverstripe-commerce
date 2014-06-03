@@ -528,35 +528,4 @@ class Order extends DataObject implements PermissionProvider {
     public function canDelete($member = null) {
         return false;
     }
-
-    /**
-     * Populate an order object from a provided array of data
-     *
-     * @param $data Array of data
-     */
-    public function populate($data) {
-        $this->Status = $data["Status"];
-        $this->Company = $data["Company"];
-        $this->FirstName = $data["FirstName"];
-        $this->Surname = $data["Surname"];
-        $this->Address1 = $data["Address1"];
-        $this->Address2 = $data["Address2"];
-        $this->City = $data["City"];
-        $this->PostCode = $data["PostCode"];
-        $this->Country = $data["Country"];
-        $this->Email = $data["Email"];
-        $this->PhoneNumber = $data["PhoneNumber"];
-        $this->DeliveryFirstnames = $data["DeliveryFirstnames"];
-        $this->DeliverySurname = $data["DeliverySurname"];
-        $this->DeliveryAddress1 = $data["DeliveryAddress1"];
-        $this->DeliveryAddress2 = $data["DeliveryAddress2"];
-        $this->DeliveryCity = $data["DeliveryCity"];
-        $this->DeliveryPostCode = $data["DeliveryPostCode"];
-        $this->DeliveryCountry = $data["DeliveryCountry"];
-        $this->PostageType = $data["PostageType"];
-        $this->PostageCost = $data["PostageCost"];
-        $this->PostageTax = $data["PostageTax"];
-
-        return $this;
-    }
 }

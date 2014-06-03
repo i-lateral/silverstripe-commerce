@@ -93,7 +93,7 @@ class Payment_Controller extends Commerce_Controller {
 
         // Setup an order based on the data from the shopping cart and load data
         $order = new Order();
-        $order->populate($data);
+        $order->update($data);
 
         // If user logged in, track it against an order
         if(Member::currentUserID()) $order->CustomerID = Member::currentUserID();
