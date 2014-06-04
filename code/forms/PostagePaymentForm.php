@@ -78,7 +78,7 @@ class PostagePaymentForm extends Form {
 
         $url = Controller::join_links(
             Director::absoluteBaseUrl(),
-            Payment_Controller::$url_segment
+            Payment_Controller::config()->url_segment
         );
 
         return $this

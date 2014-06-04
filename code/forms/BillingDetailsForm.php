@@ -37,7 +37,7 @@ class BillingDetailsForm extends Form {
 
         $back_url = Controller::join_links(
             BASE_URL,
-            ShoppingCart_Controller::$url_segment
+            ShoppingCart::config()->url_segment
         );
 
         $actions = FieldList::create(

@@ -19,7 +19,7 @@ class WorldPay extends CommercePaymentMethod {
         if($this->ID) {
             $callback_url = Controller::join_links(
                 Director::absoluteBaseURL(),
-                Payment_Controller::$url_segment,
+                Payment_Controller::config()->url_segment,
                 "callback",
                 $this->ID
             );

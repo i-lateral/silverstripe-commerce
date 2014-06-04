@@ -72,14 +72,12 @@ class AddItemToCartForm extends Form {
         }
 
         if($product) {
-            $cart = ShoppingCart::get();
+            $cart = ShoppingCart::create();
             $cart->add($product, $data['Quantity'], $customisations);
             $cart->save();
 
-            $cart_url = Controller::join_links(BASE_URL, ShoppingCart_Controller::$url_segment);
-
             $message = _t('Commerce.ADDEDITEMTOCART', 'Added item to your shopping cart');
-            $message .= ' <a href="'. $cart_url .'">';
+            $message .= ' <a href="'. $cart->Link() .'">';
             $message .= _t('Commerce.VIEWCART', 'View cart');
             $message .= '</a>';
 

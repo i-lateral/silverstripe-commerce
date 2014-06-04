@@ -17,7 +17,7 @@
                 <th class="actions"></th>
             </tr>
 
-            <% loop $Items %>
+            <% loop $Controller.Items %>
                 <tr>
                     <td>
                         <% if $Image %>$Image.CroppedImage(75,75)<% end_if %>
@@ -36,7 +36,7 @@
                         <input type="text" name="Quantity_{$Key}" value="{$Quantity}" />
                     </td>
                     <td class="total">
-                        {$Price.Nice}
+                        {$Top.Controller.SiteConfig.Currency.HTMLNotation.RAW}{$Price}
                     </td>
                     <td class="remove">
                         <a href="{$Top.Controller.Link('remove')}/{$Key}">
@@ -53,7 +53,7 @@
                     </strong>
                 </td>
                 <td colspan="2">
-                    {$Controller.SiteConfig.Currency.HTMLNotation.RAW}{$Controller.CommerceCart.SubTotalCost}
+                    {$Controller.SiteConfig.Currency.HTMLNotation.RAW}{$Controller.SubTotalCost}
                 </td>
             </tr>
         </table>

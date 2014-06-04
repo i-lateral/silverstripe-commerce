@@ -3,7 +3,7 @@
 <div class="commerce-content-container typography commerce-cart">
     <h1><% _t('Commerce.CARTNAME', 'Shopping Cart') %></h1>
 
-    <% if $CommerceCart.Items.Exists %>
+    <% if $Items.exists %>
 
         $SiteConfig.CartCopy
 

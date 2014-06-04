@@ -4,7 +4,7 @@ After: framework/routes#rootroutes
 ---
 Director:
   rules:
-    'commerce/cart//$Action/$ID/$Quantity': 'ShoppingCart_Controller'
+    'commerce/cart//$Action/$ID/$Quantity': 'ShoppingCart'
     'commerce/checkout//$Action/$ID': 'Checkout_Controller'
     'commerce/payment//$Action/$ID': 'Payment_Controller'
 ---

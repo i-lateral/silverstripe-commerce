@@ -15,7 +15,11 @@ class Checkout_Controller extends Commerce_Controller {
      */
     private static $class_name = "Checkout";
 
-    public static $url_segment = "commerce/checkout";
+    /**
+     * @var string
+     * @config
+     */
+    private static $url_segment = "commerce/checkout";
 
     private static $allowed_actions = array(
         "billing",
@@ -35,8 +39,8 @@ class Checkout_Controller extends Commerce_Controller {
         parent::init();
 
         // If no shopping cart doesn't exist, redirect to base
-        if(!ShoppingCart::get()->Items()->exists())
-            return $this->redirect(BASE_URL);
+        if(!ShoppingCart::create()->getItems()->exists())
+            return $this->redirect(ShoppingCart::config()->url_segment);
     }
 
     /**

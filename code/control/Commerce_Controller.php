@@ -14,8 +14,9 @@ abstract class Commerce_Controller extends Controller {
      * on your extension class, as it is used to generate $Link()
      *
      * @var String
+     * @config
      */
-    public static $url_segment;
+    private static $url_segment;
 
     protected $dataRecord;
 
@@ -37,8 +38,8 @@ abstract class Commerce_Controller extends Controller {
 
     public function Link($action = null) {
         return Controller::join_links(
-            BASE_URL,
-            $this->stat('url_segment'),
+            Director::BaseURL(),
+            $this->config()->url_segment,
             $action
         );
     }
@@ -71,7 +72,7 @@ abstract class Commerce_Controller extends Controller {
     public function getPostageAreas($country, $zipcode) {
         $return = new ArrayList();
         $countries = new ArrayList();
-        $cart = ShoppingCart::get();
+        $cart = ShoppingCart::create();
 
         $all_rates = $this
             ->SiteConfig()

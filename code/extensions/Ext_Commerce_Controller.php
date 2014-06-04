@@ -75,7 +75,7 @@ class Ext_Commerce_Controller extends Extension {
     public function getCommerceCartLink(){
         return Controller::join_links(
             BASE_URL,
-            ShoppingCart_Controller::$url_segment
+            ShoppingCart::config()->url_segment
         );
     }
 
@@ -96,18 +96,20 @@ class Ext_Commerce_Controller extends Extension {
 
 
     /**
-     * Return a list of all items in the shopping cart
-     *
+     * Return a the current shopping cart
+     * 
+     * @return ShoppingCart
      */
     public function getCommerceCart() {
-        return ShoppingCart::get();
+        return ShoppingCart::create();
     }
 
     /**
      * Checks to see if the shopping cart functionality is enabled
      *
+     * @return Boolean
      */
     public function getCommerceCartEnabled() {
-        return ShoppingCart::isEnabled();
+        return ShoppingCart::config()->enabled;
     }
 }

@@ -8,7 +8,12 @@
  */
 
 class Payment_Controller extends Commerce_Controller {
-    public static $url_segment = "commerce/payment";
+
+    /**
+     * @var string
+     * @config
+     */
+    private static $url_segment = "commerce/payment";
 
     private static $allowed_actions = array(
         'index',
@@ -70,7 +75,7 @@ class Payment_Controller extends Commerce_Controller {
 
     public function index() {
         // If shopping cart doesn't exist, redirect to base
-        if(!ShoppingCart::get()->Items()->exists() || $this->getPaymentHandler() === null)
+        if(!ShoppingCart::create()->getItems()->exists() || $this->getPaymentHandler() === null)
             return $this->redirect(Director::BaseURL());
 
         // Work out if an order prefix string has been set in siteconfig
@@ -102,7 +107,7 @@ class Payment_Controller extends Commerce_Controller {
         $order->write();
 
         // Loop through each session cart item and add that item to the order
-        foreach(ShoppingCart::get()->Items() as $cart_item) {
+        foreach(ShoppingCart::create()->getItems() as $cart_item) {
             $order_item = new OrderItem();
             $order_item->Title          = $cart_item->Title;
             $order_item->SKU            = $cart_item->SKU;
@@ -142,7 +147,7 @@ class Payment_Controller extends Commerce_Controller {
         } else {
             $error_url = Controller::join_links(
                 Director::absoluteBaseURL(),
-                Payment_Controller::$url_segment,
+                Payment_Controller::config()->url_segment,
                 "callback"
             );
 
@@ -212,13 +217,18 @@ class Payment_Controller extends Commerce_Controller {
 
         // Clear our session data
         if(isset($_SESSION)) {
-            ShoppingCart::get()->clear();
+            ShoppingCart::create()->clear();
             unset($_SESSION['Commerce.Order']);
             unset($_SESSION['Commerce.PostageID']);
             unset($_SESSION['Commerce.PaymentMethod']);
         }
 
-        return $this->customise($return)->renderWith(array("Payment_Response",'Page'));
+        return $this
+            ->customise($return)
+            ->renderWith(array(
+                "Payment_Response",
+                'Page'
+            ));
     }
 
     /*

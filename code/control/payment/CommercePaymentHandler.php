@@ -84,7 +84,7 @@ abstract class CommercePaymentHandler extends Controller {
     protected function gateway_actions() {
         $back_url = Controller::join_links(
             BASE_URL,
-            Checkout_Controller::$url_segment
+            Checkout_Controller::config()->url_segment
         );
 
         $actions = new FieldList(
