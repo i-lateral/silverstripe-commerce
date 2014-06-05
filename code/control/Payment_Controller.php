@@ -78,17 +78,22 @@ class Payment_Controller extends Commerce_Controller {
         if(!ShoppingCart::create()->getItems()->exists() || $this->getPaymentHandler() === null)
             return $this->redirect(Director::BaseURL());
 
+        // Get billing and delivery details and merge into an array
+        $billing_data = Session::get("Commerce.BillingDetailsForm.data");
+        $delivery_data = Session::get("Commerce.DeliveryDetailsForm.data");
+        $postage = PostageArea::get()->byID(Session::get('Commerce.PostageID'));
+
+        if(!$postage || !$billing_data || !$delivery_data)
+            return $this->redirect(Checkout_Controller::create()->Link());
+
         // Work out if an order prefix string has been set in siteconfig
         $config = SiteConfig::current_site_config();
         $order_prefix = ($config->OrderPrefix) ? $config->OrderPrefix . '-' : '';
 
-        // Get billing and delivery details and merge into an array
-        $billing_data = Session::get("Commerce.BillingDetailsForm.data");
-        $delivery_data = Session::get("Commerce.DeliveryDetailsForm.data");
+        // Merge billand and delivery data into an array
         $data = array_merge((array)$billing_data, (array)$delivery_data);
 
         // Get postage data
-        $postage = PostageArea::get()->byID(Session::get('Commerce.PostageID'));
         $data['PostageType'] = $postage->Location;
         $data['PostageCost'] = $postage->Cost;
         $data['PostageTax'] = ($config->TaxRate > 0 && $postage->Cost > 0) ? ((float)$postage->Cost / 100) * $config->TaxRate : 0;
