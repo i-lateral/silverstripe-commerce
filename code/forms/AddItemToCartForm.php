@@ -76,6 +76,9 @@ class AddItemToCartForm extends Form {
             $cart->add($product, $data['Quantity'], $customisations);
             $cart->save();
 
+            // Clear any postage data that has been set
+            Session::clear("Commerce.PostageID");
+
             $message = _t('Commerce.ADDEDITEMTOCART', 'Added item to your shopping cart');
             $message .= ' <a href="'. $cart->Link() .'">';
             $message .= _t('Commerce.VIEWCART', 'View cart');

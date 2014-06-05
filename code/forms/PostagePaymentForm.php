@@ -12,6 +12,7 @@ class PostagePaymentForm extends Form {
         $country = $delivery_data['DeliveryCountry'];
         $postcode = $delivery_data['DeliveryPostCode'];
         $postage_areas = $controller->getPostageAreas($country, $postcode);
+        $postage_id = (Session::get('Commerce.PostageID')) ? Session::get('Commerce.PostageID') : 0;
 
         // Setup postage fields
         $postage_field = CompositeField::create(
@@ -20,7 +21,7 @@ class PostagePaymentForm extends Form {
                 "PostageID",
                 _t('Commerce.PostageSelection', 'Please select your prefered postage'),
                 $postage_areas->map()
-            )
+            )->setValue($postage_id)
         )->addExtraClass("unit-50");
 
         // Get available payment methods and setup payment

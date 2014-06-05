@@ -217,6 +217,7 @@ class ShoppingCart extends Commerce_Controller {
             }
 
             $this->save();
+            Session::clear("Commerce.PostageID");
         }
 
         return $this->redirectBack();
@@ -247,6 +248,7 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function clear() {
         Session::clear('Commerce.ShoppingCart.Items');
+        Session::clear("Commerce.PostageID");
     }
 
     /**
