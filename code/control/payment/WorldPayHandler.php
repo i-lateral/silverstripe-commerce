@@ -2,9 +2,28 @@
 
 class WorldPayHandler extends CommercePaymentHandler {
 
-    protected function gateway_fields() {
-        $order = Session::get('Commerce.Order');
+    public function index() {
+
+        return $this->
+            customise(array(
+                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            ))->renderWith(array(
+                "Payment",
+                "Commerce",
+                "Page"
+            ));
+    }
+
+    /**
+     * Return a form that will be loaded into the Payment template and will post
+     * to the payment gateway provider.
+     *
+     * @return Form
+     */
+    public function GatewayForm() {
         $site = SiteConfig::current_site_config();
+        $order = $this->order;
 
         $callback_url = Controller::join_links(
             Director::absoluteBaseURL(),
@@ -13,7 +32,13 @@ class WorldPayHandler extends CommercePaymentHandler {
             $this->payment_gateway->ID
         );
 
-        $fields = new FieldList(
+        $back_url = Controller::join_links(
+            BASE_URL,
+            Checkout_Controller::config()->url_segment,
+            "finish"
+        );
+
+        $fields = FieldList::create(
             // Account details
             HiddenField::create('instId', null, $this->payment_gateway->InstallID),
             HiddenField::create('cartId', null, $order->OrderNumber),
@@ -39,7 +64,21 @@ class WorldPayHandler extends CommercePaymentHandler {
         if(Director::isDev())
             $fields->add(HiddenField::create('testMode', null, '100'));
 
-        return $fields;
+        $actions = FieldList::create(
+            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+                ->addExtraClass('btn')
+                ->addExtraClass('btn-green')
+        );
+
+        $form = Form::create($this,'GatewayForm',$fields,$actions)
+            ->addExtraClass('forms')
+            ->setFormMethod('POST')
+            ->setFormAction($this->payment_gateway->GatewayURL());
+
+        $this->extend('updateGatewayForm',$form);
+
+        return $form;
     }
 
     public function ProcessCallback($data = null, $success_data, $error_data) {

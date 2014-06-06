@@ -26,12 +26,40 @@ class SagePay extends CommercePaymentMethod {
                 'Send only to vendor'
             );
 
-            $fields->addFieldToTab('Root.Main', TextField::create('VendorName', 'Vendor name'));
-            $fields->addFieldToTab('Root.Main', DropdownField::create('ProtocolVersion', 'Version of forms protocol to use?', singleton('SagePay')->dbObject('ProtocolVersion')->enumValues()));
-            $fields->addFieldToTab('Root.Main', PasswordField::create('EncryptedPassword', 'Password'));
+            $fields->addFieldToTab(
+                "Root.Main",
+                TextField::create('VendorName', 'Vendor name'),
+                "Summary"
+            );
 
-            $fields->addFieldToTab('Root.Main', OptionsetField::create('SendEmail', 'How would you like SagePay to send emails?', $email_options));
-            $fields->addFieldToTab('Root.Main', EmailField::create('EmailRecipient','Email address of user to recieve email'));
+            $fields->addFieldToTab(
+                "Root.Main",
+                DropdownField::create(
+                    'ProtocolVersion',
+                    'Version of forms protocol to use?',
+                    singleton('SagePay')
+                        ->dbObject('ProtocolVersion')
+                        ->enumValues()),
+                "Summary"
+            );
+
+            $fields->addFieldToTab(
+                'Root.Main',
+                PasswordField::create('EncryptedPassword', 'Password'),
+                "Summary"
+            );
+
+            $fields->addFieldToTab(
+                "Root.Main",
+                OptionsetField::create('SendEmail', 'How would you like SagePay to send emails?', $email_options),
+                "Summary"
+            );
+
+            $fields->addFieldToTab(
+                "Root.Main",
+                EmailField::create('EmailRecipient','Email address of user to recieve email'),
+                "Summary"
+            );
         }
 
         return $fields;

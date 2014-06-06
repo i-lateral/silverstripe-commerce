@@ -58,5 +58,11 @@
             </div>
         </div>
     <% end_with %>
+
+    <% if $PaymentInfo %>
+        <hr/>
+        $PaymentInfo
+    <% end_if %>
+
     $GatewayForm
 </div>

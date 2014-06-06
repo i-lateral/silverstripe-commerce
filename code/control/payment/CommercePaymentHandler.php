@@ -10,6 +10,7 @@ abstract class CommercePaymentHandler extends Controller {
     /**
      * The current payment gateway we are using
      *
+     * @var CommercePaymentMethod
      */
     protected $payment_gateway;
 
@@ -23,79 +24,33 @@ abstract class CommercePaymentHandler extends Controller {
     }
 
     /**
-     * Method that allows us to perform additional actions that happen before we
-     * generate the payment gateway form
+     * The current order we are dealing with
      *
-     * @return ArrayList
-     *
+     * @var Order
      */
-    public function onBeforeGateway() {
-        $data = array();
+    protected $order;
 
-        $this->extend('onBeforeGateway', $data);
+    public function getOrder() {
+        return $this->order;
+    }
 
-        return $data;
+    public function setOrder($order) {
+        $this->order = $order;
+        return $this;
+    }
+
+    public function getPaymentInfo() {
+        return $this->payment_gateway->PaymentInfo;
     }
 
     /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
+     * The index action is called by the payment controller before order
+     * is processed by relevent payment gateway.
      *
-     * @return Form
+     * This action should return a rendered response that will then be
+     * directly reterned by the payment controller.
      */
-    public function GatewayForm($data) {
-
-        // See if the gateway URL has been set externally, else use the deafult
-        $form_action = (isset($data['GatewayURL'])) ? $data['GatewayURL'] : $this->payment_gateway->GatewayURL();
-
-        $form = Form::create(
-            $this,
-            'CommerceGatewayForm',
-            $this->gateway_fields(), // Fields for this gateway
-            $this->gateway_actions() // Actions for this gateway
-        );
-
-        $form->addExtraClass('forms');
-        $form->setFormMethod('POST');
-        $form->setFormAction($form_action);
-
-        $this->extend('updateCommerceGatewayForm',$form);
-
-        return $form;
-    }
-
-    /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
-     *
-     * @return Form
-     */
-    protected function gateway_fields() {
-        user_error('You have not added a GatewayFields() method on your Payment Handler Class');
-    }
-
-
-    /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
-     *
-     * @return Form
-     */
-    protected function gateway_actions() {
-        $back_url = Controller::join_links(
-            BASE_URL,
-            Checkout_Controller::config()->url_segment
-        );
-
-        $actions = new FieldList(
-            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
-                ->addExtraClass('btn')
-                ->addExtraClass('btn-green')
-        );
-
-        return $actions;
-    }
+    abstract public function index();
 
 
     /**

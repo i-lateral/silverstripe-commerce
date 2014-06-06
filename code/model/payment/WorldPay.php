@@ -17,27 +17,16 @@ class WorldPay extends CommercePaymentMethod {
         $fields = parent::getCMSFields();
 
         if($this->ID) {
-            $callback_url = Controller::join_links(
-                Director::absoluteBaseURL(),
-                Payment_Controller::config()->url_segment,
-                "callback",
-                $this->ID
+            $fields->addFieldToTab(
+                "Root.Main",
+                TextField::create('InstallID', 'Instalation ID'),
+                "Summary"
             );
 
             $fields->addFieldToTab(
-                'Root.Main',
-                ReadonlyField::create('ResponseURL', 'Payment Response URL')
-                    ->setValue($callback_url)
-            );
-
-            $fields->addFieldToTab(
-                'Root.Main',
-                TextField::create('InstallID', 'Instalation ID')
-            );
-
-            $fields->addFieldToTab(
-                'Root.Main',
-                PasswordField::create('ResponsePassword', 'Payment Response Password)')
+                "Root.Main",
+                PasswordField::create("ResponsePassword", "Payment Response Password"),
+                "Summary"
             );
         }
 

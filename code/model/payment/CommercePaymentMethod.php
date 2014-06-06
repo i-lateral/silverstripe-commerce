@@ -32,10 +32,11 @@ class CommercePaymentMethod extends DataObject {
 
     private static $db = array(
         // Payment Gateway config
-        'Summary'           => 'Text',
-        'URL'               => 'Varchar(200)',
-        'GatewayMessage'    => 'Text',
-        'Default'           => 'Boolean'
+        "Summary"           => "Text",
+        "URL"               => "Varchar(200)",
+        "Default"           => "Boolean",
+        "GatewayMessage"    => "Text",
+        "PaymentInfo"       => "HTMLText"
     );
 
     private static $has_one = array(
@@ -84,15 +85,31 @@ class CommercePaymentMethod extends DataObject {
         $fields->addFieldToTab('Root.Main', $classname_field);
 
         if($this->ID) {
-            $fields->addFieldToTab('Root.Main', TextField::create('Summary', 'Summary message to appear on website'));
-            $fields->addFieldToTab('Root.Main', TextField::create('URL', 'Payment gateway URL'));
-            $fields->addFieldToTab('Root.Main', CheckboxField::create('Default', 'Default payment method?'));
-            $fields->addFieldToTab('Root.Main', TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
+            // Setup response URL field
+            $callback_url = Controller::join_links(
+                Director::absoluteBaseURL(),
+                Payment_Controller::config()->url_segment,
+                "callback",
+                $this->ID
+            );
+
+            $fields->addFieldToTab(
+                'Root.Main',
+                ReadonlyField::create('ResponseURL', 'Payment Response URL')
+                    ->setValue($callback_url)
+            );
+
+            $fields->addFieldToTab("Root.Main", TextField::create('Summary', 'Summary message to appear on website'));
+            $fields->addFieldToTab("Root.Main", TextField::create('URL', 'Payment gateway URL'));
+            $fields->addFieldToTab("Root.Main", CheckboxField::create('Default', 'Default payment method?'));
+            $fields->addFieldToTab("Root.Main", TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
+            $fields->addFieldToTab("Root.Main", HTMLEditorField::create("PaymentInfo", "Message to appear on payment summary page"));
         } else {
             $fields->removeByName('URL');
             $fields->removeByName('Summary');
             $fields->removeByName('Default');
             $fields->removeByName('GatewayMessage');
+            $fields->removeByName('PaymentInfo');
         }
 
         return $fields;
@@ -100,6 +117,6 @@ class CommercePaymentMethod extends DataObject {
 
     // Get relevent payment gateway URL to use in HTML form
     public function GatewayURL() {
-            return $this->URL;
+        return $this->URL;
     }
 }

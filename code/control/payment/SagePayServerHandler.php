@@ -2,25 +2,25 @@
 
 class SagePayServerHandler extends CommercePaymentHandler {
 
-    /**
-     * SagePay server integration requires a "pre submit" authentication,
-     * meaning we have to post the order details in the background prior to
-     * sending a customer to the payment gateway.
-     *
-     * We do this using onBeforeGateway API hook and modify the output
-     *
-     */
-    public function onBeforeGateway() {
-        $data = parent::onBeforeGateway();
 
-        $order = Session::get('Commerce.Order');
+    public function index() {
+
+        $order = $this->order;
         $site = SiteConfig::current_site_config();
 
+        // First send our intial data to sagepay to get our payment ID
+        // and URL
         $callback_url = Controller::join_links(
             Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             "callback",
             $this->payment_gateway->ID
+        );
+
+        $back_url = Controller::join_links(
+            BASE_URL,
+            Checkout_Controller::config()->url_segment,
+            "finish"
         );
 
         $payload_data = array();
@@ -124,22 +124,38 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
         // Check our data was recieved ok
         if(strpos($response_data['Status'],'OK') === false) {
-            return null;
+            $form = null;
         } else {
             $order->PaymentID = $response_data['VPSTxId'];
+            $order->write();
+
             Session::set('Commerce.Order',$order);
 
-            // Finally, set the GateWay URL for the form
-            $data['GatewayURL'] = $response_data['NextURL'];
+            // now setup our form
+            $actions = FieldList::create(
+                LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+                FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+                    ->addExtraClass('btn')
+                    ->addExtraClass('btn-green')
+            );
+
+            $form = Form::create($this, 'GatewayForm', FieldList::create(), $actions)
+                ->addExtraClass('forms')
+                ->setFormMethod('POST');
+
+            $this->extend('updateGatewayForm',$form);
         }
 
-        return $data;
-    }
-
-    protected function gateway_fields() {
-        $fields = new FieldList();
-
-        return $fields;
+        return $this->
+            customise(array(
+                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                "GatewatForm" => $form
+            ))->renderWith(array(
+                "Payment",
+                "Commerce",
+                "Page"
+            ));
     }
 
     /**

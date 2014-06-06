@@ -73,10 +73,26 @@ class Payment_Controller extends Commerce_Controller {
             $handler = $handler::$handler;
 
             $this->payment_handler = $handler::create();
+            $this->payment_handler->setRequest($this->request);
+            $this->payment_handler->setURLParams = $this->request->allParams();
             $this->payment_handler->setPaymentGateway($this->getPaymentMethod());
         }
     }
 
+    /**
+     * Action that gets called before we interface with our payment
+     * method.
+     *
+     * This action is responsible for setting up an order and
+     * saving it into the database (as well as a session) and also then
+     * generating an order summary before the user performs any final
+     * actions needed.
+     *
+     * This action is then mapped directly to the index action of the
+     * Handler for the payment method that was selected by the user
+     * in the "Postage and Payment" form.
+     *
+     */
     public function index() {
         // If shopping cart doesn't exist, redirect to base
         if(!ShoppingCart::create()->getItems()->exists() || $this->getPaymentHandler() === null)
@@ -133,35 +149,14 @@ class Payment_Controller extends Commerce_Controller {
 
         // Add order to session so our payment handler can process it
         Session::set("Commerce.Order", $order);
+        $this->payment_handler->setOrder($order);
 
-        // Perform pre gateway action and return data (if any)
-        $data = $this->payment_handler->onBeforeGateway();
+        // Get gateway data
+        $return = $this->payment_handler->index();
 
-        if(is_array($data)) {
-
-            // Setup gateway form
-            $form = $this->payment_handler->GatewayForm($data);
-
-            return $this->
-                customise(array(
-                    'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-                    'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-                    'GatewayForm' => $form
-                ))->renderWith(array(
-                    "Payment",
-                    "Commerce",
-                    "Page"
-                ));
-        } else {
-            $error_url = Controller::join_links(
-                Director::absoluteBaseURL(),
-                Payment_Controller::config()->url_segment,
-                "callback"
-            );
-
-            return $this->redirect($error_url);
-         }
+        return $return;
     }
+
 
     /**
      * This method is what is called at the end of the transaction. It takes

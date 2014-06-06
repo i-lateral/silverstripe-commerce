@@ -2,8 +2,37 @@
 
 class SagePayFormsHandler extends CommercePaymentHandler {
 
-    protected function gateway_fields() {
-        $fields = new FieldList(
+    /**
+     * Default Action
+     *
+     */
+    public function index() {
+        return $this->
+            customise(array(
+                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            ))->renderWith(array(
+                "Payment",
+                "Commerce",
+                "Page"
+            ));
+    }
+
+    /**
+     * Return a form that will be loaded into the Payment template and will post
+     * to the payment gateway provider.
+     *
+     * @return Form
+     */
+    public function GatewayForm() {
+        $back_url = Controller::join_links(
+            BASE_URL,
+            Checkout_Controller::config()->url_segment,
+            "finish"
+        );
+
+
+        $fields = FieldList::create(
             HiddenField::create('navigate'),
             HiddenField::create('VPSProtocol',null,$this->payment_gateway->ProtocolVersion),
             HiddenField::create('TxType', null, 'PAYMENT'),
@@ -11,7 +40,21 @@ class SagePayFormsHandler extends CommercePaymentHandler {
             HiddenField::create('Crypt', null, $this->gateway_data())
         );
 
-        return $fields;
+        $actions = FieldList::create(
+            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+                ->addExtraClass('btn')
+                ->addExtraClass('btn-green')
+        );
+
+        $form = Form::create($this, 'GatewayForm', $fields, $actions)
+            ->addExtraClass('forms')
+            ->setFormMethod('POST')
+            ->setFormAction($this->payment_gateway->GatewayURL());
+
+        $this->extend('updateGatewayForm',$form);
+
+        return $form;
     }
 
     /**
@@ -19,7 +62,7 @@ class SagePayFormsHandler extends CommercePaymentHandler {
      *
      */
     private function gateway_data() {
-        $order = Session::get('Commerce.Order');
+        $order = $this->order;
         $site = SiteConfig::current_site_config();
 
         $callback_url = Controller::join_links(
