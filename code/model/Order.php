@@ -17,7 +17,7 @@ class Order extends DataObject implements PermissionProvider {
 
     private static $db = array(
         'OrderNumber'       => 'Varchar',
-        'Status'            => "Enum('incomplete,failed,canceled,paid,processing,dispatched','incomplete')",
+        'Status'            => "Enum('incomplete,failed,canceled,paid,pending,processing,dispatched','incomplete')",
         // Billing Details
         'Company'           => 'Varchar',
         'FirstName'         => 'Varchar',
