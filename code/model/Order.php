@@ -196,6 +196,7 @@ class Order extends DataObject implements PermissionProvider {
         // Setup basic history of this order
         $versions = $this->AllVersions();
         $curr_version = $versions->First()->Version;
+        $message = "";
 
         foreach($versions as $version) {
             $i = $version->Version;
