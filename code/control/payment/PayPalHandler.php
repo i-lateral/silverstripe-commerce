@@ -154,7 +154,7 @@ class PayPalHandler extends CommercePaymentHandler {
                 if (!$response)
                     return false;
 
-                if((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($this->request->post['payment_status'])) {
+                if((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($data['payment_status'])) {
 
                     switch($data['payment_status']) {
                         case 'Canceled_Reversal':
