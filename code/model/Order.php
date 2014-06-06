@@ -206,7 +206,11 @@ class Order extends DataObject implements PermissionProvider {
                 $frm = Versioned::get_version($this->class, $this->ID, $i - 1);
                 $to = Versioned::get_version($this->class, $this->ID, $i);
                 $diff = new DataDifferencer($frm, $to);
-                $message = "<p>{$version->Author()->FirstName} ({$version->LastEdited})</p>";
+
+                if($version->Author())
+                    $message = "<p>{$version->Author()->FirstName} ({$version->LastEdited})</p>";
+                else
+                    $message = "<p>Unknown ({$version->LastEdited})</p>";
 
                 if($diff->ChangedFields()->exists()) {
                     $message .= "<ul>";
