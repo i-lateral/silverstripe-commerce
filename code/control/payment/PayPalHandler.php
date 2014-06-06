@@ -109,7 +109,6 @@ class PayPalHandler extends CommercePaymentHandler {
      * Process the callback data from the payment provider
      */
     public function callback() {
-        $vars = array();
         $data = $this->request->postVars();
 
         $success_url = Controller::join_links(
@@ -189,11 +188,13 @@ class PayPalHandler extends CommercePaymentHandler {
                             $order->Status = "canceled";
                             break;
                     }
-
-                    $order->write();
                 }
 
                 curl_close($curl);
+
+                // Store all the data sent from the gateway in a json
+                $order->GatewayData = json_encode($data);
+                $order->write();
             }
         }
 
