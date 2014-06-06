@@ -17,6 +17,23 @@ class ShoppingCart extends Commerce_Controller {
      */
     private static $class_name = "ShoppingCart";
 
+    /**
+     * Overwrite the default title for this controller which is taken
+     * from the translation files. This is used for Title and MetaTitle
+     * variables in templates.
+     *
+     * @var string
+     * @config
+     */
+    private static $title;
+
+    public function getTitle() {
+        return ($this->config()->title) ? $this->config()->title : _t("Commerce.CARTNAME", "Shopping Cart");
+    }
+
+    public function getMetaTitle() {
+        return $this->getTitle();
+    }
 
     /**
      * URL Used to access this controller
