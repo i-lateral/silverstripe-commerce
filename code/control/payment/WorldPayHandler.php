@@ -2,26 +2,11 @@
 
 class WorldPayHandler extends CommercePaymentHandler {
 
-    public function index() {
-
-        return $this->
-            customise(array(
-                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            ))->renderWith(array(
-                "Payment",
-                "Commerce",
-                "Page"
-            ));
-    }
-
     /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
-     *
-     * @return Form
+     * Default action
      */
-    public function GatewayForm() {
+    public function index() {
+        // Setup payment gateway form
         $site = SiteConfig::current_site_config();
         $order = $this->order;
 
@@ -71,17 +56,27 @@ class WorldPayHandler extends CommercePaymentHandler {
                 ->addExtraClass('btn-green')
         );
 
-        $form = Form::create($this,'GatewayForm',$fields,$actions)
+        $form = Form::create($this,'Form',$fields,$actions)
             ->addExtraClass('forms')
             ->setFormMethod('POST')
             ->setFormAction($this->payment_gateway->GatewayURL());
 
-        $this->extend('updateGatewayForm',$form);
+        $this->extend('updateForm',$form);
 
-        return $form;
+
+        return array(
+            "Title"     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            "MetaTitle" => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            "Form"      => $form
+        );
     }
 
-    public function ProcessCallback($data = null, $success_data, $error_data) {
+    /**
+     * Retrieve and process order data from the request
+     */
+    public function callback() {
+        $data = $this->request->postVars();
+
         $success_url = Controller::join_links(
             Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
@@ -107,16 +102,16 @@ class WorldPayHandler extends CommercePaymentHandler {
             $this->payment_gateway->InstallID == $data['instId'] && // The current install ID matches the postback ID
             $this->payment_gateway->ResponsePassword == $data["callbackPW"]
         ) {
-            $order = Order::get()->filter('OrderNumber',$data['cartId'])->first();
+            $order = Order::get()
+                ->filter('OrderNumber',$data['cartId'])
+                ->first();
+
             $order_status = $data['transStatus'];
 
             if($order) {
                 if($order_status == 'Y') {
                     $order->Status = 'paid';
-                    $vars = array(
-                        "SiteConfig" => SiteConfig::current_site_config(),
-                        "RedirectURL" => $success_url
-                    );
+                    $vars["RedirectURL"] = $success_url;
                 } else {
                     $order->Status = 'failed';
                 }
@@ -126,8 +121,6 @@ class WorldPayHandler extends CommercePaymentHandler {
                 $order->write();
             }
         }
-
-        $this->extend("updateCallBack", $vars);
 
         return $this->renderWith(array("Payment_WorldPay"), $vars);
     }

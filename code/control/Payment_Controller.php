@@ -154,7 +154,13 @@ class Payment_Controller extends Commerce_Controller {
         // Get gateway data
         $return = $this->payment_handler->index();
 
-        return $return;
+        return $this
+            ->customise($return)
+            ->renderWith(array(
+                    "Payment",
+                    "Commerce",
+                    "Page"
+                ));
     }
 
 
@@ -164,28 +170,14 @@ class Payment_Controller extends Commerce_Controller {
      * method for processing.
      */
     public function callback() {
-        // See if data has been passed via the request
-        if($this->request->postVars())
-            $data = $this->request->postVars();
-        elseif(count($this->request->getVars()) > 1)
-            $data = $this->request->getVars();
-        else
-            $data = false;
-
-        $handler = $this->getPaymentHandler();
-
         // If post data exists, process. Otherwise provide error
-        if($data && $handler !== null) {
-            $callback = $handler->ProcessCallback(
-                $data,
-                $this->success_data(),
-                $this->error_data()
-            );
+        if($this->payment_handler !== null) {
+            $callback = $this->payment_handler->callback();
         } else {
             // Redirect to error page
             return $this->redirect(Controller::join_links(
                 Director::BaseURL(),
-                self::$url_segment,
+                $this->config()->url_segment,
                 'complete',
                 'error'
             ));

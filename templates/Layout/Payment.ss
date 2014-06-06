@@ -64,5 +64,5 @@
         $PaymentInfo
     <% end_if %>
 
-    $GatewayForm
+    $Form
 </div>

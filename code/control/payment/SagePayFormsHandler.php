@@ -7,30 +7,12 @@ class SagePayFormsHandler extends CommercePaymentHandler {
      *
      */
     public function index() {
-        return $this->
-            customise(array(
-                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            ))->renderWith(array(
-                "Payment",
-                "Commerce",
-                "Page"
-            ));
-    }
-
-    /**
-     * Return a form that will be loaded into the Payment template and will post
-     * to the payment gateway provider.
-     *
-     * @return Form
-     */
-    public function GatewayForm() {
+        // Setup payment gateway form
         $back_url = Controller::join_links(
             BASE_URL,
             Checkout_Controller::config()->url_segment,
             "finish"
         );
-
 
         $fields = FieldList::create(
             HiddenField::create('navigate'),
@@ -47,15 +29,20 @@ class SagePayFormsHandler extends CommercePaymentHandler {
                 ->addExtraClass('btn-green')
         );
 
-        $form = Form::create($this, 'GatewayForm', $fields, $actions)
+        $form = Form::create($this, 'Form', $fields, $actions)
             ->addExtraClass('forms')
             ->setFormMethod('POST')
             ->setFormAction($this->payment_gateway->GatewayURL());
 
-        $this->extend('updateGatewayForm',$form);
+        $this->extend('updateForm',$form);
 
-        return $form;
+        return array(
+            'Title'     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            'MetaTitle' => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            "Form"      => $form
+        );
     }
+
 
     /**
      * Generate encrypted string to send to SagePay
@@ -210,7 +197,11 @@ class SagePayFormsHandler extends CommercePaymentHandler {
      * @var $success_data initial success vars
      * @var $error_data initial success vars
      */
-    public function ProcessCallback($data = null, $success_data, $error_data) {
+    public function callback() {
+
+        $controller = Controller::curr();
+        $data = $this->request->getVars();
+
         $successs_url = Controller::join_links(
             Director::BaseURL(),
             Payment_Controller::config()->url_segment,
@@ -223,8 +214,6 @@ class SagePayFormsHandler extends CommercePaymentHandler {
             'complete',
             'error'
         );
-
-        $controller = Controller::curr();
 
         // Check if CallBack data exists and install id matches the saved ID
         if(isset($data) && isset($data['crypt'])) {

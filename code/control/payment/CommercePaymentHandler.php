@@ -54,13 +54,11 @@ abstract class CommercePaymentHandler extends Controller {
 
 
     /**
-     * Retrieve and process order data from the request
+     * Retrieve and process callback info from the payment gateway.
      *
-     * @var $data request data
-     * @var $success_data initial success vars
-     * @var $error_data initial success vars
+     * This action is called directly from the payment controller and
+     * should return either a rendered template or a response (such as a
+     * redirect).
      */
-    public function ProcessCallback($data = null, $success_data, $error_data) {
-        user_error('You have not added a ProcessCallback() method on your Payment Handler Class');
-    }
+    abstract public function callback();
 }
