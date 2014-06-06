@@ -194,6 +194,7 @@ class PayPalHandler extends CommercePaymentHandler {
 
                 // Store all the data sent from the gateway in a json
                 $order->GatewayData = json_encode($data);
+                $order->PaymentID = $data["txn_id"];
                 $order->write();
             }
         }
