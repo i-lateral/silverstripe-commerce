@@ -6,9 +6,20 @@
         <div class="commerce-summary">
             <h2><% _t('Commerce.ORDER','Order') %></h2>
             <p>
+                <strong><%  _t('Commerce.SUBTOTAL', 'Sub Total') %>:</strong>
+                $SubTotal.Nice
+                <br/>
+
                 <strong><%  _t('Commerce.POSTAGE', 'Postage') %>:</strong>
                 $PostageType $PostageCost.Nice
                 <br/>
+
+                <% if $Top.SiteConfig.TaxRate > 0 %>
+                    <strong><%  _t('Commerce.TAX', 'Tax') %>:</strong>
+                    $TaxTotal.Nice
+                    <br/>
+                <% end_if %>
+
                 <strong><%  _t('Commerce.TOTAL', 'Total') %>:</strong>
                 $Total.Nice
             </p>

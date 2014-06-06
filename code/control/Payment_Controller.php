@@ -53,6 +53,10 @@ class Payment_Controller extends Commerce_Controller {
         return Session::get('Commerce.Order');
     }
 
+    public function getClassName() {
+        return str_replace("_Controller","",get_class($this));
+    }
+
     public function init() {
         parent::init();
 
@@ -125,6 +129,8 @@ class Payment_Controller extends Commerce_Controller {
             $order->Items()->add($order_item);
         }
 
+        $order->write();
+
         // Add order to session so our payment handler can process it
         Session::set("Commerce.Order", $order);
 
@@ -136,19 +142,16 @@ class Payment_Controller extends Commerce_Controller {
             // Setup gateway form
             $form = $this->payment_handler->GatewayForm($data);
 
-            // Finally, save order to database before transport
-            $order = $this->getOrder();
-            $order->write();
-
-            $vars = array(
-                'ClassName'   => "Payment",
-                'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-                'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-                'GatewayForm' => $form,
-                'Order'       => $order
-            );
-
-            return $this->renderWith(array('Payment','Page'), $vars);
+            return $this->
+                customise(array(
+                    'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                    'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+                    'GatewayForm' => $form
+                ))->renderWith(array(
+                    "Payment",
+                    "Commerce",
+                    "Page"
+                ));
         } else {
             $error_url = Controller::join_links(
                 Director::absoluteBaseURL(),
