@@ -36,6 +36,7 @@ de_DE:
     CARTQTY: 'Anzahl'
     POSTAGE: 'Versand'
     CARTLOCATION: 'Bitte wählen Sie den Lieferungsort aus'
+    CARTSUBTOTAL: 'Zwischensumme'
     CARTTOTAL: 'Gesamt'
     PAYMENT: 'Zahlung'
     PAYMENTSELECTION: 'Bitte wählen Sie, wie Sie bezahlen möchten'

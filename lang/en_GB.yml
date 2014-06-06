@@ -39,6 +39,7 @@ en_GB:
     CARTQTY: 'Qty'
     POSTAGE: 'Postage'
     CARTLOCATION: 'Please choose the location to post to'
+    CARTSUBTOTAL: 'Sub Total'
     CARTTOTAL: 'Total'
     PAYMENT: 'Payment'
     PAYMENTSELECTION: 'Please choose how you would like to pay'
