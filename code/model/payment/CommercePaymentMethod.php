@@ -85,6 +85,12 @@ class CommercePaymentMethod extends DataObject {
         $fields->addFieldToTab('Root.Main', $classname_field);
 
         if($this->ID) {
+            $fields->addFieldToTab("Root.Main", TextField::create('Summary', 'Summary message to appear on website'));
+            $fields->addFieldToTab("Root.Main", TextField::create('URL', 'Payment gateway URL'));
+            $fields->addFieldToTab("Root.Main", CheckboxField::create('Default', 'Default payment method?'));
+            $fields->addFieldToTab("Root.Main", TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
+            $fields->addFieldToTab("Root.Main", HTMLEditorField::create("PaymentInfo", "Message to appear on payment summary page"));
+
             // Setup response URL field
             $callback_url = Controller::join_links(
                 Director::absoluteBaseURL(),
@@ -93,17 +99,37 @@ class CommercePaymentMethod extends DataObject {
                 $this->ID
             );
 
-            $fields->addFieldToTab(
-                'Root.Main',
-                ReadonlyField::create('ResponseURL', 'Payment Response URL')
-                    ->setValue($callback_url)
+            // Setup completed URL
+            $complete_url = Controller::join_links(
+                Director::absoluteBaseURL(),
+                Payment_Controller::config()->url_segment,
+                "complete"
             );
 
-            $fields->addFieldToTab("Root.Main", TextField::create('Summary', 'Summary message to appear on website'));
-            $fields->addFieldToTab("Root.Main", TextField::create('URL', 'Payment gateway URL'));
-            $fields->addFieldToTab("Root.Main", CheckboxField::create('Default', 'Default payment method?'));
-            $fields->addFieldToTab("Root.Main", TextareaField::create('GatewayMessage','Message to appear when user user is directed to payment provider'));
-            $fields->addFieldToTab("Root.Main", HTMLEditorField::create("PaymentInfo", "Message to appear on payment summary page"));
+            // Setup error URL
+            $error_url = Controller::join_links(
+                Director::absoluteBaseURL(),
+                Payment_Controller::config()->url_segment,
+                "complete",
+                "error"
+            );
+
+            $url_field = ToggleCompositeField::create(
+                "PaymentURLS",
+                "Payment integration URLs",
+                FieldList::create(
+                    ReadonlyField::create('ResponseURL', 'Response URL')
+                        ->setValue($callback_url),
+
+                    ReadonlyField::create('CompletedURL', 'Completed URL')
+                        ->setValue($complete_url),
+
+                    ReadonlyField::create('ErrorURL', 'Error URL')
+                        ->setValue($error_url)
+                )
+            );
+
+            $fields->addFieldToTab("Root.Main", $url_field);
         } else {
             $fields->removeByName('URL');
             $fields->removeByName('Summary');
