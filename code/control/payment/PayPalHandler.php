@@ -20,13 +20,13 @@ class PayPalHandler extends CommercePaymentHandler {
         );
 
         $success_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             'complete'
         );
 
         $error_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             'complete',
             'error'
