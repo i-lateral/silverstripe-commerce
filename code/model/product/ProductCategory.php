@@ -40,8 +40,12 @@ class ProductCategory extends DataObject {
     *
     * @return string URL to cart controller
     */
-    public function Link() {
-        return Controller::join_links(BASE_URL , $this->URLSegment);
+    public function Link($action = null) {
+        return Controller::join_links(
+            BASE_URL,
+            $this->URLSegment,
+            $action
+        );
     }
 
     public function getMenuTitle() {
