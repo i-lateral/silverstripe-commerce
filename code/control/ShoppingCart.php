@@ -465,6 +465,8 @@ class ShoppingCart extends Commerce_Controller {
      * @return Form
      */
     public function PostageForm() {
+        $available_postage = Session::get("Commerce.AvailablePostage");
+
         // Setup default postage fields
         $country_select = CompositeField::create(
             CountryDropdownField::create('Country',_t('Commerce.COUNTRY','Country'))
@@ -472,20 +474,16 @@ class ShoppingCart extends Commerce_Controller {
             TextField::create("ZipCode",_t('Commerce.ZipCode',"Zip/Postal Code"))
         )->addExtraClass("unit-50");
 
-        $search_action = CompositeField::create(
-            FormAction::create("doGetPostage", _t('Commerce.Search',"Search"))
-                ->addExtraClass('btn')
-        )->addExtraClass("unit-50");
-
-
         // If we have stipulated a search, then see if we have any results
         // otherwise load empty fieldsets
-        if($rates = Session::get("Commerce.AvailablePostage")) {
+        if($available_postage) {
+            $search_text = _t('Commerce.Update',"Update");
+
             $postage_select = CompositeField::create(
                 OptionsetField::create(
                     "PostageID",
                     _t('Commerce.SelectPostage',"Select Postage"),
-                    $rates->map()
+                    $available_postage->map()
                 )
             )->addExtraClass("unit-50");
 
@@ -495,9 +493,16 @@ class ShoppingCart extends Commerce_Controller {
                     ->addExtraClass('btn-green')
             )->addExtraClass("unit-50");
         } else {
+            $search_text = _t('Commerce.Search',"Search");
             $postage_select = CompositeField::create()->addExtraClass("unit-50");
             $confirm_action = CompositeField::create()->addExtraClass("unit-50");
         }
+
+        // Set search field
+        $search_action = CompositeField::create(
+            FormAction::create("doGetPostage", $search_text)
+                ->addExtraClass('btn')
+        )->addExtraClass("unit-50");
 
 
         // Setup fields and actions
