@@ -6,6 +6,7 @@
  * of items,
  *
  * @author morven
+ * @package commerce
  */
 class ShoppingCart extends Commerce_Controller {
 
@@ -87,6 +88,22 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function getItems() {
         return $this->items;
+    }
+
+    /**
+     * Set postage that is available to the shopping cart based on the
+     * country and zip code submitted
+     *
+     * @param $country 2 character country code
+     * @param $code Zip or Postal code
+     * @return ShoppingCart
+     */
+    public function setAvailablePostage($country, $code) {
+        // Set postage data from commerce_controller and save into a session
+        $postage_areas = $this->getPostageAreas($country, $codes);
+        Session::set("Commerce.AvailablePostage", $postage_areas);
+
+        return $this;
     }
 
 
@@ -234,7 +251,6 @@ class ShoppingCart extends Commerce_Controller {
             }
 
             $this->save();
-            Session::clear("Commerce.PostageID");
         }
 
         return $this->redirectBack();
@@ -255,7 +271,15 @@ class ShoppingCart extends Commerce_Controller {
      *
      */
     public function save() {
+        Session::clear("Commerce.PostageID");
         Session::set("Commerce.ShoppingCart.Items", serialize($this->items));
+
+        // Update available postage
+        if($data = Session::get("Form.Form_PostageForm.data")) {
+            $country = $data["Country"];
+            $code = $data["ZipCode"];
+            $this->setAvailablePostage($country, $code);
+        }
     }
 
     /**
@@ -418,9 +442,6 @@ class ShoppingCart extends Commerce_Controller {
 
         $this->save();
 
-        // Clear and postage data that has been set
-        Session::clear("Commerce.PostageID");
-
         return $this->redirectBack();
     }
 
@@ -444,7 +465,6 @@ class ShoppingCart extends Commerce_Controller {
      * @return Form
      */
     public function PostageForm() {
-
         // Setup default postage fields
         $country_select = CompositeField::create(
             CountryDropdownField::create('Country',_t('Commerce.COUNTRY','Country'))
@@ -523,12 +543,9 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function doGetPostage($data, $form) {
         $country = $data["Country"];
-        $codes = $data["ZipCode"];
+        $code = $data["ZipCode"];
 
-        $postage_areas = $this->getPostageAreas($country, $codes);
-
-        // Set our postage data into a session so the form can get the relevent fields
-        Session::set("Commerce.AvailablePostage", $postage_areas);
+        $this->setAvailablePostage($country, $code);
 
         // Set the form pre-populate data before redirecting
         Session::set("Form.{$form->FormName()}.data", $data);
