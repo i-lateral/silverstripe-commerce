@@ -60,7 +60,9 @@
     </fieldset>
 
     <fieldset class="commerce-cart-actions Actions">
-        $Actions.dataFieldByName(action_doEmpty)
+        <a href="$Controller.Link('emptycart')" class="btn btn-red">
+            <%_t('Commerce.CartEmpty','Empty Cart') %>
+        </a>
         $Actions.dataFieldByName(action_doUpdate)
     </fieldset>
 </form>

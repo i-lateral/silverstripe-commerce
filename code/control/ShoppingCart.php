@@ -64,7 +64,7 @@ class ShoppingCart extends Commerce_Controller {
 
     private static $allowed_actions = array(
         "remove",
-        "empty",
+        "emptycart",
         "clear",
         "update",
         "CartForm",
@@ -267,6 +267,17 @@ class ShoppingCart extends Commerce_Controller {
     }
 
     /**
+     * Action that will clear shopping cart and associated sessions
+     *
+     */
+    public function emptycart() {
+        $this->extend("onBeforeEmpty");
+        $this->clear();
+
+        return $this->redirectBack();
+    }
+
+    /**
      * Save the current products list and postage to a session.
      *
      */
@@ -402,9 +413,6 @@ class ShoppingCart extends Commerce_Controller {
         $fields = new FieldList();
 
         $actions = new FieldList(
-            FormAction::create('doEmpty', _t('Commerce.CartEmpty','Empty Cart'))
-                ->addExtraClass('btn')
-                ->addExtraClass('btn-red'),
             FormAction::create('doUpdate', _t('Commerce.CartUpdate','Update Cart'))
                 ->addExtraClass('btn')
                 ->addExtraClass('btn-blue')
@@ -441,18 +449,6 @@ class ShoppingCart extends Commerce_Controller {
         }
 
         $this->save();
-
-        return $this->redirectBack();
-    }
-
-    /**
-     * Action that will clear shopping cart and associated sessions
-     *
-     */
-    public function doEmpty($data, $form) {
-
-        $this->extend("onBeforeEmpty");
-        $this->clear();
 
         return $this->redirectBack();
     }
