@@ -54,12 +54,41 @@ class CatalogueAdmin extends ModelAdmin {
             $add_button = new GridFieldAddNewButton('toolbar-header-left');
             $add_button->setButtonName('Add Product');
 
+            // Bulk manager
+            $manager = new GridFieldBulkManager();
+            $manager->removeBulkAction("unlink");
+            $manager->removeBulkAction("delete");
+
+            $manager->addBulkAction(
+                'enable',
+                'Enable',
+                'CommerceProductBulkAction'
+            );
+
+            $manager->addBulkAction(
+                'disable',
+                'Disable',
+                'CommerceProductBulkAction'
+            );
+
+            $manager->addBulkAction(
+                'delete',
+                'Delete',
+                'GridFieldBulkActionDeleteHandler',
+                 array(
+                    'isAjax' => true,
+                    'icon' => 'decline',
+                    'isDestructive' => true
+                )
+            );
+
             $field_config
                 ->removeComponentsByType('GridFieldExportButton')
                 ->removeComponentsByType('GridFieldPrintButton')
                 ->removeComponentsByType('GridFieldAddNewButton')
                 ->addComponents(
-                    $add_button
+                    $add_button,
+                    $manager
                 );
 
         }
