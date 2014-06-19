@@ -106,6 +106,10 @@ class CatalogueAdmin extends ModelAdmin {
             $add_button = new GridFieldAddNewButton('toolbar-header-left');
             $add_button->setButtonName('Add Category');
 
+            // Bulk manager
+            $manager = new GridFieldBulkManager();
+            $manager->removeBulkAction("unlink");
+
             // Tidy up category config
             $field_config = $gridField->getConfig();
             $field_config
@@ -116,6 +120,7 @@ class CatalogueAdmin extends ModelAdmin {
                 ->addComponents(
                     $record_editor,
                     $add_button,
+                    $manager,
                     GridFieldOrderableRows::create('Sort')
                 );
 
