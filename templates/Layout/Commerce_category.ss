@@ -20,9 +20,9 @@
         <% end_if %>
     </div>
 
-    <% if $AllProducts.exists %>
+    <% if $PaginatedAllProducts(8).exists %>
         <div class="units-row commerce-list commerce-list-products">
-            <% loop $AllProducts %>
+            <% loop $PaginatedAllProducts(8) %>
                 <div class="unit-25 commerce-list-child">
                     <h2><a href="$Link">$Title</a></h2>
 
@@ -34,7 +34,40 @@
                         </span>
                     </p>
                 </div>
+
+                <% if $MultipleOf(4) %></div><div class="units-row commerce-list commerce-list-products"><% end_if %>
             <% end_loop %>
         </div>
+
+        <% with $PaginatedAllProducts(8) %>
+            <% if $MoreThanOnePage %>
+                <ul class="pagination">
+                    <% if $NotFirstPage %>
+                        <li class="prev">
+                            <a class="prev" href="$PrevLink">Prev</a>
+                        </li>
+                    <% end_if %>
+
+                    <% loop $Pages %>
+                        <% if $CurrentBool %>
+                            <li><span>$PageNum</span></li>
+                        <% else %>
+                            <% if $Link %>
+                                <li><a href="$Link">$PageNum</a></li>
+                            <% else %>
+                                <li>...</li>
+                            <% end_if %>
+                        <% end_if %>
+                    <% end_loop %>
+
+                    <% if $NotLastPage %>
+                        <li class="next">
+                            <a class="next" href="$NextLink">Next</a>
+                        </li>
+                    <% end_if %>
+                </ul>
+            <% end_if %>
+        <% end_with %>
+
     <% end_if %>
 </div>

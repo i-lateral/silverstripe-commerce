@@ -230,6 +230,12 @@ class Product extends DataObject {
 
         $fields->addFieldToTab('Root.Main', $url_field, 'Price');
 
+        // Add disble product field
+        $fields->addFieldToTab('Root.Main', CheckboxField::create(
+            "Disabled",
+            _t("Commerce.DisableProduct", "Disable this product?")
+        ));
+
         $fields->addFieldToTab(
             'Root.Main',
             HTMLEditorField::create('Description')
@@ -257,12 +263,6 @@ class Product extends DataObject {
 
         $fields->addFieldToTab('Root.Main', $additional_field);
         $fields->addFieldToTab('Root.Main', $meta_field);
-
-        // Add disble product field
-        $fields->addFieldToTab('Root.Main', CheckboxField::create(
-            "Disabled",
-            _t("Commerce.DisableProduct", "Disable this product?")
-        ));
 
         // Once product is saved, deal with more complex associations
         if($this->ID) {

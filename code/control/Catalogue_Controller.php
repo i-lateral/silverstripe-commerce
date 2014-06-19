@@ -56,6 +56,33 @@ class Catalogue_Controller extends Commerce_Controller {
     }
 
     /**
+     * Get a paginated list of products
+     *
+     * @return PaginatedList
+     */
+    public function PaginatedProducts($limit = 10) {
+        if($this->dataRecord instanceOf ProductCategory)
+            return PaginatedList::create($this->Products(), $this->request)
+                ->setPageLength($limit);
+        else
+            return ArrayList::create();
+    }
+
+
+    /**
+     * Get a paginated list of products
+     *
+     * @return PaginatedList
+     */
+    public function PaginatedAllProducts($limit = 10) {
+        if($this->dataRecord instanceOf ProductCategory)
+            return PaginatedList::create($this->AllProducts(), $this->request)
+                ->setPageLength($limit);
+        else
+            return ArrayList::create();
+    }
+
+    /**
      * Return the link to this controller, but force the expanded link to be returned so that form methods and
      * similar will function properly.
      *
