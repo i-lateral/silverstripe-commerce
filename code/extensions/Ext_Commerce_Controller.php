@@ -17,7 +17,7 @@ class Ext_Commerce_Controller extends Extension {
 
             // Check if url is primary domain, if not, re-direct
             if($_SERVER['HTTP_HOST'] != Subsite::currentSubsite()->getPrimaryDomain())
-                Director::redirect(Subsite::currentSubsite()->absoluteBaseURL());
+                $this->owner->redirect(Subsite::currentSubsite()->absoluteBaseURL());
         }
 
         // Setup currency globally based on what is set in admin
@@ -97,7 +97,7 @@ class Ext_Commerce_Controller extends Extension {
 
     /**
      * Return a the current shopping cart
-     * 
+     *
      * @return ShoppingCart
      */
     public function getCommerceCart() {
