@@ -91,6 +91,17 @@ class CatalogueAdmin extends ModelAdmin {
                     $manager
                 );
 
+            // Update list of items for subsite (if used)
+            if(class_exists('Subsite')) {
+                $list = $gridField
+                    ->getList()
+                    ->filter(array(
+                        'SubsiteID' => Subsite::currentSubsiteID()
+                    ));
+
+                $gridField->setList($list);
+            }
+
         }
 
         // Alterations for Hiarachy on product cataloge
@@ -163,6 +174,17 @@ class CatalogueAdmin extends ModelAdmin {
                     );
                 }
             ));
+
+            // Update list of items for subsite (if used)
+            if(class_exists('Subsite')) {
+                $list = $gridField
+                    ->getList()
+                    ->filter(array(
+                        'SubsiteID' => Subsite::currentSubsiteID()
+                    ));
+
+                $gridField->setList($list);
+            }
         }
 
         return $form;

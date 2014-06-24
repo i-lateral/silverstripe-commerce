@@ -61,6 +61,17 @@ class OrderAdmin extends ModelAdmin {
             $field_config
                 ->removeComponentsByType('GridFieldExportButton')
                 ->addComponent($manager);
+
+            // Update list of items for subsite (if used)
+            if(class_exists('Subsite')) {
+                $list = $gridField
+                    ->getList()
+                    ->filter(array(
+                        'SubsiteID' => Subsite::currentSubsiteID()
+                    ));
+
+                $gridField->setList($list);
+            }
         }
 
         return $form;
