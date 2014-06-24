@@ -74,6 +74,13 @@ class Product extends DataObject {
         );
     }
 
+    /**
+     * Return the absolute link to this product
+     */
+    public function AbsoluteLink($action = null) {
+        return Director::absoluteURL($this->Link($action));
+    }
+
     public function getMenuTitle() {
         return $this->Title;
     }

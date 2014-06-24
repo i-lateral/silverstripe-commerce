@@ -21,3 +21,9 @@ if(class_exists('Subsite')) {
 }
 
 LeftAndMain::add_extension('Ext_Commerce_LeftAndMain');
+
+// Setup google sitemaps
+if(class_exists("GoogleSitemap")) {
+    GoogleSitemap::register_dataobject('Product');
+    GoogleSitemap::register_dataobject('ProductCategory');
+}
