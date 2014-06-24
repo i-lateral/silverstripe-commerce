@@ -116,6 +116,10 @@ class ShoppingCart extends Commerce_Controller {
         return self::config()->enabled;
     }
 
+    public static function get() {
+        return ShoppingCart::create();
+    }
+
 
     public function __construct() {
         // If items are stored in a session, get them now
