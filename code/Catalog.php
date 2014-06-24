@@ -87,7 +87,10 @@ class Catalog_Controller extends Page_Controller {
     public function getCategoryChildren() {
         $category = ProductCategory::get()->filter('ID', $this->CategoryID)->first();
 
-        return ($category) ? $category->ChildrenOrProducts() : false;
+        if($category && $category->Children()->exists())
+            return $category->Children();
+        else
+            return $category->Products();
     }
     /*
     public function index() {
