@@ -14,7 +14,8 @@ class BillingDetailsForm extends Form {
                 TextField::create("Company",_t('Commerce.Company',"Company")),
                 EmailField::create('Email',_t('Commerce.Email','Email') . '*'),
                 TextField::create('PhoneNumber',_t('Commerce.Phone','Phone Number'))
-            )->addExtraClass('unit-50');
+            )->setName("PersonalFields")
+            ->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
                 HeaderField::create('AddressHeader', _t('Commerce.Address','Address'), 2),
@@ -28,11 +29,15 @@ class BillingDetailsForm extends Form {
                     null,
                     'GB'
                 )->setAttribute("class",'countrydropdown dropdown btn')
-            )->addExtraClass('unit-50');
+            )->setName("AddressFields")
+            ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
-            $personal_fields,
-            $address_fields
+            CompositeField::create(
+                $personal_fields,
+                $address_fields
+            )->setName("BillingFields")
+            ->addExtraClass('units-row')
         );
 
         $back_url = Controller::join_links(

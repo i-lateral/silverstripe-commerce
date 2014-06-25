@@ -11,7 +11,8 @@ class DeliveryDetailsForm extends Form {
                 HeaderField::create('PersonalHeader', _t('Commerce.PersonalDetails','Personal Details'), 2),
                 TextField::create('DeliveryFirstnames',_t('Commerce.FirstName','First Name(s)') . '*'),
                 TextField::create('DeliverySurname',_t('Commerce.Surname','Surname') . '*')
-            )->addExtraClass('unit-50');
+            )->setName("PersonalFields")
+            ->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
                 HeaderField::create('AddressHeader', _t('Commerce.Address','Address'), 2),
@@ -23,11 +24,15 @@ class DeliveryDetailsForm extends Form {
                     'DeliveryCountry',
                     _t('Commerce.Country','Country')
                 )->setAttribute("class",'countrydropdown dropdown btn')
-            )->addExtraClass('unit-50');
+            )->setName("AddressFields")
+            ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
-            $personal_fields,
-            $address_fields
+            CompositeField::create(
+                $personal_fields,
+                $address_fields
+            )->setName("DeliveryFields")
+            ->addExtraClass('units-row')
         );
 
         $back_url = $controller->Link();

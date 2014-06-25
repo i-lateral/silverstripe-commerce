@@ -22,7 +22,8 @@ class PostagePaymentForm extends Form {
                 _t('Commerce.PostageSelection', 'Please select your prefered postage'),
                 $postage_areas->map()
             )->setValue($postage_id)
-        )->addExtraClass("unit-50");
+        )->setName("PostageFields")
+        ->addExtraClass("unit-50");
 
         // Get available payment methods and setup payment
         $payment_methods = SiteConfig::current_site_config()->PaymentMethods();
@@ -44,11 +45,15 @@ class PostagePaymentForm extends Form {
                 $payment_map,
                 $payment_value
             )
-        )->addExtraClass("unit-50");
+        )->setName("PaymentFields")
+        ->addExtraClass("unit-50");
 
         $fields = FieldList::create(
-            CompositeField::create($postage_field,$payment_field)
-                ->addExtraClass("units-row")
+            CompositeField::create(
+                $postage_field,
+                $payment_field
+            )->setName("PostagePaymentFields")
+            ->addExtraClass("units-row")
         );
 
         $back_url = $controller->Link("billing");
