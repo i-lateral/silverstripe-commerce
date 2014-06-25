@@ -100,7 +100,7 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function setAvailablePostage($country, $code) {
         // Set postage data from commerce_controller and save into a session
-        $postage_areas = $this->getPostageAreas($country, $codes);
+        $postage_areas = $this->getPostageAreas($country, $code);
         Session::set("Commerce.AvailablePostage", $postage_areas);
 
         return $this;
