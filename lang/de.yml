@@ -1,0 +1,172 @@
+de:
+  Catalog:
+    DESCRIPTION: 'Generic content page'
+    PLURALNAME: Catalogs
+    SINGULARNAME: Catalog
+  Commerce:
+    AddToCart: 'Add to cart'
+    AddedItemToCart: 'Added item to your shopping cart'
+    Address: Address
+    Address1: 'Address Line 1'
+    Address2: 'Address Line 2'
+    Attributes: Attributes
+    Back: Back
+    BillingDetails: 'Billing Details'
+    CartEmpty: 'Empty Cart'
+    CartIsEmpty: 'Your cart is currently empty'
+    CartName: 'Shopping Cart'
+    CartProceed: 'Proceed to Checkout'
+    CartQty: Qty
+    CartTotal: Total
+    CartUpdate: 'Update Cart'
+    CheckoutSummary: Summary
+    City: City
+    Company: Company
+    Confirm: Confirm
+    ConfirmPay: 'Confirm and Pay'
+    Country: Country
+    Date: Date
+    DeliverThisAddress: 'Deliver to this address'
+    DeliveryDetails: 'Delivery Details'
+    Description: Description
+    DisableProduct: 'Disable this product?'
+    Email: Email
+    EstimateShipping: 'Estimate Shipping'
+    Excluding: Excluding
+    FirstName: 'First Name(s)'
+    Including: Including
+    Item: Item
+    ItemCost: 'Item Cost'
+    Name: Name
+    Order: Order
+    OrderComplete: 'Order Complete'
+    OrderError: 'An error occured, Order ID''s do not match'
+    OrderFailed: 'Order Failed'
+    PackSize: 'Pack Size'
+    Payment: Payment
+    PaymentDetails: 'Enter Payment Details'
+    PaymentSelection: 'Please choose how you would like to pay'
+    PersonalDetails: 'Personal Details'
+    Phone: 'Phone Number'
+    PleaseSelect: 'Please Select'
+    PostCode: 'Post Code'
+    Postage: Postage
+    PostageDetails: 'Select Postage'
+    PostagePayment: 'Postage and Payment'
+    PostageSelection: 'Please select your prefered postage'
+    Price: Price
+    Processing: Processing
+    ProductDescription: 'Product Description'
+    Qty: Qty
+    ReadMore: 'Read More'
+    RedirectingToStore: 'We are now redirecting you, if you are not redirected automatically then click the link below.'
+    RelatedProducts: 'Related Products'
+    Reorder: Reorder
+    Search: Search
+    SelectPostage: 'Select Postage'
+    SetDeliveryAddress: 'Deliver to another address'
+    Shipping: Shipping
+    Status: Status
+    SubTotal: 'Sub Total'
+    Summary: Summary
+    SummaryCopy: 'Please review your personal information before proceeding and entering your payment details'
+    Surname: Surname
+    Tax: Tax
+    Total: Total
+    Update: Update
+    ViewCart: 'View Cart'
+    Weight: Weight
+    ZipCode: 'Zip/Postal Code'
+  CommerceAccount:
+    Company: Company
+    ContinueGuest: 'Continue as a Guest'
+    NoAccount: 'Don''t have an account'
+    NoOrders: 'There are currently no orders'
+    NotFound: 'Order not found'
+    Or: Or
+    OrderHistory: 'Order history'
+    OutstandingOrders: 'Outstanding Orders'
+    PhoneNumber: 'Phone Number'
+    Register: Register
+    SignIn: 'Sign in'
+  CommerceCurrency:
+    PLURALNAME: 'Commerce Currencies'
+    SINGULARNAME: 'Commerce Currency'
+  CommerceEmail:
+    CheckOrder: "Please check your order carefully when it arrives and contact us as soon as\npossible if there are any problems"
+    ContactQueries: 'If you have any queries, please'
+    Email: Email
+    FailedNotice: 'Unfortunately we could not process your order and payment. Please get in touch with us if you have any questions.'
+    FinalThanks: 'Many thanks'
+    Items: 'Items Ordered'
+    MarkedAs: 'has been marked as'
+    Order: Order
+    OrderDispatchedTo: 'Your order will be dispatched to'
+    Phone: Phone
+    ThankYou: 'Thank you for ordering from {title}'
+  CommercePaymentMethod:
+    PLURALNAME: 'Commerce Payment Methods'
+    SINGULARNAME: 'Commerce Payment Method'
+  Form:
+    FIELDISREQUIRED: '%s is required'
+  GridField:
+    NewRecord: 'New %s'
+  NumericField:
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Order:
+    PLURALNAME: Orders
+    SINGULARNAME: Order
+  OrderItem:
+    PLURALNAME: 'Order Items'
+    SINGULARNAME: 'Order Item'
+  PayPal:
+    PLURALNAME: 'Pay Pals'
+    SINGULARNAME: 'Pay Pal'
+  PostageArea:
+    PLURALNAME: 'Postage Areas'
+    SINGULARNAME: 'Postage Area'
+  Product:
+    PLURALNAME: Products
+    SINGULARNAME: Product
+  ProductAttribute:
+    PLURALNAME: 'Product Attributs'
+    SINGULARNAME: 'Product Attribute'
+  ProductCategory:
+    PLURALNAME: 'Product Categories'
+    SINGULARNAME: 'Product Category'
+  ProductColour:
+    PLURALNAME: 'Product Colours'
+    SINGULARNAME: 'Product Colour'
+  ProductCustomisation:
+    PLURALNAME: 'Product Customisations'
+    SINGULARNAME: 'Product Customisation'
+  ProductCustomisationOption:
+    PLURALNAME: 'Product Customisation Options'
+    SINGULARNAME: 'Product Customisation Option'
+  ProductWeight:
+    PLURALNAME: 'Product Weights'
+    SINGULARNAME: 'Product Weight'
+  SagePay:
+    PLURALNAME: 'Sage Paies'
+    SINGULARNAME: 'Sage Pay'
+  SagePayForms:
+    PLURALNAME: 'Sage Pay Formss'
+    SINGULARNAME: 'Sage Pay Forms'
+  SagePayServer:
+    PLURALNAME: 'Sage Pay Servers'
+    SINGULARNAME: 'Sage Pay Server'
+  SearchForm:
+    SearchResults: 'Search Results'
+  SiteTree:
+    MetadataToggle: Metadata
+    PLURALNAME: Pages
+    SINGULARNAME: Page
+  WorldPay:
+    PLURALNAME: 'World Paies'
+    SINGULARNAME: 'World Pay'
+  CatalogueAdmin:
+    MENUTITLE: Catalogue
+  LocaliseAdmin:
+    MENUTITLE: Localisation
+  OrderAdmin:
+    MENUTITLE: Orders

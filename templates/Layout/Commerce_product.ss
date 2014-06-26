@@ -28,7 +28,7 @@
             <div class="unit-50 commerce-product-summary">
                 <p>
                     <span class="price label big label-green">
-                        <span class="title"><% _t('Commerce.PRICE','Price') %>:</span>
+                        <span class="title"><% _t('Commerce.Price','Price') %>:</span>
                         <span class="value">
                             {$SiteConfig.Currency.HTMLNotation.RAW}
                             {$FrontPrice}
@@ -38,14 +38,14 @@
 
                     <% if $PackSize %>
                         <span class="packsize label big">
-                            <span class="title bold"><% _t('Commerce.PACKSIZE','Pack Size') %>:</span>
+                            <span class="title bold"><% _t('Commerce.PackSize','Pack Size') %>:</span>
                             <span class="value">{$PackSize}</span>
                         </span>
                     <% end_if %>
 
                     <% if $Weight %>
                         <span class="weight label big">
-                            <span class="title bold"><% _t('Commerce.WEIGHT','Weight') %>:</span>
+                            <span class="title bold"><% _t('Commerce.Weight','Weight') %>:</span>
                             <span class="value">{$Weight}{$SiteConfig.Weight.Unit}</span>
                         </span>
                     <% end_if %>
@@ -55,8 +55,8 @@
                     <div class="description">
                         <p>
                             $Description.Summary(50)
-                            <a href="{$Top.Link()}#commerce-product-description" title="<% _t('Commerce.READMORE','Read More') %>: {$Title}">
-                                <% _t('Commerce.READMORE','Read More') %>
+                            <a href="{$Top.Link()}#commerce-product-description" title="<% _t('Commerce.ReadMore','Read More') %>: {$Title}">
+                                <% _t('Commerce.ReadMore','Read More') %>CommerceAccount
                             </a>
                         </p>
                     </div>
@@ -74,14 +74,14 @@
             <div class="commerce-product-details">
                 <% if $Description %>
                     <div id="commerce-product-description" class="description">
-                        <h2><% _t('Commerce.DESCRIPTION','Description') %></h2>
+                        <h2><% _t('Commerce.Description','Description') %></h2>
                         $Description
                     </div>
                 <% end_if %>
 
                 <% if $Attributes %>
                     <div id="commerce-product-attributes" class="attributes">
-                        <h2><% _t('Commerce.ATTRIBUTES','Attributes') %></h2>
+                        <h2><% _t('Commerce.Attributes','Attributes') %></h2>
                         <ul>
                             <% loop $Attributes %><li class="feature">
                                 <strong>$Title:</strong> $Content
@@ -96,7 +96,7 @@
         <% if $RelatedProducts.exists %>
             <hr/>
 
-            <h2><% _t('Commerce.RELATEDPRODUCTS','Related Products') %></h2>
+            <h2><% _t('Commerce.RelatedProducts','Related Products') %></h2>
 
             <div class="units-row commerce-related-products">
                 <% loop $RelatedProducts %>

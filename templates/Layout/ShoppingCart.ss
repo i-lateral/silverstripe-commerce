@@ -1,7 +1,7 @@
 <% require css('commerce/css/Commerce.css') %>
 
 <div class="commerce-content-container typography commerce-cart">
-    <h1><% _t('Commerce.CARTNAME', 'Shopping Cart') %></h1>
+    <h1><% _t('Commerce.CartName', 'Shopping Cart') %></h1>
 
     <% if $Items.exists %>
 

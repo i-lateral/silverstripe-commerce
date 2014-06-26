@@ -1,26 +1,26 @@
 <div class="commerce-content-container typography">
-    <h1><% _t('Commerce.SUMMARY','Summary') %></h1>
-    <p><% _t('Commerce.SUMMARYCOPY','Please review your personal information before proceeding and entering your payment details') %>.</p>
+    <h1><% _t('Commerce.Summary','Summary') %></h1>
+    <p><% _t('Commerce.SummaryCopy','Please review your personal information before proceeding and entering your payment details') %>.</p>
 
     <% with $Order %>
         <div class="commerce-summary">
-            <h2><% _t('Commerce.ORDER','Order') %></h2>
+            <h2><% _t('Commerce.Order','Order') %></h2>
             <p>
-                <strong><%  _t('Commerce.SUBTOTAL', 'Sub Total') %>:</strong>
+                <strong><%  _t('Commerce.SubTotal', 'Sub Total') %>:</strong>
                 $SubTotal.Nice
                 <br/>
 
-                <strong><%  _t('Commerce.POSTAGE', 'Postage') %>:</strong>
+                <strong><%  _t('Commerce.Postage', 'Postage') %>:</strong>
                 $PostageType $PostageCost.Nice
                 <br/>
 
                 <% if $Top.SiteConfig.TaxRate > 0 %>
-                    <strong><%  _t('Commerce.TAX', 'Tax') %>:</strong>
+                    <strong><%  _t('Commerce.Tax', 'Tax') %>:</strong>
                     $TaxTotal.Nice
                     <br/>
                 <% end_if %>
 
-                <strong><%  _t('Commerce.TOTAL', 'Total') %>:</strong>
+                <strong><%  _t('Commerce.Total', 'Total') %>:</strong>
                 $Total.Nice
             </p>
         </div>
@@ -29,7 +29,7 @@
 
         <div class="commerce-summary units-row">
             <div class="unit-50">
-                <h2><% _t('Commerce.BILLINGDETAILS','Billing Details') %></h2>
+                <h2><% _t('Commerce.BillingDetails','Billing Details') %></h2>
                 <p>
                     <strong><% _t('Commerce.Name','Name') %>:</strong> $FirstName $Surname<br/>
                     <strong><% _t('Commerce.Email','Email') %>:</strong> $Email<br/>

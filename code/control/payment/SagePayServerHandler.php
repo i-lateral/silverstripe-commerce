@@ -135,8 +135,8 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
             // now setup our form
             $actions = FieldList::create(
-                LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-                FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+                LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'),
+                FormAction::create('Submit', _t('Commerce.ConfirmPay','Confirm and Pay'))
                     ->addExtraClass('btn')
                     ->addExtraClass('btn-green')
             );
@@ -149,8 +149,8 @@ class SagePayServerHandler extends CommercePaymentHandler {
         }
 
         return array(
-            'Title'       => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            'MetaTitle'   => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            'Title'       => _t('Commerce.CheckoutSummary',"Summary"),
+            'MetaTitle'   => _t('Commerce.CheckoutSummary',"Summary"),
             "Form" => $form
         );
     }
@@ -193,17 +193,17 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
                 if($order_status == 'OK' || $order_status == 'AUTHENTICATED') {
                     $vars['Status'] = "OK";
-                    $vars['StatusDetail'] =  _t('Commerce.ORDERCOMPLETE',"Order Complete");
+                    $vars['StatusDetail'] =  _t('Commerce.OrderComplete',"Order Complete");
                     $vars['RedirectURL'] = $success_url;
                 }
             } else {
                 $vars['Status'] = "INVALID";
-                $vars['StatusDetail'] =  _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match");
+                $vars['StatusDetail'] =  _t('Commerce.OrderError',"An error occured, Order ID's do not match");
                 $vars['RedirectURL'] = $error_url;
             }
         } else {
             $vars['Status'] = "ERROR";
-            $vars['StatusDetail'] =  _t('Commerce.ORDERERROR',"An error occured, Order ID's do not match");
+            $vars['StatusDetail'] =  _t('Commerce.OrderError',"An error occured, Order ID's do not match");
             $vars['RedirectURL'] = $error_url;
         }
 

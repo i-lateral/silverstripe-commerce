@@ -29,7 +29,7 @@ class ShoppingCart extends Commerce_Controller {
     private static $title;
 
     public function getTitle() {
-        return ($this->config()->title) ? $this->config()->title : _t("Commerce.CARTNAME", "Shopping Cart");
+        return ($this->config()->title) ? $this->config()->title : _t("Commerce.CartName", "Shopping Cart");
     }
 
     public function getMetaTitle() {
@@ -469,7 +469,7 @@ class ShoppingCart extends Commerce_Controller {
 
         // Setup default postage fields
         $country_select = CompositeField::create(
-            CountryDropdownField::create('Country',_t('Commerce.COUNTRY','Country'))
+            CountryDropdownField::create('Country',_t('Commerce.Country','Country'))
                 ->setAttribute("class",'countrydropdown dropdown btn'),
             TextField::create("ZipCode",_t('Commerce.ZipCode',"Zip/Postal Code"))
         )->addExtraClass("unit-50");

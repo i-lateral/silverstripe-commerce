@@ -40,7 +40,7 @@ class DeliveryDetailsForm extends Form {
         $actions = FieldList::create(
             LiteralField::create(
                 'BackButton',
-                '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'
+                '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'
             ),
 
             FormAction::create('doContinue', _t('Commerce.PostageDetails','Select Postage'))

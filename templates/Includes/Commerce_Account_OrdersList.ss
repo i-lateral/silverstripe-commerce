@@ -10,8 +10,8 @@ $Content
     <table class="width-100 table-hovered">
         <thead>
             <tr>
-                <th><% _t("Commerce.ORDER","Order") %></th>
-                <th><% _t("Commerce.DATE","Date") %></th>
+                <th><% _t("Commerce.Order","Order") %></th>
+                <th><% _t("Commerce.Date","Date") %></th>
                 <th><% _t("Commerce.Price","Price") %></th>
                 <th><% _t("Commerce.Status","Status") %></th>
             </tr>

@@ -53,7 +53,7 @@ class Checkout_Controller extends Commerce_Controller {
             return $this->redirect($this->Link('billing'));
 
         $this->customise(array(
-            'Title'     => _t('CommerceAccount.SIGNIN',"Sign in"),
+            'Title'     => _t('CommerceAccount.SignIn',"Sign in"),
             "Login"     => true,
             'Content'   => $this->renderWith("Commerce_Checkout_Login"),
             'LoginForm' => $this->LoginForm()
@@ -82,7 +82,7 @@ class Checkout_Controller extends Commerce_Controller {
             $form->loadDataFrom(Member::currentUser());
 
         $this->customise(array(
-            'Title'     => _t('Commerce.BILLINGDETAILS',"Billing Details"),
+            'Title'     => _t('Commerce.BillingDetails',"Billing Details"),
             'Form'      => $form
         ));
 
@@ -104,7 +104,7 @@ class Checkout_Controller extends Commerce_Controller {
      */
     public function delivery() {
         $this->customise(array(
-            'Title'     => _t('Commerce.DELIVERYDETAILS',"Delivery Details"),
+            'Title'     => _t('Commerce.DeliveryDetails',"Delivery Details"),
             'Form'      => $this->DeliveryForm()
         ));
 

@@ -235,7 +235,7 @@ class Payment_Controller extends Commerce_Controller {
         $site = SiteConfig::current_site_config();
 
         return array(
-            'Title' => _t('Commerce.ORDERCOMPLETE','Order Complete'),
+            'Title' => _t('Commerce.OrderComplete','Order Complete'),
             'Content' => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
         );
     }
@@ -249,7 +249,7 @@ class Payment_Controller extends Commerce_Controller {
         $site = SiteConfig::current_site_config();
 
         return array(
-            'Title'     => _t('Commerce.ORDERFAILED','Order Failed'),
+            'Title'     => _t('Commerce.OrderFailed','Order Failed'),
             'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
         );
     }

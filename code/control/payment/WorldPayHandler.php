@@ -50,8 +50,8 @@ class WorldPayHandler extends CommercePaymentHandler {
             $fields->add(HiddenField::create('testMode', null, '100'));
 
         $actions = FieldList::create(
-            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.ConfirmPay','Confirm and Pay'))
                 ->addExtraClass('btn')
                 ->addExtraClass('btn-green')
         );
@@ -65,8 +65,8 @@ class WorldPayHandler extends CommercePaymentHandler {
 
 
         return array(
-            "Title"     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            "MetaTitle" => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            "Title"     => _t('Commerce.CheckoutSummary',"Summary"),
+            "MetaTitle" => _t('Commerce.CheckoutSummary',"Summary"),
             "Form"      => $form
         );
     }

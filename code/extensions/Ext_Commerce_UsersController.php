@@ -24,7 +24,7 @@ class Ext_Commerce_UsersController extends Extension {
 
         if(!$orders->exists()) {
             $message = '<p class="message message-info">';
-            $message .= _t("NOORDERS","There are currently no orders");
+            $message .= _t("CommerceAccount.NoOrders","There are currently no orders");
             $message .= '</p>';
 
             $content = new HTMLText();
@@ -38,7 +38,7 @@ class Ext_Commerce_UsersController extends Extension {
 
         $this->owner->customise(array(
             "ClassName" => "AccountPage",
-            "Title" => _t('CommerceAccount.OUTSTANDINGORDERS','Outstanding Orders'),
+            "Title" => _t('CommerceAccount.OutstandingOrders','Outstanding Orders'),
             "Content" => $content,
             "Orders" => $orders
         ));
@@ -61,7 +61,7 @@ class Ext_Commerce_UsersController extends Extension {
 
         if(!$orders->exists()) {
             $message = '<p class="message message-info">';
-            $message .= _t("NOORDERS","There are currently no orders");
+            $message .= _t("CommerceAccount.NoOrders","There are currently no orders");
             $message .= '</p>';
 
             $content = new HTMLText();
@@ -75,7 +75,7 @@ class Ext_Commerce_UsersController extends Extension {
 
         $this->owner->customise(array(
             "ClassName" => "AccountPage",
-            "Title" => _t('CommerceAccount.ORDERHISTORY','Order History'),
+            "Title" => _t('CommerceAccount.OrderHistory','Order History'),
             "Content" => $content,
             "Orders" => $orders
         ));
@@ -98,14 +98,14 @@ class Ext_Commerce_UsersController extends Extension {
 
         if(!$order || ($order && !$order->canView())) {
             $message = '<p class="message message-error">';
-            $message .= _t("NOTFOUND","Order not found");
+            $message .= _t("CommerceAccount.NotFound","Order not found");
             $message .= '</p>';
 
-            $title = _t("NOTFOUND","Order not found");
+            $title = _t("CommerceAccount.NotFound","Order not found");
             $content->setValue($message);
             $order = null;
         } else {
-            $title =  _t('Commerce.ORDER','Order') . ': ' . $order->OrderNumber;
+            $title =  _t('Commerce.Order','Order') . ': ' . $order->OrderNumber;
         }
 
         $this->owner->customise(array(
@@ -130,13 +130,13 @@ class Ext_Commerce_UsersController extends Extension {
 
         $menu->add(new ArrayData(array(
             "ID"    => 1,
-            "Title" => _t('CommerceAccount.OUTSTANDINGORDERS','Outstanding Orders'),
+            "Title" => _t('CommerceAccount.OutstandingOrders','Outstanding Orders'),
             "Link"  => $this->owner->Link("outstanding")
         )));
 
         $menu->add(new ArrayData(array(
             "ID"    => 2,
-            "Title" => _t('CommerceAccount.ORDERHISTORY',"Order history"),
+            "Title" => _t('CommerceAccount.OrderHistory',"Order history"),
             "Link"  => $this->owner->Link("history")
         )));
     }
@@ -148,12 +148,12 @@ class Ext_Commerce_UsersController extends Extension {
     public function updateEditAccountForm($form) {
         $form->Fields()->insertBefore(TextField::create(
             "Company",
-            _t('CommerceAccount.COMPANY',"Company")
+            _t('CommerceAccount.Company',"Company")
         ),"FirstName");
 
         $form->Fields()->add(TextField::create(
             "PhoneNumber",
-            _t("CommerceAccount.PHONENUMBER","Phone Number")
+            _t("CommerceAccount.PhoneNumber","Phone Number")
         ));
     }
 }

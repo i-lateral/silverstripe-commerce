@@ -14,7 +14,7 @@ class AddItemToCartForm extends Form {
         );
 
         $actions = FieldList::create(
-            FormAction::create('doAddItemToCart',_t('Commerce.ADDTOCART','Add to Cart'))
+            FormAction::create('doAddItemToCart',_t('Commerce.AddToCart','Add to Cart'))
                 ->addExtraClass('btn')
         );
 
@@ -31,7 +31,7 @@ class AddItemToCartForm extends Form {
             }
         }
 
-        $quantity_fields = QuantityField::create('Quantity', _t('Commerce.CARTQTY','Qty'))
+        $quantity_fields = QuantityField::create('Quantity', _t('Commerce.CartQty','Qty'))
             ->setValue('1')
             ->addExtraClass('commerce-additem-quantity');
 
@@ -79,9 +79,9 @@ class AddItemToCartForm extends Form {
             // Clear any postage data that has been set
             Session::clear("Commerce.PostageID");
 
-            $message = _t('Commerce.ADDEDITEMTOCART', 'Added item to your shopping cart');
+            $message = _t('Commerce.AddedItemToCart', 'Added item to your shopping cart');
             $message .= ' <a href="'. $cart->Link() .'">';
-            $message .= _t('Commerce.VIEWCART', 'View cart');
+            $message .= _t('Commerce.ViewCart', 'View cart');
             $message .= '</a>';
 
             $this->controller->setSessionMessage(

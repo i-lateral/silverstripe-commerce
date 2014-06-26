@@ -404,7 +404,7 @@ class Order extends DataObject implements PermissionProvider {
                 if($this->SubsiteID && class_exists('Subsite') && $this->Subsite())
                     i18n::set_locale($this->Subsite()->Language);
 
-                $subject = _t('CommerceEmail.ORDER', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
+                $subject = _t('CommerceEmail.Order', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
 
                 $body = $this->renderWith('OrderEmail_Customer', $vars);
                 $email = new Email($from,$this->BillingEmail,$subject,$body);
@@ -417,7 +417,7 @@ class Order extends DataObject implements PermissionProvider {
 
             // Deal with vendor email
             if($siteconfig->sendCommerceEmail('Vendor', $this->Status)) {
-                $subject = _t('CommerceEmail.ORDER', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
+                $subject = _t('CommerceEmail.Order', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
                 switch($this->Status) {
                     case 'paid':
                         $email_to = $siteconfig->PaidEmailAddress;

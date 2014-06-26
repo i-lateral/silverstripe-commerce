@@ -80,13 +80,13 @@ class PayPalHandler extends CommercePaymentHandler {
         }
 
         // Add shipping as an extra product
-        $fields->add(HiddenField::create('item_name_' . $i, null, _t("Commerce.POSTAGE", "Postage")));
+        $fields->add(HiddenField::create('item_name_' . $i, null, _t("Commerce.Postage", "Postage")));
         $fields->add(HiddenField::create('amount_' . $i, null, ($order->PostageCost + $order->PostageTax)));
         $fields->add(HiddenField::create('quantity_' . $i, null, "1"));
 
         $actions = FieldList::create(
-            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.CONFIRMPAY','Confirm and Pay'))
+            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.ConfirmPay','Confirm and Pay'))
                 ->addExtraClass('btn')
                 ->addExtraClass('btn-green')
         );
@@ -99,8 +99,8 @@ class PayPalHandler extends CommercePaymentHandler {
         $this->extend('updateForm',$form);
 
         return array(
-            "Title"     => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
-            "MetaTitle" => _t('Commerce.CHECKOUTSUMMARY',"Summary"),
+            "Title"     => _t('Commerce.CheckoutSummary',"Summary"),
+            "MetaTitle" => _t('Commerce.CheckoutSummary',"Summary"),
             "Form"      => $form
         );
     }

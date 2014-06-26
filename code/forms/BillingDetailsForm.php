@@ -21,7 +21,7 @@ class BillingDetailsForm extends Form {
                 HeaderField::create('AddressHeader', _t('Commerce.Address','Address'), 2),
                 TextField::create('Address1',_t('Commerce.Address1','Address Line 1') . '*'),
                 TextField::create('Address2',_t('Commerce.Address2','Address Line 2')),
-                TextField::create('City',_t('Commerce.Cirt','City') . '*'),
+                TextField::create('City',_t('Commerce.City','City') . '*'),
                 TextField::create('PostCode',_t('Commerce.PostCode','Post Code') . '*'),
                 CountryDropdownField::create(
                     'Country',
@@ -48,7 +48,7 @@ class BillingDetailsForm extends Form {
         $actions = FieldList::create(
             LiteralField::create(
                 'BackButton',
-                '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.BACK','Back') . '</a>'
+                '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'
             ),
 
             FormAction::create('doSetDelivery', _t('Commerce.SetDeliveryAddress','Deliver to another address'))
