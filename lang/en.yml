@@ -93,7 +93,7 @@ en:
     PLURALNAME: 'Commerce Currencies'
     SINGULARNAME: 'Commerce Currency'
   CommerceEmail:
-    CheckOrder: "Please check your order carefully when it arrives and contact us as soon as\npossible if there are any problems"
+    CheckOrder: 'Please check your order carefully when it arrives and contact us as soon as possible if there are any problems'
     ContactQueries: 'If you have any queries, please'
     Email: Email
     FailedNotice: 'Unfortunately we could not process your order and payment. Please get in touch with us if you have any questions.'

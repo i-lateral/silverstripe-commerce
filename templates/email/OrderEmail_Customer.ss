@@ -34,8 +34,7 @@
 <% if $SiteConfig.ContactEmail %><%t CommerceEmail.Email 'Email' %>: {$SiteConfig.ContactEmail}<% end_if %>
 <% end_if %>
 
-<% if $Order.Status = 'dispatched' %><%t CommerceEmail.CheckOrder 'Please check your order carefully when it arrives and contact us as soon as
-possible if there are any problems' %>.<% end_if %>
+<% if $Order.Status = 'dispatched' %><%t CommerceEmail.CheckOrder 'Please check your order carefully when it arrives and contact us as soon as possible if there are any problems' %>.<% end_if %>
 
 <%t CommerceEmail.FinalThanks 'Many thanks' %>,
 
