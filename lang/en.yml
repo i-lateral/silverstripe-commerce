@@ -108,7 +108,7 @@ en:
     PLURALNAME: 'Commerce Payment Methods'
     SINGULARNAME: 'Commerce Payment Method'
   CommerceStatus:
-    Canceled: Canceled
+    Cancelled: Cancelled
     Dispatched: Dispatched
     Failed: Failed
     Incomplete: Incomplete

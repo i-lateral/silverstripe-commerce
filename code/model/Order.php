@@ -326,7 +326,7 @@ class Order extends DataObject implements PermissionProvider {
                 $return = _t("CommerceStatus.Failed","Failed");
                 break;
             case "canceled":
-                $return = _t("CommerceStatus.Canceled","Canceled");
+                $return = _t("CommerceStatus.Cancelled","Cancelled");
                 break;
             case "paid":
                 $return = _t("CommerceStatus.Paid","Paid");
