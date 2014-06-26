@@ -318,7 +318,31 @@ class Order extends DataObject implements PermissionProvider {
     }
 
     public function getTranslatedStatus() {
-        return _t("Commerce." . strtoupper($this->Status), $this->Status);
+        switch($this->Status) {
+            case "incomplete":
+                $return = _t("CommerceStatus.Incomplete","Incomplete");
+                break;
+            case "failed":
+                $return = _t("CommerceStatus.Failed","Failed");
+                break;
+            case "canceled":
+                $return = _t("CommerceStatus.Canceled","Canceled");
+                break;
+            case "paid":
+                $return = _t("CommerceStatus.Paid","Paid");
+                break;
+            case "pending":
+                $return = _t("CommerceStatus.Pending","Pending");
+                break;
+            case "processing":
+                $return = _t("CommerceStatus.Processing","Processing");
+                break;
+            case "dispatched":
+                $return = _t("CommerceStatus.Dispatched","Dispatched");
+                break;
+        }
+
+        return $return;
     }
 
     protected function generate_order_number() {

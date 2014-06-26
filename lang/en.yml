@@ -107,6 +107,14 @@ en:
   CommercePaymentMethod:
     PLURALNAME: 'Commerce Payment Methods'
     SINGULARNAME: 'Commerce Payment Method'
+  CommerceStatus:
+    Canceled: Canceled
+    Dispatched: Dispatched
+    Failed: Failed
+    Incomplete: Incomplete
+    Paid: Paid
+    Pending: Pending
+    Processing: Processing
   Form:
     FIELDISREQUIRED: '%s is required'
   GridField:
