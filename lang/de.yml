@@ -4,79 +4,78 @@ de:
     PLURALNAME: Catalogs
     SINGULARNAME: Catalog
   Commerce:
-    AddToCart: 'Add to cart'
-    AddedItemToCart: 'Added item to your shopping cart'
-    Address: Address
-    Address1: 'Address Line 1'
-    Address2: 'Address Line 2'
-    Attributes: Attributes
-    Back: Back
-    BillingDetails: 'Billing Details'
-    CartEmpty: 'Empty Cart'
-    CartIsEmpty: 'Your cart is currently empty'
-    CartName: 'Shopping Cart'
-    CartProceed: 'Proceed to Checkout'
-    CartQty: Qty
-    CartTotal: Total
-    CartUpdate: 'Update Cart'
-    CheckoutSummary: Summary
-    City: City
-    Company: Company
-    Confirm: Confirm
-    ConfirmPay: 'Confirm and Pay'
-    Country: Country
-    Date: Date
-    DeliverThisAddress: 'Deliver to this address'
-    DeliveryDetails: 'Delivery Details'
-    Description: Description
+    AddToCart: 'In den Warenkorb'
+    AddedItemToCart: 'Artikel wurde zum Einkaufswagen hinzugefügt'
+    Address: Adresse
+    Address1: 'Adresszeile 1'
+    Address2: 'Adresszeile 2'
+    Attributes: Eigenschaften
+    Back: Zurück
+    BillingDetails: Rechnungsanschrift
+    CartEmpty: 'Warenkorb leeren'
+    CartIsEmpty: 'Ihr Warenkorb ist derzeit leer'
+    CartName: Warenkorb
+    CartProceed: 'Zur Kasse gehen'
+    CartQty: Anzahl
+    CartTotal: Gesamt
+    CartUpdate: 'Warenkorb aktualisieren'
+    CheckoutSummary: Warenkorbübersicht
+    City: Stadt
+    Company: Firma
+    Confirm: Bestätigen
+    ConfirmPay: 'Bestätigen und zahlen'
+    Country: Land
+    Date: Datum
+    DeliverThisAddress: 'An dieser Adresse liefern'
+    DeliveryDetails: Lieferanschrift
+    Description: Beschreibung
     DisableProduct: 'Disable this product?'
-    Email: Email
-    EstimateShipping: 'Estimate Shipping'
-    Excluding: Excluding
-    FirstName: 'First Name(s)'
-    Including: Including
+    Email: 'E-Mail'
+    EstimateShipping: 'Versandkosten abschätzen'
+    Excluding: Exklusive
+    FirstName: 'Vorname(n)'
+    Including: Inklusive
     Item: Item
-    ItemCost: 'Item Cost'
+    ItemCost: 'Preis'
     Name: Name
-    Order: Order
-    OrderComplete: 'Order Complete'
-    OrderError: 'An error occured, Order ID''s do not match'
-    OrderFailed: 'Order Failed'
-    PackSize: 'Pack Size'
-    Payment: Payment
-    PaymentDetails: 'Enter Payment Details'
-    PaymentSelection: 'Please choose how you would like to pay'
-    PersonalDetails: 'Personal Details'
-    Phone: 'Phone Number'
-    PleaseSelect: 'Please Select'
-    PostCode: 'Post Code'
-    Postage: Postage
-    PostageDetails: 'Select Postage'
-    PostagePayment: 'Postage and Payment'
-    PostageSelection: 'Please select your prefered postage'
-    Price: Price
-    Processing: Processing
-    ProductDescription: 'Product Description'
-    Qty: Qty
-    ReadMore: 'Read More'
-    RedirectingToStore: 'We are now redirecting you, if you are not redirected automatically then click the link below.'
-    RelatedProducts: 'Related Products'
-    Reorder: Reorder
-    Search: Search
-    SelectPostage: 'Select Postage'
-    SetDeliveryAddress: 'Deliver to another address'
-    Shipping: Shipping
+    Order: Auftrag
+    OrderComplete: 'Auftrag fertig'
+    OrderError: 'Leider konnten wir Ihren Auftrag nicht bearbeiten.'
+    OrderFailed: 'Auftrag fehlgeschlagen'
+    PackSize: Gebindegröße
+    Payment: Zahlung
+    PaymentDetails: 'Zahlungsangaben eingeben'
+    PaymentSelection: 'Bitte wählen Sie, wie Sie bezahlen möchten'
+    PersonalDetails: 'Persoenlichen Angaben'
+    Phone: Telefonnummer
+    PleaseSelect: 'Bitte auswählen'
+    PostCode: Postleitzahl
+    Postage: Versand
+    PostageDetails: 'Wählen Sie eine Versandart'
+    PostagePayment: 'Versand und Zahlungt'
+    PostageSelection: 'Bitte wählen Sie eine Versandart'
+    Price: Preis
+    ProductDescription: 'Artikelbeschreibung'
+    Qty: Menge
+    ReadMore: 'Lesen Sie mehr'
+    RedirectingToStore: 'Umleitung. Wenn Sie sich nicht automatisch umgeleitet wurden, klicken Sie auf den Link unten.'
+    RelatedProducts: 'Entsprechenden Artikeln'
+    Reorder: Wiederverkaufen
+    Search: Versuch
+    SelectPostage: 'Versand wählen'
+    SetDeliveryAddress: 'An andere Adresse liefern'
+    Shipping: Versand
     Status: Status
-    SubTotal: 'Sub Total'
-    Summary: Summary
-    SummaryCopy: 'Please review your personal information before proceeding and entering your payment details'
-    Surname: Surname
-    Tax: Tax
-    Total: Total
+    SubTotal: 'Zwischensumme'
+    Summary: Zusammenfassung
+    SummaryCopy: 'Bitte Überprüfen Sie ihre persönlichen Angaben, bevor Sie fortfahren und Ihre Zahlungsangaben eingeben'
+    Surname: Familienname
+    Tax: Steuer
+    Total: Summe
     Update: Update
-    ViewCart: 'View Cart'
-    Weight: Weight
-    ZipCode: 'Zip/Postal Code'
+    ViewCart: Warenkorb
+    Weight: Gewicht
+    ZipCode: 'Postleitzahl'
   CommerceAccount:
     Company: Company
     ContinueGuest: 'Continue as a Guest'
@@ -93,28 +92,28 @@ de:
     PLURALNAME: 'Commerce Currencies'
     SINGULARNAME: 'Commerce Currency'
   CommerceEmail:
-    CheckOrder: "Please check your order carefully when it arrives and contact us as soon as\npossible if there are any problems"
-    ContactQueries: 'If you have any queries, please'
-    Email: Email
-    FailedNotice: 'Unfortunately we could not process your order and payment. Please get in touch with us if you have any questions.'
-    FinalThanks: 'Many thanks'
-    Items: 'Items Ordered'
-    MarkedAs: 'has been marked as'
-    Order: Order
-    OrderDispatchedTo: 'Your order will be dispatched to'
-    Phone: Phone
-    ThankYou: 'Thank you for ordering from {title}'
+    CheckOrder: 'Bitte prüfen Sie Ihre Erkennungsmarken sorgfältig, sobald Sie sie erhalten, und kontaktieren Sie uns bei Problemen so schnell wie möglich'
+    ContactQueries: 'Bei Fragen erreichen Sie uns unter'
+    Email: E-Mail
+    FailedNotice: 'Leider konnten wir Ihren Auftrag und Zahlung nicht bearbeiten. Bitte setzen Sie mit uns in Verbindung, wenn Sie.'
+    FinalThanks: 'Vielen Dank'
+    Items: 'Einzelheiten Ihrer Auftrag'
+    MarkedAs: ist
+    Order: 'Der Status ihres Auftrages'
+    OrderDispatchedTo: 'Ihr Auftrag wurde an die folgende Adresse versandt'
+    Phone: Telephon
+    ThankYou: 'Vielen Dank, dass Sie auf {title} bestellt haben'
   CommercePaymentMethod:
     PLURALNAME: 'Commerce Payment Methods'
     SINGULARNAME: 'Commerce Payment Method'
   CommerceStatus:
     Cancelled: Cancelled
-    Dispatched: Dispatched
-    Failed: Failed
-    Incomplete: Incomplete
-    Paid: Paid
-    Pending: Pending
-    Processing: Processing
+    Dispatched: Verschickt
+    Failed: Gescheitert
+    Incomplete: Unfertig
+    Paid: Bezahlt
+    Pending: anstehend
+    Processing: Bearbeitung
   Form:
     FIELDISREQUIRED: '%s is required'
   GridField:

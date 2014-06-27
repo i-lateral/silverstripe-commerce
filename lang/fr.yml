@@ -4,79 +4,79 @@ fr:
     PLURALNAME: Catalogs
     SINGULARNAME: Catalog
   Commerce:
-    AddToCart: 'Add to cart'
-    AddedItemToCart: 'Added item to your shopping cart'
-    Address: Address
-    Address1: 'Address Line 1'
-    Address2: 'Address Line 2'
+    AddToCart: 'Ajouter au panier'
+    AddedItemToCart: 'Article a été ajouté au panier'
+    Address: Adresse
+    Address1: 'Ligne d'adresse 1'
+    Address2: 'Ligne d'adresse 2'
     Attributes: Attributes
-    Back: Back
-    BillingDetails: 'Billing Details'
-    CartEmpty: 'Empty Cart'
-    CartIsEmpty: 'Your cart is currently empty'
-    CartName: 'Shopping Cart'
-    CartProceed: 'Proceed to Checkout'
-    CartQty: Qty
+    Back: Retour
+    BillingDetails: 'Informations de facturation'
+    CartEmpty: 'Vider le panier'
+    CartIsEmpty: 'Votre panier est actuellement vide'
+    CartName: Panier
+    CartProceed: 'Terminer la commande'
+    CartQty: Qté
     CartTotal: Total
-    CartUpdate: 'Update Cart'
-    CheckoutSummary: Summary
-    City: City
-    Company: Company
+    CartUpdate: 'Mettre à jour le panier'
+    CheckoutSummary: Sommaire
+    City: Ville
+    Company: 'Nom de société'
     Confirm: Confirm
-    ConfirmPay: 'Confirm and Pay'
-    Country: Country
+    ConfirmPay: 'Confirmation et paiement'
+    Country: Pays
     Date: Date
-    DeliverThisAddress: 'Deliver to this address'
-    DeliveryDetails: 'Delivery Details'
+    DeliverThisAddress: 'Expédier à cette adresse'
+    DeliveryDetails: 'Informations de livraison'
     Description: Description
     DisableProduct: 'Disable this product?'
-    Email: Email
-    EstimateShipping: 'Estimate Shipping'
-    Excluding: Excluding
-    FirstName: 'First Name(s)'
-    Including: Including
-    Item: Item
-    ItemCost: 'Item Cost'
-    Name: Name
-    Order: Order
-    OrderComplete: 'Order Complete'
-    OrderError: 'An error occured, Order ID''s do not match'
-    OrderFailed: 'Order Failed'
-    PackSize: 'Pack Size'
-    Payment: Payment
-    PaymentDetails: 'Enter Payment Details'
-    PaymentSelection: 'Please choose how you would like to pay'
-    PersonalDetails: 'Personal Details'
-    Phone: 'Phone Number'
-    PleaseSelect: 'Please Select'
-    PostCode: 'Post Code'
-    Postage: Postage
-    PostageDetails: 'Select Postage'
-    PostagePayment: 'Postage and Payment'
-    PostageSelection: 'Please select your prefered postage'
-    Price: Price
-    Processing: Processing
-    ProductDescription: 'Product Description'
-    Qty: Qty
-    ReadMore: 'Read More'
-    RedirectingToStore: 'We are now redirecting you, if you are not redirected automatically then click the link below.'
-    RelatedProducts: 'Related Products'
-    Reorder: Reorder
-    Search: Search
-    SelectPostage: 'Select Postage'
-    SetDeliveryAddress: 'Deliver to another address'
-    Shipping: Shipping
-    Status: Status
-    SubTotal: 'Sub Total'
-    Summary: Summary
-    SummaryCopy: 'Please review your personal information before proceeding and entering your payment details'
-    Surname: Surname
-    Tax: Tax
+    Email:'E-mail'
+    EstimateShipping: 'Estimer frais de livraison'
+    Excluding: Exclusif
+    FirstName: 'Prénom(s)'
+    Including: Inclusif
+    Item: Article
+    ItemCost: 'Prix'
+    Name: Nom
+    Order: Commande
+    OrderComplete: 'Commande confirmée'
+    OrderError: 'Erreur. Les numéros de commande ne s’accordent pas'
+    OrderFailed: 'La commande n'a pas été prise en compte'
+    PackSize: Qté du lot'
+    Payment: Paiement
+    PaymentDetails: 'Veuillez saisir les informations relatives au paiement'
+    PaymentSelection: 'Veuillez sélectionner un mode de paiement'
+    PersonalDetails: 'Renseignements personnels'
+    Phone: 'Numéro de téléphone'
+    PleaseSelect: 'Veuillez sélectionner'
+    PostCode: 'Code postal'
+    Postage: 'Frais d'expedition'
+    PostageDetails: 'Selectionner mode d’expédition'
+    PostagePayment: 'Expédition et paiement'
+    PostageSelection: 'Veuillez selectionner un mode d’expédition'
+    Price: Prix
+    Processing: 'En traitement'
+    ProductDescription: 'Description'
+    Qty: Qté
+    ReadMore: 'Lire plus'
+    RedirectingToStore: 'Vous êtes en train de rédirection. Si vous n'êtes pas automatiquement redirigé, cliquez sur le lien ci-dessus.'
+    RelatedProducts: 'Articles liés'
+    Reorder: 'Commander encore'
+    Search: Recherches
+    SelectPostage: 'Selectionner mode d’expédition'
+    SetDeliveryAddress: 'Expédier à une autre adresse'
+    Shipping: Expédition
+    Status: État
+    SubTotal: 'Sous-total'
+    Summary: 'Récapitulatif'
+    SummaryCopy: 'Veuillez vérifier vos informations personnelles avant de valider la commande et procéder au paiement'
+    Surname: 'Nom de famille'
+    Tax: Taxe
     Total: Total
-    Update: Update
-    ViewCart: 'View Cart'
-    Weight: Weight
-    ZipCode: 'Zip/Postal Code'
+    Update: Actualiser
+    ViewCart: 'Votre panier'
+    Weight: Poids
+    ZipCode: 'Code postal'
   CommerceAccount:
     Company: Company
     ContinueGuest: 'Continue as a Guest'
@@ -93,28 +93,28 @@ fr:
     PLURALNAME: 'Commerce Currencies'
     SINGULARNAME: 'Commerce Currency'
   CommerceEmail:
-    CheckOrder: "Please check your order carefully when it arrives and contact us as soon as\npossible if there are any problems"
-    ContactQueries: 'If you have any queries, please'
-    Email: Email
-    FailedNotice: 'Unfortunately we could not process your order and payment. Please get in touch with us if you have any questions.'
-    FinalThanks: 'Many thanks'
-    Items: 'Items Ordered'
-    MarkedAs: 'has been marked as'
-    Order: Order
-    OrderDispatchedTo: 'Your order will be dispatched to'
-    Phone: Phone
-    ThankYou: 'Thank you for ordering from {title}'
+    CheckOrder: 'Veuillez vérifier votre commande avec attention dès sa réception. En cas de problème, contactez-nous dans les plus brefs délais'
+    ContactQueries: 'Pour toute question, veuillez contacter'
+    Email: E-mail
+    FailedNotice: 'Malheureusement, votre commande et votre paiement n'ont pas pu être pris en compte. Pour toute question, veuillez nous contacter.'
+    FinalThanks: Merci
+    Items: 'Articles commandés'
+    MarkedAs: 'marqué(e) en tant que'
+    Order: Commande
+    OrderDispatchedTo: 'Votre commande sera expédiée à l'adresse suivante'
+    Phone: Téléphone
+    ThankYou: 'Merci d'avoir commandé chez {title}'
   CommercePaymentMethod:
     PLURALNAME: 'Commerce Payment Methods'
     SINGULARNAME: 'Commerce Payment Method'
   CommerceStatus:
     Cancelled: Cancelled
-    Dispatched: Dispatched
-    Failed: Failed
-    Incomplete: Incomplete
-    Paid: Paid
-    Pending: Pending
-    Processing: Processing
+    Dispatched: Expédiée
+    Failed: rejetée
+    Incomplete: incomplète
+    Paid: Payée
+    Pending: 'en attendant'
+    Processing: 'Traitement en cours'
   Form:
     FIELDISREQUIRED: '%s is required'
   GridField:
