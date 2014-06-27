@@ -143,7 +143,8 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
             $form = Form::create($this, 'Form', FieldList::create(), $actions)
                 ->addExtraClass('forms')
-                ->setFormMethod('POST');
+                ->setFormMethod('POST')
+                ->setFormMethod($response_data['NextURL']);
 
             $this->extend('updateForm',$form);
         }
