@@ -12,6 +12,8 @@ class DeliveryDetailsForm extends Form {
                 TextField::create('DeliveryFirstnames',_t('Commerce.FirstName','First Name(s)') . '*'),
                 TextField::create('DeliverySurname',_t('Commerce.Surname','Surname') . '*')
             )->setName("PersonalFields")
+            ->addExtraClass('unit')
+            ->addExtraClass('size1of2')
             ->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
@@ -25,6 +27,8 @@ class DeliveryDetailsForm extends Form {
                     _t('Commerce.Country','Country')
                 )->setAttribute("class",'countrydropdown dropdown btn')
             )->setName("AddressFields")
+            ->addExtraClass('unit')
+            ->addExtraClass('size1of2')
             ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
@@ -32,6 +36,7 @@ class DeliveryDetailsForm extends Form {
                 $personal_fields,
                 $address_fields
             )->setName("DeliveryFields")
+            ->addExtraClass('lines')
             ->addExtraClass('units-row')
         );
 

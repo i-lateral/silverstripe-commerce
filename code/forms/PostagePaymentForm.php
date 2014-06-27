@@ -23,6 +23,8 @@ class PostagePaymentForm extends Form {
                 $postage_areas->map()
             )->setValue($postage_id)
         )->setName("PostageFields")
+        ->addExtraClass("unit")
+        ->addExtraClass("size1of2")
         ->addExtraClass("unit-50");
 
         // Get available payment methods and setup payment
@@ -46,6 +48,8 @@ class PostagePaymentForm extends Form {
                 $payment_value
             )
         )->setName("PaymentFields")
+        ->addExtraClass("unit")
+        ->addExtraClass("size1of2")
         ->addExtraClass("unit-50");
 
         $fields = FieldList::create(
@@ -54,6 +58,7 @@ class PostagePaymentForm extends Form {
                 $payment_field
             )->setName("PostagePaymentFields")
             ->addExtraClass("units-row")
+            ->addExtraClass("line")
         );
 
         $back_url = $controller->Link("billing");

@@ -7,17 +7,19 @@
 
         $SiteConfig.CartCopy
 
-        <div class="form">
+        <div class="form line">
             $CartForm
         </div>
 
-        <div class="units-row commerce-cart-postage">
-            <div class="unit-66">
+        <hr/>
+
+        <div class="units-row line commerce-cart-postage">
+            <div class="unit-66 unit size2of3">
                 <h2><% _t('Commerce.EstimateShipping','Estimate Shipping') %></h2>
                 $PostageForm
             </div>
 
-            <div class="unit-33">
+            <div class="unit-33 unit size1of3">
                 <h2><% _t("Commerce.Total","Total") %></h2>
 
                 <table class="commerce-tax-table width-100">
@@ -65,7 +67,9 @@
             </div>
         </div>
 
-        <div class="units-row-end">
+        <hr/>
+
+        <div class="commerce-cart-proceed line units-row-end">
             <div class="unit-push-right">
                 <a href="{$BaseHref}commerce/checkout" class="btn btn-green btn-big">
                     <% _t('Commerce.CartProceed','Proceed to Checkout') %>

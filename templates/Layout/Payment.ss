@@ -3,7 +3,7 @@
     <p><% _t('Commerce.SummaryCopy','Please review your personal information before proceeding and entering your payment details') %>.</p>
 
     <% with $Order %>
-        <div class="commerce-summary">
+        <div class="commerce-summary line">
             <h2><% _t('Commerce.Order','Order') %></h2>
             <p>
                 <strong><%  _t('Commerce.SubTotal', 'Sub Total') %>:</strong>
@@ -27,8 +27,8 @@
 
         <hr/>
 
-        <div class="commerce-summary units-row">
-            <div class="unit-50">
+        <div class="commerce-summary units-row line">
+            <div class="unit-50 unit size1of2">
                 <h2><% _t('Commerce.BillingDetails','Billing Details') %></h2>
                 <p>
                     <strong><% _t('Commerce.Name','Name') %>:</strong> $FirstName $Surname<br/>
@@ -44,7 +44,7 @@
                 </p>
             </div>
 
-            <div class="unit-50">
+            <div class="unit-50 unit size1of2">
                 <h2><% _t('Commerce.DeliveryDetails','Delivery Details') %></h2>
                 <p>
                     <strong><% _t('Commerce.Name','Name') %>:</strong> $DeliveryFirstnames $DeliverySurname<br/>

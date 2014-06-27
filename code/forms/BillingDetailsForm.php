@@ -15,6 +15,8 @@ class BillingDetailsForm extends Form {
                 EmailField::create('Email',_t('Commerce.Email','Email') . '*'),
                 TextField::create('PhoneNumber',_t('Commerce.Phone','Phone Number'))
             )->setName("PersonalFields")
+            ->addExtraClass('unit')
+            ->addExtraClass('size1of2')
             ->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
@@ -30,6 +32,8 @@ class BillingDetailsForm extends Form {
                     'GB'
                 )->setAttribute("class",'countrydropdown dropdown btn')
             )->setName("AddressFields")
+            ->addExtraClass('unit')
+            ->addExtraClass('size1of2')
             ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
@@ -37,6 +41,7 @@ class BillingDetailsForm extends Form {
                 $personal_fields,
                 $address_fields
             )->setName("BillingFields")
+            ->addExtraClass('line')
             ->addExtraClass('units-row')
         );
 

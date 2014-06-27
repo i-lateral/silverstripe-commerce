@@ -6,10 +6,12 @@
 
         <h1>$Title</h1>
 
-        <div class="units-row">
-            <div class="unit-50 commerce-product-images">
+        <div class="units-row line">
+            <div class="unit-50 unit size1of2 commerce-product-images">
                 <div id="commerce-product-image">
-                    $ProductImage.PaddedImage(550,550)
+                    <a href="{$ProductImage.SetRatioSize(900,550).URL}">
+                        $ProductImage.PaddedImage(500,500)
+                    </a>
                 </div>
 
                 <div class="units-row-end">
@@ -25,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="unit-50 commerce-product-summary">
+            <div class="unit-50 unit size1of2 commerce-product-summary">
                 <p>
                     <span class="price label big label-green">
                         <span class="title"><% _t('Commerce.Price','Price') %>:</span>
@@ -56,7 +58,7 @@
                         <p>
                             $Description.Summary(50)
                             <a href="{$Top.Link()}#commerce-product-description" title="<% _t('Commerce.ReadMore','Read More') %>: {$Title}">
-                                <% _t('Commerce.ReadMore','Read More') %>CommerceAccount
+                                <% _t('Commerce.ReadMore','Read More') %>
                             </a>
                         </p>
                     </div>
@@ -73,14 +75,14 @@
         <div class="units-row">
             <div class="commerce-product-details">
                 <% if $Description %>
-                    <div id="commerce-product-description" class="description">
+                    <div id="commerce-product-description" class="description line">
                         <h2><% _t('Commerce.Description','Description') %></h2>
                         $Description
                     </div>
                 <% end_if %>
 
                 <% if $Attributes %>
-                    <div id="commerce-product-attributes" class="attributes">
+                    <div id="commerce-product-attributes" class="attributes line">
                         <h2><% _t('Commerce.Attributes','Attributes') %></h2>
                         <ul>
                             <% loop $Attributes %><li class="feature">
@@ -98,9 +100,9 @@
 
             <h2><% _t('Commerce.RelatedProducts','Related Products') %></h2>
 
-            <div class="units-row commerce-related-products">
+            <div class="units-row commerce-related-products line">
                 <% loop $RelatedProducts %>
-                    <div class="unit-20 commerce-list-child">
+                    <div class="unit-25 unit size1of4 commerce-list-item">
                         <h3><a href="$Link">$Title</a></h3>
 
                         <p>
@@ -115,7 +117,7 @@
                     </div>
 
                     <% if $MultipleOf(5) && not $Last %>
-                        </div><div class="units-row commerce-related-products">
+                        </div><div class="units-row commerce-related-products line">
                     <% end_if %>
 
 
