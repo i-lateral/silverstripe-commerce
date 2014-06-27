@@ -9,7 +9,7 @@ class SagePayFormsHandler extends CommercePaymentHandler {
     public function index() {
         // Setup payment gateway form
         $back_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Checkout_Controller::config()->url_segment,
             "finish"
         );
@@ -203,13 +203,13 @@ class SagePayFormsHandler extends CommercePaymentHandler {
         $data = $this->request->getVars();
 
         $successs_url = Controller::join_links(
-            Director::BaseURL(),
+            Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             'complete'
         );
 
         $error_url = Controller::join_links(
-            Director::BaseURL(),
+            Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             'complete',
             'error'

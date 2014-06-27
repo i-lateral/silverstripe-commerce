@@ -18,7 +18,7 @@ class WorldPayHandler extends CommercePaymentHandler {
         );
 
         $back_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Checkout_Controller::config()->url_segment,
             "finish"
         );
