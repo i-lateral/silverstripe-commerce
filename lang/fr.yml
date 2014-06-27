@@ -30,7 +30,7 @@ fr:
     DeliveryDetails: 'Informations de livraison'
     Description: Description
     DisableProduct: 'Disable this product?'
-    Email:'E-mail'
+    Email: 'E-mail'
     EstimateShipping: 'Estimer frais de livraison'
     Excluding: Exclusif
     FirstName: 'Prénom(s)'
