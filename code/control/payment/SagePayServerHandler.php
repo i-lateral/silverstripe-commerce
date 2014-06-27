@@ -20,7 +20,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
         );
 
         $back_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Checkout_Controller::config()->url_segment,
             "finish"
         );
@@ -164,13 +164,13 @@ class SagePayServerHandler extends CommercePaymentHandler {
         $data = $this->request->postVars();
 
         $success_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             'complete'
         );
 
         $error_url = Controller::join_links(
-            BASE_URL,
+            Director::absoluteBaseURL(),
             Payment_Controller::config()->url_segment,
             'complete',
             'error'
