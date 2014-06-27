@@ -114,7 +114,7 @@ class Payment_Controller extends Commerce_Controller {
         $data = array_merge((array)$billing_data, (array)$delivery_data);
 
         // Get postage data
-        $data['PostageType'] = $postage->Location;
+        $data['PostageType'] = $postage->Title;
         $data['PostageCost'] = $postage->Cost;
         $data['PostageTax'] = ($config->TaxRate > 0 && $postage->Cost > 0) ? ((float)$postage->Cost / 100) * $config->TaxRate : 0;
 
