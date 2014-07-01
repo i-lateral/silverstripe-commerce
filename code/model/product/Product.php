@@ -59,7 +59,7 @@ class Product extends DataObject {
         'Description'
     );
 
-    private static $default_sort = "\"Title\" ASC";
+    private static $default_sort = "\"Sort\" DESC, \"Title\" ASC";
 
     /**
      * Return a URL to link to this product (via Catalog_Controller)
