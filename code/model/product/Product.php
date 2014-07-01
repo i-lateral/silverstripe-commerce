@@ -186,10 +186,7 @@ class Product extends DataObject {
     }
 
     public function getCMSThumbnail() {
-        if($this->Images()->exists())
-            return $this->Images()->first()->PaddedImage(50,50);
-        else
-            return '(No Image)';
+        return $this->SortedImages()->first()->PaddedImage(50,50);
     }
 
     /**
