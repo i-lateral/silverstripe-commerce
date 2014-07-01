@@ -29,6 +29,13 @@
             <% if CategoryChildren %>
                 <% loop CategoryChildren %>
                     <div class="commerce-list-child unit size1of4">
+
+                        <% if SortedImages.exists %>
+                        <div class="commerce-list-image">
+                            <a href="$Link">
+                                $SortedImages.First.PaddedImage(190,190)
+                            </a>
+                        </div>
                         <% if Images %>
                             <div class="commerce-list-image"><a href="$Link">$Images.First.PaddedImage(190,190)</a></div>
                         <% else %>
