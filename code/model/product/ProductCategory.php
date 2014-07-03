@@ -49,7 +49,7 @@ class ProductCategory extends DataObject {
     }
 
     /**
-     * Return the absolute link to this product
+     * Return the absolute link to this category
      */
     public function AbsoluteLink($action = null) {
         return Director::absoluteURL($this->Link($action));
@@ -152,6 +152,16 @@ class ProductCategory extends DataObject {
     }
 
     /**
+     * Return sorted images, if no images exist, create a new opbject set
+     * with a blank product image in it.
+     *
+     * @return ArrayList
+     */
+    public function SortedProducts() {
+        return $this->Products()->Sort("SortOrder ASC, \"Product\".\"Title\" ASC");
+    }
+
+    /**
      * Get a list of all products from this category and it's children
      * categories.
      *
@@ -186,11 +196,14 @@ class ProductCategory extends DataObject {
             ->setReadonly(true)
             ->performReadonlyTransformation();
 
+        $gridconfig = new GridFieldConfig_RelationEditor();
+        $gridconfig->addComponent(new GridFieldOrderableRows('SortOrder'));
+
         $products_field = GridField::create(
             "Products",
             "",
             $this->Products(),
-            new GridFieldConfig_RelationEditor()
+            $gridconfig
         );
 
         $parent_field = TreeDropdownField::create('ParentID', 'Parent Category', 'ProductCategory')

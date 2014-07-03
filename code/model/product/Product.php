@@ -59,7 +59,7 @@ class Product extends DataObject {
         'Description'
     );
 
-    private static $default_sort = "\"Sort\" DESC, \"Title\" ASC";
+    private static $default_sort = "\"Sort\" ASC, \"Title\" ASC";
 
     /**
      * Return a URL to link to this product (via Catalog_Controller)
@@ -229,7 +229,6 @@ class Product extends DataObject {
                         array(
                             NumericField::create("Quantity", $this->fieldLabel('Quantity')),
                             TextField::create("SKU", $this->fieldLabel('SKU')),
-                            TextField::create("Sort", $this->fieldLabel('Sort')),
                             TextField::create("PackSize", $this->fieldLabel('PackSize')),
                             TextField::create("Weight", $this->fieldLabel('Weight'))
                         )

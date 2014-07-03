@@ -56,13 +56,13 @@ class Catalogue_Controller extends Commerce_Controller {
     }
 
     /**
-     * Get a paginated list of products
+     * Get a paginated list of products contained in this category
      *
      * @return PaginatedList
      */
     public function PaginatedProducts($limit = 10) {
         if($this->dataRecord instanceOf ProductCategory)
-            return PaginatedList::create($this->Products(), $this->request)
+            return PaginatedList::create($this->SortedProducts(), $this->request)
                 ->setPageLength($limit);
         else
             return ArrayList::create();

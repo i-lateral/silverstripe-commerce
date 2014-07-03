@@ -20,7 +20,7 @@ class CatalogueAdmin extends ModelAdmin {
 
     private static $model_importers = array(
       'Product' => 'ProductCSVBulkLoader',
-   );
+    );
 
     public $showImportForm = array('Product');
 
@@ -88,7 +88,8 @@ class CatalogueAdmin extends ModelAdmin {
                 ->removeComponentsByType('GridFieldAddNewButton')
                 ->addComponents(
                     $add_button,
-                    $manager
+                    $manager,
+                    GridFieldOrderableRows::create('Sort')
                 );
 
             // Update list of items for subsite (if used)
