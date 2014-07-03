@@ -15,7 +15,19 @@
                             <div class="commerce-noimage"><a href="$Link">$Top.CommerceNoImage.PaddedImage(190,190)</a></div>
                         <% end_if %>
 
-                        <% if ClassName = "Product" %><p class="commerce-list-price">{$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}</p><% end_if %>
+                        <% if ClassName = "Product" %>
+                            <p class="commerce-list-price">
+                                {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$Price}
+
+                                <% if not $Quantity %>
+                                    <span class="label label-red">
+                                        <strong>
+                                            <%t Commerce.OutOfStock "Out of stock" %>
+                                        </strong>
+                                    </span>
+                                <% end_if %>
+                            </p>
+                        <% end_if %>
                     </div>
 
                     <% if $MultipleOf(4) && not $Last %></div><div class="commerce-list-children line"><% end_if %>

@@ -32,10 +32,18 @@
                         <span class="price label label-green big">
                             {$Top.SiteConfig.Currency.HTMLNotation.RAW}{$FrontPrice}
                         </span>
+
+                        <% if not $Quantity %>
+                            <span class="label label-red">
+                                <strong>
+                                    <%t Commerce.OutOfStock "Out of stock" %>
+                                </strong>
+                            </span>
+                        <% end_if %>
                     </p>
                 </div>
 
-                <% if $MultipleOf(4) %></div><div class="units-row unit size1of4 commerce-list"><% end_if %>
+                <% if $MultipleOf(4) %></div><div class="units-row line commerce-list"><% end_if %>
             <% end_loop %>
         </div>
 

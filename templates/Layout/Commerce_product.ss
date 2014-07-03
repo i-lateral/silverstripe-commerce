@@ -32,8 +32,7 @@
                     <span class="price label big label-green">
                         <span class="title"><% _t('Commerce.Price','Price') %>:</span>
                         <span class="value">
-                            {$SiteConfig.Currency.HTMLNotation.RAW}
-                            {$FrontPrice}
+                            {$SiteConfig.Currency.HTMLNotation.RAW}{$FrontPrice}
                             {$SiteConfig.TaxString}
                         </span>
                     </span>
@@ -64,7 +63,17 @@
                     </div>
                 <% end_if %>
 
-                $AddItemForm
+                <% if $Quantity %>
+                    $AddItemForm
+                <% else %>
+                    <p>
+                        <span class="label label-red">
+                            <strong>
+                                <%t Commerce.OutOfStock "Out of stock" %>
+                            </strong>
+                        </span>
+                    </p>
+                <% end_if %>
             </div>
         </div>
 
