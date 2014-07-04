@@ -36,7 +36,7 @@ class DeliveryDetailsForm extends Form {
                 $personal_fields,
                 $address_fields
             )->setName("DeliveryFields")
-            ->addExtraClass('lines')
+            ->addExtraClass('line')
             ->addExtraClass('units-row')
         );
 
