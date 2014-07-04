@@ -2,12 +2,13 @@
 
 class Ext_Commerce_Member extends DataExtension {
     private static $db = array(
-        "PhoneNumber" => "Varchar",
-        "Company" => "Varchar(99)"
+        "PhoneNumber"   => "Varchar",
+        "Company"       => "Varchar(99)"
     );
 
     private static $has_many = array(
-        "Orders" => "Order"
+        "Orders"        => "Order",
+        "Addresses"     => "MemberAddress"
     );
 
     public function updateCMSFields(FieldList $fields) {
