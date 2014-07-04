@@ -79,22 +79,24 @@ class OrderItem extends DataObject {
      }
 
     /**
-     * Unserialise the list of customisations and rendering into a basic HTML
-     * string
+     * Unserialise the list of customisations and rendering into a basic
+     * HTML string
      *
      */
     public function getCustomDetails() {
+        $htmltext = HTMLText::create();
         $return = "";
 
         if($this->Customisation) {
             $customisations = unserialize($this->Customisation);
 
             foreach($customisations as $custom) {
-                $return .= $custom->Title . ': ' . $custom->Value . ";\n";
+                $return .= $custom->Title . ': ' . $custom->Value . ";<br/>";
             }
         }
 
-        return nl2br($return);
+        $htmltext->setValue($return);
+        return $htmltext;
     }
 
     public function canCreate($member = null) {
