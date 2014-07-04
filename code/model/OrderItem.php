@@ -94,7 +94,7 @@ class OrderItem extends DataObject {
             }
         }
 
-        return $return;
+        return nl2br($return);
     }
 
     public function canCreate($member = null) {
