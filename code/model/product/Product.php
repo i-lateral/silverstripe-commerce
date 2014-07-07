@@ -325,26 +325,77 @@ class Product extends DataObject {
         return new RequiredFields(array("Title","Price"));
     }
 
+    /**
+     * Returns TRUE if this object has a URLSegment value that does not conflict with any other objects. This methods
+     * checks for:
+     *   - A page with the same URLSegment that has a conflict.
+     *   - Conflicts with actions on the parent page.
+     *   - A conflict caused by a root page having the same URLSegment as a class name.
+     *
+     * @return bool
+     */
+    public function validURLSegment() {
+        $objects_to_check = array("SiteTree", "Product", "ProductCategory");
+
+        $segment = Convert::raw2sql($this->URLSegment);
+
+        foreach($objects_to_check as $classname) {
+            $return = $classname::get()
+                ->filter(array(
+                    "URLSegment"=> $segment,
+                    "ID:not"    => $this->ID
+                ));
+
+            if($return->exists()) return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Generate a URL segment based on the title provided.
+     *
+     * If {@link Extension}s wish to alter URL segment generation, they can do so by defining
+     * updateURLSegment(&$url, $title).  $url will be passed by reference and should be modified.
+     * $title will contain the title that was originally used as the source of this generated URL.
+     * This lets extensions either start from scratch, or incrementally modify the generated URL.
+     *
+     * @param string $title Page title.
+     * @return string Generated url segment
+     */
+    public function generateURLSegment($title){
+        $filter = URLSegmentFilter::create();
+        $t = $filter->filter($title);
+
+        // Fallback to generic page name if path is empty (= no valid, convertable characters)
+        if(!$t || $t == '-' || $t == '-1') $t = "page-$this->ID";
+
+        // Hook for extensions
+        $this->extend('updateURLSegment', $t, $title);
+
+        return $t;
+    }
+
     public function onBeforeWrite() {
         parent::onBeforeWrite();
 
-        // Only call on first creation, ir if title is changed
-        if(($this->ID == 0) || $this->isChanged('Title') || !($this->URLSegment)) {
-            // Set the URL Segment, so it can be accessed via the controller
+        // If there is no URLSegment set, generate one from Title
+        if((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
+            $this->URLSegment = $this->generateURLSegment($this->Title);
+        } else if($this->isChanged('URLSegment', 2)) {
+            // Do a strict check on change level, to avoid double encoding caused by
+            // bogus changes through forceChange()
             $filter = URLSegmentFilter::create();
-            $t = $filter->filter($this->Title);
+            $this->URLSegment = $filter->filter($this->URLSegment);
+            // If after sanitising there is no URLSegment, give it a reasonable default
+            if(!$this->URLSegment) $this->URLSegment = "page-$this->ID";
+        }
 
-            // Fallback to generic name if path is empty (= no valid, convertable characters)
-            if(!$t || $t == '-' || $t == '-1') $t = "category-{$this->ID}";
-
-            // Ensure that this object has a non-conflicting URLSegment value.
-            $existing_cats = ProductCategory::get()->filter('URLSegment',$t)->count();
-            $existing_products = Product::get()->filter('URLSegment',$t)->count();
-            $existing_pages = (class_exists('SiteTree')) ? SiteTree::get()->filter('URLSegment',$t)->count() : 0;
-
-            $count = (int)$existing_cats + (int)$existing_products + (int)$existing_pages;
-
-            $this->URLSegment = ($count) ? $t . '-' . ($count + 1) : $t;
+        // Ensure that this object has a non-conflicting URLSegment value.
+        $count = 2;
+        while(!$this->validURLSegment()) {
+            $this->URLSegment = preg_replace('/-[0-9]+$/', null, $this->URLSegment) . '-' . $count;
+            $count++;
         }
 
         // If no images are set, add our default image (if it exists)
