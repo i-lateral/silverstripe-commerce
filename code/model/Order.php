@@ -72,7 +72,7 @@ class Order extends DataObject implements PermissionProvider {
     );
 
     private static $summary_fields = array(
-        "OrderNumber"   => "Order Number",
+        "OrderNumber"   => "#",
         "FirstName"     => "First Name(s)",
         "Surname"       => "Surname",
         "Email"         => "Email",
@@ -118,9 +118,21 @@ class Order extends DataObject implements PermissionProvider {
         $fields->removeByName('PostageCost');
         $fields->removeByName('PostageTax');
 
-        $fields->addFieldToTab('Root.Main', ReadonlyField::create('OrderNumber'), 'Status');
-        $fields->addFieldToTab('Root.Main', ReadonlyField::create('Created'));
-        $fields->addFieldToTab('Root.Main', ReadonlyField::create('LastEdited', 'Last time order was saved'));
+        $fields->addFieldToTab(
+            'Root.Main',
+            ReadonlyField::create('OrderNumber', "#"),
+            'Status'
+        );
+
+        $fields->addFieldToTab(
+            'Root.Main',
+            ReadonlyField::create('Created')
+        );
+
+        $fields->addFieldToTab(
+            'Root.Main',
+            ReadonlyField::create('LastEdited', 'Last time order was saved')
+        );
 
         // Load basic list of ordered items
         $item_config = GridFieldConfig::create()->addComponents(
