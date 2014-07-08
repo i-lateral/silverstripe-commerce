@@ -231,6 +231,8 @@ class Order extends DataObject implements PermissionProvider {
             ));
         }
 
+        $this->extend("updateCMSFields", $fields);
+
         return $fields;
     }
 

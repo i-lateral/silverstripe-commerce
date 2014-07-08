@@ -19,12 +19,6 @@ class PostageArea extends DataObject {
         "Site"          => "SiteConfig"
     );
 
-    public function getCMSFields() {
-        $fields = parent::getCMSFields();
-
-        return $fields;
-    }
-
     public function canCreate($member = null) {
         return true;
     }
