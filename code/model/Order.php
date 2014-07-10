@@ -445,7 +445,7 @@ class Order extends DataObject implements PermissionProvider {
                 $subject = _t('CommerceEmail.Order', 'Order') . " {$this->OrderNumber} {$this->getTranslatedStatus()}";
 
                 $body = $this->renderWith('OrderEmail_Customer', $vars);
-                $email = new Email($from,$this->BillingEmail,$subject,$body);
+                $email = new Email($from,$this->Email,$subject,$body);
                 $email->sendPlain();
 
                 // If subsites enabled, set the language back
