@@ -24,6 +24,7 @@ class Checkout_Controller extends Commerce_Controller {
     private static $allowed_actions = array(
         "billing",
         "delivery",
+        "usememberaddress",
         "finish",
         "LoginForm",
         'BillingForm',
@@ -62,7 +63,7 @@ class Checkout_Controller extends Commerce_Controller {
         $this->extend("onBeforeIndex");
 
         return $this->renderWith(array(
-            'Commerce_checkout',
+            'Checkout',
             'Commerce',
             'Page'
         ));
@@ -89,7 +90,7 @@ class Checkout_Controller extends Commerce_Controller {
         $this->extend("onBeforeBilling");
 
         return $this->renderWith(array(
-            'Commerce_checkout',
+            'Checkout_billing',
             'Commerce',
             'Page'
         ));
@@ -111,10 +112,33 @@ class Checkout_Controller extends Commerce_Controller {
         $this->extend("onBeforeDelivery");
 
         return $this->renderWith(array(
-            'Commerce_checkout',
+            'Checkout_delivery',
             'Commerce',
             'Page'
         ));
+    }
+
+    /**
+     * User the address provided via the $ID param in the URL. The
+     * $OtherID param is used to determine if the address is billing
+     * or delivery.
+     *
+     * If no $OtherID is provided, we assume billing should be used.
+     *
+     * @return redirect
+     */
+    public function usememberaddress() {
+        $id = $this->request->param("ID");
+        $otherid = $this->request->param("OtherID");
+
+        if(!$id)
+            return $this->httpError(500, "Cannot determine address you would like to use");
+
+        $action = "delivery";
+
+        $this->extend("onBeforeUseMemberAddress");
+
+        return $this->redirect($this->Link($action));
     }
 
 
@@ -141,7 +165,7 @@ class Checkout_Controller extends Commerce_Controller {
         $this->extend("onBeforeFinish");
 
         return $this->renderWith(array(
-            'Commerce_checkout',
+            'Checkout_finish',
             'Commerce',
             'Page'
         ));
