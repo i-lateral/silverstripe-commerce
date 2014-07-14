@@ -37,6 +37,7 @@ class BillingDetailsForm extends Form {
             ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
+            // Add default fields
             CompositeField::create(
                 $personal_fields,
                 $address_fields
@@ -44,6 +45,20 @@ class BillingDetailsForm extends Form {
             ->addExtraClass('line')
             ->addExtraClass('units-row')
         );
+
+        // Add a save address for later checkbox if a user is logged in
+        if(Member::currentUserID()) {
+            $fields->add(
+                CompositeField::create(
+                    CheckboxField::create(
+                        "SaveAddress",
+                        _t('Commerce.SaveAddress','Save this address for later')
+                    )
+                )->setName("SaveAddressHolder")
+                ->addExtraClass('line')
+                ->addExtraClass('units-row')
+            );
+        }
 
         $back_url = Controller::join_links(
             BASE_URL,
@@ -102,6 +117,8 @@ class BillingDetailsForm extends Form {
         Session::set("Commerce.BillingDetailsForm.data",$data);
         Session::set("Commerce.DeliveryDetailsForm.data",$delivery_data);
 
+        $this->save_address($data);
+
         $url = $this
             ->controller
             ->Link("finish");
@@ -123,6 +140,8 @@ class BillingDetailsForm extends Form {
         // Save billing data to sessions
         Session::set("Commerce.BillingDetailsForm.data",$data);
 
+        $this->save_address($data);
+
         $url = $this
             ->controller
             ->Link("delivery");
@@ -130,5 +149,27 @@ class BillingDetailsForm extends Form {
         return $this
             ->controller
             ->redirect($url);
+    }
+
+    /**
+     * If the flag has been set from the provided array, create a new
+     * address and assign to the current user.
+     *
+     * @param $data Form data submitted
+     */
+    private function save_address($data) {
+        // If the user ticked "save address" then add to their account
+        if(array_key_exists('SaveAddress',$data) && $data['SaveAddress']) {
+            $address = MemberAddress::create();
+            $address->FirstName = $data['FirstName'];
+            $address->Surname = $data['Surname'];
+            $address->Address1 = $data['Address1'];
+            $address->Address2 = $data['Address2'];
+            $address->City = $data['City'];
+            $address->PostCode = $data['PostCode'];
+            $address->Country = $data['Country'];
+            $address->OwnerID = Member::currentUserID();
+            $address->write();
+        }
     }
 }

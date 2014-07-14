@@ -40,6 +40,22 @@ class DeliveryDetailsForm extends Form {
             ->addExtraClass('units-row')
         );
 
+        // Add a save address for later checkbox if a user is logged in
+        if(Member::currentUserID()) {
+            $member = Member::currentUser();
+
+            $fields->add(
+                CompositeField::create(
+                    CheckboxField::create(
+                        "SaveAddress",
+                        _t('Commerce.SaveAddress','Save this address for later')
+                    )
+                )->setName("SaveAddressHolder")
+                ->addExtraClass('line')
+                ->addExtraClass('units-row')
+            );
+        }
+
         $back_url = $controller->Link();
 
         $actions = FieldList::create(
@@ -68,6 +84,20 @@ class DeliveryDetailsForm extends Form {
 
     public function doContinue($data) {
         Session::set("Commerce.DeliveryDetailsForm.data",$data);
+
+        // If the user ticked "save address" then add to their account
+        if(array_key_exists('SaveAddress',$data) && $data['SaveAddress']) {
+            $address = MemberAddress::create();
+            $address->FirstName = $data['DeliveryFirstnames'];
+            $address->Surname = $data['DeliverySurname'];
+            $address->Address1 = $data['DeliveryAddress1'];
+            $address->Address2 = $data['DeliveryAddress2'];
+            $address->City = $data['DeliveryCity'];
+            $address->PostCode = $data['DeliveryPostCode'];
+            $address->Country = $data['DeliveryCountry'];
+            $address->OwnerID = Member::currentUserID();
+            $address->write();
+        }
 
         $url = $this
             ->controller

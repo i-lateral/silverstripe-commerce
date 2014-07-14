@@ -41,7 +41,10 @@ class Ext_Commerce_UsersController extends Extension {
      */
     public function addaddress() {
         $form = $this->AddressForm();
-        $form->Fields()->dataFieldByName("OwnerID")->setValue(Member::currentuserID());
+        $form
+            ->Fields()
+            ->dataFieldByName("OwnerID")
+            ->setValue(Member::currentuserID());
 
         return $this
             ->owner
