@@ -123,18 +123,62 @@ class Checkout_Controller extends Commerce_Controller {
      * $OtherID param is used to determine if the address is billing
      * or delivery.
      *
-     * If no $OtherID is provided, we assume billing should be used.
+     * If no $ID or $OtherID is provided, we return an error.
      *
      * @return redirect
      */
     public function usememberaddress() {
+        $allowed_otherids = array("billing","delivery");
         $id = $this->request->param("ID");
         $otherid = $this->request->param("OtherID");
+        $data = array();
+        $member = Member::currentUser();
+        $address = MemberAddress::get()->byID($id);
+        $action = "billing";
 
-        if(!$id)
-            return $this->httpError(500, "Cannot determine address you would like to use");
+        // If our required details are not set, return a server error
+        if(
+            !$address ||
+            !$member ||
+            ($address && !$address->canView($member)) ||
+            !in_array($otherid, $allowed_otherids)
+        ) {
+            return $this
+                ->httpError(
+                    404,
+                    "There was an error selecting your address"
+                );
+        }
 
-        $action = "delivery";
+        // Set the session data
+        if($otherid == "billing") {
+            $data["FirstName"]  = $address->FirstName;
+            $data["Surname"]    = $address->Surname;
+            $data["Address1"]   = $address->Address1;
+            $data["Address2"]   = $address->Address2;
+            $data["City"]       = $address->City;
+            $data["PostCode"]   = $address->PostCode;
+            $data["Country"]    = $address->Country;
+            $data["Email"]      = $member->Email;
+            $data["PhoneNumber"]= $member->PhoneNumber;
+            $data["Company"]    = $member->Company;
+
+            Session::set("Commerce.BillingDetailsForm.data", $data);
+            $action = "delivery";
+        }
+
+        if($otherid == "delivery") {
+            $data['DeliveryFirstnames']  = $address->FirstName;
+            $data['DeliverySurname']    = $address->Surname;
+            $data['DeliveryAddress1']   = $address->Address1;
+            $data['DeliveryAddress2']   = $address->Address2;
+            $data['DeliveryCity']       = $address->City;
+            $data['DeliveryPostCode']   = $address->PostCode;
+            $data['DeliveryCountry']    = $address->Country;
+
+            Session::set("Commerce.DeliveryDetailsForm.data", $data);
+            $action = "finish";
+        }
 
         $this->extend("onBeforeUseMemberAddress");
 
