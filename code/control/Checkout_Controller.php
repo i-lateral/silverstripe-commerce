@@ -221,8 +221,12 @@ class Checkout_Controller extends Commerce_Controller {
      * @return MemberLoginForm
      */
     public function LoginForm() {
-        $form = MemberLoginForm::create($this, 'LoginForm');
+        $form = CommerceLoginForm::create($this, 'LoginForm');
         $form->setAttribute("action", $this->Link("LoginForm"));
+
+        $form
+            ->Fields()
+            ->add(HiddenField::create("BackURL")->setValue($this->Link()));
 
         $form
             ->Actions()
