@@ -1,7 +1,9 @@
-<% include Users_Profile_SideBar %>
+<div class="units-row users-account line">
+    <% include Users_Profile_SideBar %>
 
-<div class="commerce-content-container typography commerce-account unit-75 unit size3of4 lastUnit">
-    <h1><%t CommerceAccount.EditAddress "Edit Address" %></h1>
+    <div class="commerce-content-container typography commerce-account unit-75 unit size3of4 lastUnit">
+        <h1><%t CommerceAccount.EditAddress "Edit Address" %></h1>
 
-    $Form
+        $Form
+    </div>
 </div>
