@@ -53,7 +53,6 @@ class ShoppingCart extends Commerce_Controller {
      */
     protected static $enabled = true;
 
-
     /**
      * Track all items stored in the current shopping cart
      *
@@ -61,6 +60,19 @@ class ShoppingCart extends Commerce_Controller {
      */
     protected $items;
 
+    /**
+     * Track a list of discounts, each item should contain:
+     *
+     * - 'Code' (to identify the discount and prevent duplicates)
+     * - 'Type' (currently Fixed, Percentage)
+     * - 'Amount' (discount either a fixed price, or a percentage)
+     *
+     * Adding a discounts list is intended to allow third party modules
+     * to easily tap into the shopping cart to easily provide discounts
+     *
+     * @var ArrayList
+     */
+    protected $discounts;
 
     private static $allowed_actions = array(
         "remove",
@@ -68,7 +80,8 @@ class ShoppingCart extends Commerce_Controller {
         "clear",
         "update",
         "CartForm",
-        "PostageForm"
+        "PostageForm",
+        "DiscountForm"
     );
 
     /**
@@ -88,6 +101,15 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function getItems() {
         return $this->items;
+    }
+
+    /**
+     * Get all items in the current shopping cart
+     *
+     * @return ArrayItems
+     */
+    public function getDiscounts() {
+        return $this->discounts;
     }
 
     /**
@@ -120,13 +142,18 @@ class ShoppingCart extends Commerce_Controller {
         return ShoppingCart::create();
     }
 
-
     public function __construct() {
         // If items are stored in a session, get them now
         if(Session::get('Commerce.ShoppingCart.Items'))
             $this->items = unserialize(Session::get('Commerce.ShoppingCart.Items'));
         else
             $this->items = ArrayList::create();
+
+        // If discounts stored in a session, get them, else create new list
+        if(Session::get('Commerce.ShoppingCart.Discounts'))
+            $this->discounts = unserialize(Session::get('Commerce.ShoppingCart.Discounts'));
+        else
+            $this->discounts = ArrayList::create();
 
         parent::__construct();
     }
@@ -287,7 +314,18 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function save() {
         Session::clear("Commerce.PostageID");
-        Session::set("Commerce.ShoppingCart.Items", serialize($this->items));
+
+        // Save cart items
+        Session::set(
+            "Commerce.ShoppingCart.Items",
+            serialize($this->items)
+        );
+
+        // Save cart discounts
+        Session::set(
+            "Commerce.ShoppingCart.Discounts",
+            serialize($this->discounts)
+        );
 
         // Update available postage
         if($data = Session::get("Form.Form_PostageForm.data")) {
@@ -304,6 +342,7 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function clear() {
         Session::clear('Commerce.ShoppingCart.Items');
+        Session::clear('Commerce.ShoppingCart.Discounts');
         Session::clear("Commerce.PostageID");
     }
 
@@ -366,6 +405,24 @@ class ShoppingCart extends Commerce_Controller {
     }
 
     /**
+     * Find the total discount based on discount items added.
+     *
+     * @return Float
+     */
+    public function DiscountAmount() {
+        $total = 0;
+
+        foreach($this->discounts as $item) {
+            if($item->Type == "Fixed")
+                $total += $item->Amount;
+            elseif($item->Type == "Percentage" && $item->Amount)
+                $total += (($item->Amount / 100) * $this->SubTotalCost());
+        }
+
+        return number_format($total,2);
+    }
+
+    /**
      * Find the total cost of tax for the items in the cart, as well as shipping
      * (if set)
      *
@@ -398,10 +455,14 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function TotalCost() {
         $total = str_replace(",","",$this->SubTotalCost());
+        $discount = str_replace(",","",$this->DiscountAmount());
         $postage = str_replace(",","",$this->PostageCost());
         $tax = str_replace(",","",$this->TaxCost());
 
-        $total = (float)$total + (float)$postage + (float)$tax;
+        // If discount is less than 0, then set to 0
+        $total_with_discount = (((float)$total - (float)$discount) < 0) ? 0 : ((float)$total - (float)$discount);
+
+        $total = $total_with_discount + (float)$postage + (float)$tax;
 
         return number_format($total,2);
     }
@@ -459,6 +520,69 @@ class ShoppingCart extends Commerce_Controller {
 
 
     /**
+     * Form that allows you to add a discount code which then gets added
+     * to the cart's list of discounts.
+     *
+     * @return Form
+     */
+    public function DiscountForm() {
+        $fields = new FieldList(
+            TextField::create(
+                "DiscountCode",
+                _t("Commerce.DiscountCode", "Discount Code")
+            )->setAttribute(
+                "placeholder",
+                _t("Commerce.EnterDiscountCode", "Enter your discount code")
+            )
+        );
+
+        $actions = new FieldList(
+            FormAction::create('doAddDiscount', _t('Commerce.Add','Add'))
+                ->addExtraClass('btn')
+                ->addExtraClass('btn-blue')
+        );
+
+        $form = Form::create($this, "DiscountForm", $fields, $actions)
+            ->addExtraClass("forms");
+
+        $this->extend("updateDiscountForm", $form);
+
+        return $form;
+    }
+
+    /**
+     * Action that will find a discount based on the code
+     *
+     * @param type $data
+     * @param type $form
+     */
+    public function doAddDiscount($data, $form) {
+        $code_to_search = $data['DiscountCode'];
+
+        // First check if the discount is already added (so we don't
+        // query the DB if we don't have to).
+        if(!$this->discounts->find("Code",$code_to_search)) {
+            $code = Discount::get()->filter(array(
+                "Code" => $code_to_search,
+                "Expires:GreaterThan" => date("Y-m-d") // Todays date
+            ))->first();
+
+            if($code) {
+                $this->discounts->add(ArrayData::create(array(
+                    "Title"  => $code->Title,
+                    "Type"  => $code->Type,
+                    "Code"  => $code->Code,
+                    "Amount"=> $code->Amount
+                )));
+            }
+        }
+
+        $this->save();
+
+        return $this->redirectBack();
+    }
+
+    /**
      * Form responsible for estimating shipping based on location and
      * postal code
      *
@@ -472,7 +596,9 @@ class ShoppingCart extends Commerce_Controller {
             CountryDropdownField::create('Country',_t('Commerce.Country','Country'))
                 ->setAttribute("class",'countrydropdown dropdown btn'),
             TextField::create("ZipCode",_t('Commerce.ZipCode',"Zip/Postal Code"))
-        )->addExtraClass("unit-50");
+        )->addExtraClass("size1of2")
+        ->addExtraClass("unit")
+        ->addExtraClass("unit-50");
 
         // If we have stipulated a search, then see if we have any results
         // otherwise load empty fieldsets
@@ -485,34 +611,48 @@ class ShoppingCart extends Commerce_Controller {
                     _t('Commerce.SelectPostage',"Select Postage"),
                     $available_postage->map()
                 )
-            )->addExtraClass("unit-50");
+            )->addExtraClass("size1of2")
+            ->addExtraClass("unit")
+            ->addExtraClass("unit-50");
 
             $confirm_action = CompositeField::create(
                 FormAction::create("doSavePostage", _t('Commerce.Confirm',"Confirm"))
                     ->addExtraClass('btn')
                     ->addExtraClass('btn-green')
-            )->addExtraClass("unit-50");
+            )->addExtraClass("size1of2")
+            ->addExtraClass("unit")
+            ->addExtraClass("unit-50");
         } else {
             $search_text = _t('Commerce.Search',"Search");
-            $postage_select = CompositeField::create()->addExtraClass("unit-50");
-            $confirm_action = CompositeField::create()->addExtraClass("unit-50");
+            $postage_select = CompositeField::create()
+                ->addExtraClass("size1of2")
+                ->addExtraClass("unit")
+                ->addExtraClass("unit-50");
+            $confirm_action = CompositeField::create()
+                ->addExtraClass("size1of2")
+                ->addExtraClass("unit")
+                ->addExtraClass("unit-50");
         }
 
         // Set search field
         $search_action = CompositeField::create(
             FormAction::create("doGetPostage", $search_text)
                 ->addExtraClass('btn')
-        )->addExtraClass("unit-50");
+        )->addExtraClass("size1of2")
+        ->addExtraClass("unit")
+        ->addExtraClass("unit-50");
 
 
         // Setup fields and actions
         $fields = new FieldList(
             CompositeField::create($country_select,$postage_select)
+                ->addExtraClass("line")
                 ->addExtraClass("units-row-end")
         );
 
         $actions = new FieldList(
             CompositeField::create($search_action,$confirm_action)
+                ->addExtraClass("line")
                 ->addExtraClass("units-row-end")
         );
 

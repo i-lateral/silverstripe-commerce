@@ -36,7 +36,8 @@ class Ext_Commerce_SiteConfig extends DataExtension {
 
     private static $has_many = array(
         'PostageAreas'      => 'PostageArea',
-        'PaymentMethods'    => 'CommercePaymentMethod'
+        'Discounts'         => 'Discount',
+        'PaymentMethods'    => 'CommercePaymentMethod',
     );
 
     private static $defaults = array(
@@ -220,6 +221,64 @@ class Ext_Commerce_SiteConfig extends DataExtension {
             )
         );
 
+        // Setup discounts field
+        $discounts_field = new GridField(
+            'Discounts',
+            '',
+            $this->owner->Discounts(),
+            GridFieldConfig::create()
+                ->addComponents(
+                    new GridFieldButtonRow('before'),
+                    new GridFieldToolbarHeader(),
+                    new GridFieldTitleHeader(),
+                    new GridFieldEditableColumns(),
+                    new GridFieldDeleteAction(),
+                    new GridFieldAddNewInlineButton('toolbar-header-left')
+                )
+        );
+
+        // Setup fields and type dropdown
+        $discounts_field
+            ->getConfig()
+            ->getComponentByType('GridFieldEditableColumns')
+            ->setDisplayFields(array(
+                'Title' => array(
+                    'title' => 'Title',
+                    'field' => 'TextField'
+                ),
+                'Type'  => array(
+                    'title' => 'Type',
+                    'callback' => function($record, $column, $grid) {
+                        return DropdownField::create(
+                            $column,
+                            "Type",
+                            singleton('Discount')->dbObject('Type')->enumValues()
+                        )->setValue("Percentage");
+                    }
+                ),
+                'Code' => array(
+                    'title' => 'Code',
+                    'field' => 'TextField'
+                ),
+                'Amount' => array(
+                    'title' => 'Amount',
+                    'field' => 'NumericField'
+                ),
+                'Expires'  => array(
+                    'title' => 'Expires',
+                    'field' => 'DateField'
+                ),
+            ));
+
+        // Setup compressed postage options
+        $discounts_fields = ToggleCompositeField::create(
+            'DiscountFields',
+            'Cart Discount',
+            array(
+                $discounts_field
+            )
+        );
+
         // Payment Methods
         $payment_table = GridField::create(
             'PaymentMethods',
@@ -261,6 +320,7 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         $fields->addFieldToTab('Root.Commerce', $cart_fields);
         $fields->addFieldToTab('Root.Commerce', $email_fields);
         $fields->addFieldToTab('Root.Commerce', $postage_fields);
+        $fields->addFieldToTab('Root.Commerce', $discounts_fields);
         $fields->addFieldToTab('Root.Commerce', $payment_fields);
         $fields->addFieldToTab('Root.Commerce', $tax_fields);
     }

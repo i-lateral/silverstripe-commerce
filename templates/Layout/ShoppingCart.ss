@@ -1,46 +1,79 @@
 <% require css('commerce/css/Commerce.css') %>
 
 <div class="commerce-content-container typography commerce-cart">
-    <h1><% _t('Commerce.CartName', 'Shopping Cart') %></h1>
+    <h1><%t Commerce.CartName 'Shopping Cart' %></h1>
 
     <% if $Items.exists %>
 
         $SiteConfig.CartCopy
 
-        <div class="form line">
+        <div class="commerce-cart-form">
             $CartForm
         </div>
 
         <hr/>
 
-        <div class="units-row line commerce-cart-postage">
+        <div class="units-row line">
             <div class="unit-66 unit size2of3">
-                <h2><% _t('Commerce.EstimateShipping','Estimate Shipping') %></h2>
-                $PostageForm
+                <div class="commerce-cart-discounts line units-row-end">
+                    <h2><%t Commerce.UseDiscountCode "Use a discount code" %></h2>
+
+                    <% if $Discounts.exists %>
+                        <p><%t Commerce.CurrentDiscounts "Current discounts" %></p>
+                        <ul>
+                            <% loop $Discounts %>
+                                <li>$Title</li>
+                            <% end_loop %>
+                        </ul>
+                    <% end_if %>
+
+                    $DiscountForm
+                </div>
+
+                <hr/>
+
+                <div class="commerce-cart-postage">
+                    <h2><%t Commerce.EstimateShipping "Estimate Shipping" %></h2>
+                    $PostageForm
+                </div>
             </div>
 
             <div class="unit-33 unit size1of3">
-                <h2><% _t("Commerce.Total","Total") %></h2>
+                <h2><%t Commerce.Total "Total" %></h2>
 
                 <table class="commerce-tax-table width-100">
                     <tr class="subtotal">
                         <td class="right">
                             <strong>
-                                <% _t('Commerce.SubTotal','Sub Total') %>
+                                <%t Commerce.SubTotal 'Sub Total' %>
                             </strong>
                         </td>
                         <td class="right">
-                            {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.SubTotalCost}
+                            {$SiteConfig.Currency.HTMLNotation.RAW}{$SubTotalCost}
                         </td>
                     </tr>
+
+                    <% if $Discounts.exists %>
+                        <tr class="discounts">
+                            <td class="right">
+                                <strong>
+                                    <%t Commerce.Discount 'Discount' %>
+                                </strong>
+                            </td>
+                            <td class="right">
+                                {$SiteConfig.Currency.HTMLNotation.RAW}{$DiscountAmount}
+                            </td>
+                        </tr>
+                    <% end_if %>
+
                     <tr class="shipping">
                         <td class="right">
                             <strong>
-                                <% _t('Commerce.Shipping','Shipping') %>
+                                <%t Commerce.Shipping 'Shipping' %>
                             </strong>
                         </td>
                         <td class="right">
-                            {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.PostageCost}
+                            {$SiteConfig.Currency.HTMLNotation.RAW}{$PostageCost}
                         </td>
                     </tr>
                     <% if $SiteConfig.TaxRate > 0 %>
@@ -48,11 +81,11 @@
                             <td class="right">
                                 <strong>
                                     <% if $SiteConfig.TaxName %>{$SiteConfig.TaxName}
-                                    <% else %><% _t('Commerce.Tax','Tax') %><% end_if %>
+                                    <% else %><%t Commerce.Tax 'Tax' %><% end_if %>
                                 </strong>
                             </td>
                             <td class="right">
-                                {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.TaxCost}
+                                {$SiteConfig.Currency.HTMLNotation.RAW}{$TaxCost}
                             </td>
                         </tr>
                     <% end_if %>
@@ -60,9 +93,9 @@
 
                 <p class="commerce-cart-total">
                     <strong class="uppercase bold">
-                        <% _t('Commerce.CartTotal','Total') %>:
+                        <%t Commerce.CartTotal 'Total' %>:
                     </strong>
-                    {$SiteConfig.Currency.HTMLNotation.RAW}{$CommerceCart.TotalCost}
+                    {$SiteConfig.Currency.HTMLNotation.RAW}{$TotalCost}
                 </p>
             </div>
         </div>
@@ -72,14 +105,14 @@
         <div class="commerce-cart-proceed line units-row-end">
             <div class="unit-push-right">
                 <a href="{$BaseHref}commerce/checkout" class="btn btn-green btn-big">
-                    <% _t('Commerce.CartProceed','Proceed to Checkout') %>
+                    <%t Commerce.CartProceed 'Proceed to Checkout' %>
                 </a>
             </div>
         </div>
     <% else %>
         <p>
             <strong>
-                <% _t('Commerce.CartIsEmpty','Your cart is currently empty') %>
+                <%t Commerce.CartIsEmpty 'Your cart is currently empty' %>
             </strong>
         </p>
     <% end_if %>
