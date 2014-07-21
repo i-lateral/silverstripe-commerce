@@ -130,7 +130,6 @@ class ShoppingCart extends Commerce_Controller {
         return $this;
     }
 
-
     /**
      * find out if the shopping cart is enabled
      *
@@ -140,9 +139,15 @@ class ShoppingCart extends Commerce_Controller {
         return self::config()->enabled;
     }
 
+    /**
+     * Shortcut for ShoppingCart::create, exists because create()
+     * doesn't seem quite right.
+     *
+     */
     public static function get() {
         return ShoppingCart::create();
     }
+
 
     public function __construct() {
         // If items are stored in a session, get them now
@@ -169,7 +174,6 @@ class ShoppingCart extends Commerce_Controller {
             'Page'
         ));
     }
-
 
     /**
      * Add a product to the shopping cart via its ID number.
@@ -565,14 +569,14 @@ class ShoppingCart extends Commerce_Controller {
         // First check if the discount is already added (so we don't
         // query the DB if we don't have to).
         if(!$this->discounts->find("Code",$code_to_search)) {
-            $code = Discount::get()->filter(array(
-                "Code" => $code_to_search,
-                "Expires:GreaterThan" => date("Y-m-d") // Todays date
-            ))->first();
+            $code = Discount::get()
+                ->filter("Code", $code_to_search)
+                ->exclude("Expires:LessThan", date("Y-m-d"))
+                ->first();
 
             if($code) {
                 $this->discounts->add(ArrayData::create(array(
-                    "Title"  => $code->Title,
+                    "Title" => $code->Title,
                     "Type"  => $code->Type,
                     "Code"  => $code->Code,
                     "Amount"=> $code->Amount
