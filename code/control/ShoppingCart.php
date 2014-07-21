@@ -61,8 +61,10 @@ class ShoppingCart extends Commerce_Controller {
     protected $items;
 
     /**
-     * Track a list of discounts, each item should contain:
+     * Track a discount object placed against this cart, we only track
+     * one object and it should have the following paramaters:
      *
+     * - 'Title' (name of this discount)
      * - 'Code' (to identify the discount and prevent duplicates)
      * - 'Type' (currently Fixed, Percentage)
      * - 'Amount' (discount either a fixed price, or a percentage)

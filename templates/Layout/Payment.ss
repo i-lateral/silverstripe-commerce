@@ -10,6 +10,12 @@
                 $SubTotal.Nice
                 <br/>
 
+                <% if $DiscountAmount %>
+                    <strong><%  _t('Commerce.Discount', 'Discount') %>:</strong>
+                    $DiscountAmount.Nice
+                    <br/>
+                <% end_if %>
+
                 <strong><%  _t('Commerce.Postage', 'Postage') %>:</strong>
                 $PostageType $PostageCost.Nice
                 <br/>
