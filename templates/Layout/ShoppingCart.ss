@@ -16,10 +16,9 @@
         <div class="units-row line">
             <div class="unit-66 unit size2of3">
                 <div class="commerce-cart-discounts line units-row-end">
-                    <h2><%t Commerce.UseDiscountCode "Use a discount code" %></h2>
+                    <h2><%t Commerce.Discounts "Discounts" %></h2>
 
                     <% if $Discounts.exists %>
-                        <p><%t Commerce.CurrentDiscounts "Current discounts" %></p>
                         <ul>
                             <% loop $Discounts %>
                                 <li>$Title</li>

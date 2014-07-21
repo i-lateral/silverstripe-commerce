@@ -295,7 +295,7 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function removeAll() {
         foreach($this->items as $item) {
-            $this->remove($item);
+            $this->items->remove($item);
         }
     }
 
@@ -305,7 +305,8 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function emptycart() {
         $this->extend("onBeforeEmpty");
-        $this->clear();
+        $this->removeAll();
+        $this->save();
 
         return $this->redirectBack();
     }
@@ -534,7 +535,7 @@ class ShoppingCart extends Commerce_Controller {
                 _t("Commerce.DiscountCode", "Discount Code")
             )->setAttribute(
                 "placeholder",
-                _t("Commerce.EnterDiscountCode", "Enter your discount code")
+                _t("Commerce.EnterDiscountCode", "Enter a discount code")
             )
         );
 
