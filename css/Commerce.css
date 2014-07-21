@@ -68,14 +68,11 @@ commerce-action-back {
 
 /* Shopping Cart
 ----------------------------------------- */
-.commerce-cart .form form,
+.commerce-cart form,
 .commerce-cart .commerce-cart-items table {
     width: 100%;
     max-width: none;
 }
-    .commerce-cart .commerce-cart-items th {
-        font-weight: bold;
-    }
     .commerce-cart .commerce-cart-items .image {
         width: 12%;
     }
@@ -89,56 +86,23 @@ commerce-action-back {
         text-align: right;
     }
 
-.commerce-cart .commerce-cart-postage {}
-    .commerce-cart .commerce-cart-postage label {
-        display: inline;
-        color: #000;
-    }
-    .commerce-cart .commerce-cart-postage select {
-        display: inline;
-        width: 15em;
-        margin: 0 0.5em;
-        padding: 3px;
-    }
-    .commerce-cart .commerce-cart-postage .commerce-cart-total {
-        text-align: center;
-        color: #fff;
-        font-size: 1.5em;
-        padding: 0.5em;
-        margin: 1.5em 0;
-        background: #95C902;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
-    }
-
-.commerce-cart .commerce-cart-payment {}
-    .commerce-cart .commerce-cart-payment .optionset {
-        padding-left: 0.4em;
-        margin-left: 0;
-        margin-top: 0.5em;
-    }
-        .commerce-cart .commerce-cart-payment .optionset li {
-            font-size: 1em;
-            color: #000;
-            clear: both;
-        }
-        .commerce-cart .commerce-cart-payment .optionset input,
-        .commerce-cart .commerce-cart-payment .optionset label,
-        .commerce-cart .commerce-cart-payment .optionset label img {
-            float: left;
-            margin-right: 0.5em;
-        }
-        .commerce-cart .commerce-cart-payment .optionset input {
-            margin-top: 0.25em;
-        }
-
-.commerce-cart .commerce-cart-actions {
-    text-align: right;
+/**
+ * TOTAL COLUMN
+ */
+.commerce-cart .commerce-tax-table {
+    width: 100%;
 }
-    .commerce-cart .commerce-cart-actions .action {
-        display: inline;
-    }
+.commerce-cart .commerce-cart-total {
+    text-align: center;
+    color: #fff;
+    font-size: 1.5em;
+    padding: 0.5em;
+    margin: 1.5em 0;
+    background: #95C902;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
 
 /* Checkout
 ---------------------------------------- */
