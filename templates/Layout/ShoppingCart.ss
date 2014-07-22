@@ -32,7 +32,9 @@
                     <% end_if %>
                 </div>
 
-                <hr/>
+                <% if $Discount || $ShowDiscountForm %>
+                    <hr/>
+                <% end_if %>
 
                 <div class="commerce-cart-postage">
                     <h2><%t Commerce.EstimateShipping "Estimate Shipping" %></h2>
