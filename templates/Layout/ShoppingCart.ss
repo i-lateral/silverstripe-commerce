@@ -16,14 +16,13 @@
         <div class="units-row line">
             <div class="unit-66 unit size2of3">
                 <div class="commerce-cart-discounts line units-row-end">
-                    <h2><%t Commerce.Discounts "Discounts" %></h2>
+                    <h2><%t Commerce.Discount "Discount" %></h2>
 
-                    <% if $Discounts.exists %>
-                        <ul>
-                            <% loop $Discounts %>
-                                <li>$Title</li>
-                            <% end_loop %>
-                        </ul>
+                    <% if $Discount %>
+                        <p>
+                            <%t Commerce.CurrentDiscount "Current discount" %>
+                            $Discount.Title
+                        </p>
                     <% end_if %>
 
                     $DiscountForm
@@ -52,7 +51,7 @@
                         </td>
                     </tr>
 
-                    <% if $Discounts.exists %>
+                    <% if $Discount %>
                         <tr class="discounts">
                             <td class="right">
                                 <strong>

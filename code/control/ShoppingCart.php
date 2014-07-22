@@ -61,20 +61,19 @@ class ShoppingCart extends Commerce_Controller {
     protected $items;
 
     /**
-     * Track a discount object placed against this cart, we only track
-     * one object and it should have the following paramaters:
-     *
-     * - 'Title' (name of this discount)
-     * - 'Code' (to identify the discount and prevent duplicates)
-     * - 'Type' (currently Fixed, Percentage)
-     * - 'Amount' (discount either a fixed price, or a percentage)
-     *
-     * Adding a discounts list is intended to allow third party modules
-     * to easily tap into the shopping cart to easily provide discounts
+     * Track a discount object placed against this cart
      *
      * @var ArrayList
      */
-    protected $discounts;
+    protected $discount;
+
+    public function getDiscount() {
+        return $this->discount;
+    }
+
+    public function setDiscount(Discount $discount) {
+        $this->discount = $discount;
+    }
 
     private static $allowed_actions = array(
         "remove",
@@ -103,15 +102,6 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function getItems() {
         return $this->items;
-    }
-
-    /**
-     * Get all items in the current shopping cart
-     *
-     * @return ArrayItems
-     */
-    public function getDiscounts() {
-        return $this->discounts;
     }
 
     /**
@@ -157,22 +147,69 @@ class ShoppingCart extends Commerce_Controller {
             $this->items = ArrayList::create();
 
         // If discounts stored in a session, get them, else create new list
-        if(Session::get('Commerce.ShoppingCart.Discounts'))
-            $this->discounts = unserialize(Session::get('Commerce.ShoppingCart.Discounts'));
-        else
-            $this->discounts = ArrayList::create();
+        if(Session::get('Commerce.ShoppingCart.Discount'))
+            $this->discount = unserialize(Session::get('Commerce.ShoppingCart.Discount'));
+
+        // If we don't have any discounts, a user is logged in and he has
+        // access to discounts through a group, add the discount here
+        if(!$this->discount && Member::currentUserID()) {
+            $member = Member::currentUser();
+            $this->discount = $member->getDiscount();
+            Session::set('Commerce.ShoppingCart.Discount', serialize($this->discount));
+        }
 
         parent::__construct();
     }
 
+    /**
+     * Default acton for the shopping cart
+     *
+     */
     public function index() {
         $this->extend("onBeforeIndex");
+
+        // Check if there is a logged in member and if so, add a discount
+        // if they have one
 
         return $this->renderWith(array(
             'ShoppingCart',
             'Commerce',
             'Page'
         ));
+    }
+
+    /**
+     * Remove a product from ShoppingCart Via its ID. This action
+     * expects an ID to be sent through the URL that matches a specific
+     * key added to an item in the cart
+     *
+     * @return Redirect
+     */
+    public function remove() {
+        $key = $this->request->param('ID');
+
+        if(!empty($key)) {
+            foreach($this->items as $item) {
+                if($item->Key == $key)
+                    $this->items->remove($item);
+            }
+
+            $this->save();
+        }
+
+        return $this->redirectBack();
+    }
+
+    /**
+     * Action that will clear shopping cart and associated sessions
+     *
+     */
+    public function emptycart() {
+        $this->extend("onBeforeEmpty");
+        $this->removeAll();
+        $this->save();
+
+        return $this->redirectBack();
     }
 
     /**
@@ -272,28 +309,6 @@ class ShoppingCart extends Commerce_Controller {
      }
 
     /**
-     * Remove a product from ShoppingCart Via its ID. This action
-     * expects an ID to be sent through the URL that matches a specific
-     * key added to an item in the cart
-     *
-     * @return Redirect
-     */
-    public function remove() {
-        $key = $this->request->param('ID');
-
-        if(!empty($key)) {
-            foreach($this->items as $item) {
-                if($item->Key == $key)
-                    $this->items->remove($item);
-            }
-
-            $this->save();
-        }
-
-        return $this->redirectBack();
-    }
-
-    /**
      * Empty the shopping cart object of all items.
      *
      */
@@ -301,18 +316,6 @@ class ShoppingCart extends Commerce_Controller {
         foreach($this->items as $item) {
             $this->items->remove($item);
         }
-    }
-
-    /**
-     * Action that will clear shopping cart and associated sessions
-     *
-     */
-    public function emptycart() {
-        $this->extend("onBeforeEmpty");
-        $this->removeAll();
-        $this->save();
-
-        return $this->redirectBack();
     }
 
     /**
@@ -330,8 +333,8 @@ class ShoppingCart extends Commerce_Controller {
 
         // Save cart discounts
         Session::set(
-            "Commerce.ShoppingCart.Discounts",
-            serialize($this->discounts)
+            "Commerce.ShoppingCart.Discount",
+            serialize($this->discount)
         );
 
         // Update available postage
@@ -349,7 +352,7 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function clear() {
         Session::clear('Commerce.ShoppingCart.Items');
-        Session::clear('Commerce.ShoppingCart.Discounts');
+        Session::clear('Commerce.ShoppingCart.Discount');
         Session::clear("Commerce.PostageID");
     }
 
@@ -418,12 +421,13 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function DiscountAmount() {
         $total = 0;
+        $discount = $this->discount;
 
-        foreach($this->discounts as $item) {
-            if($item->Type == "Fixed")
-                $total += $item->Amount;
-            elseif($item->Type == "Percentage" && $item->Amount)
-                $total += (($item->Amount / 100) * $this->SubTotalCost());
+        if($discount) {
+            if($discount->Type == "Fixed")
+                $total += $discount->Amount;
+            elseif($discount->Type == "Percentage" && $discount->Amount)
+                $total += (($discount->Amount / 100) * $this->SubTotalCost());
         }
 
         return number_format($total,2);
@@ -566,22 +570,17 @@ class ShoppingCart extends Commerce_Controller {
     public function doAddDiscount($data, $form) {
         $code_to_search = $data['DiscountCode'];
 
+        Debug::show($data['DiscountCode']);
+
         // First check if the discount is already added (so we don't
         // query the DB if we don't have to).
-        if(!$this->discounts->find("Code",$code_to_search)) {
+        if(!$this->discount || ($this->discount && $this->discount->Code != $code_to_search)) {
             $code = Discount::get()
                 ->filter("Code", $code_to_search)
                 ->exclude("Expires:LessThan", date("Y-m-d"))
                 ->first();
 
-            if($code) {
-                $this->discounts->add(ArrayData::create(array(
-                    "Title" => $code->Title,
-                    "Type"  => $code->Type,
-                    "Code"  => $code->Code,
-                    "Amount"=> $code->Amount
-                )));
-            }
+            if($code) $this->discount = $code;
         }
 
         $this->save();

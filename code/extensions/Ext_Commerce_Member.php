@@ -30,6 +30,25 @@ class Ext_Commerce_Member extends DataExtension {
     }
 
     /**
+     * Get a discount from the groups this member is in
+     *
+     * @return Discount
+     */
+    public function getDiscount() {
+        $discounts = ArrayList::create();
+
+        foreach($this->owner->Groups() as $group) {
+            foreach($group->Discounts() as $discount) {
+                $discounts->add($discount);
+            }
+        }
+
+        $discounts->sort("Amount", "DESC");
+
+        return $discounts->first();
+    }
+
+    /**
      * Get all orders that have been generated and are marked as paid or
      * processing
      *

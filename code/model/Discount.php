@@ -14,6 +14,10 @@ class Discount extends DataObject {
         "Site"      => "SiteConfig"
     );
 
+    private static $many_many = array(
+        "Groups"    => "Group"
+    );
+
     public function canCreate($member = null) {
         return true;
     }

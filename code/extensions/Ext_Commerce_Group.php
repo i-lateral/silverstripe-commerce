@@ -4,6 +4,11 @@
  * Overwrite group object so we can setup some more default groups
  */
 class Ext_Commerce_Group extends DataExtension {
+
+    private static $belongs_many_many = array(
+        "Discounts" => "Discount"
+    );
+
     public function requireDefaultRecords() {
         parent::requireDefaultRecords();
 

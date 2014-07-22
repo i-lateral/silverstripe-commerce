@@ -221,61 +221,17 @@ class Ext_Commerce_SiteConfig extends DataExtension {
             )
         );
 
-        // Setup discounts field
-        $discounts_field = new GridField(
-            'Discounts',
-            '',
-            $this->owner->Discounts(),
-            GridFieldConfig::create()
-                ->addComponents(
-                    new GridFieldButtonRow('before'),
-                    new GridFieldToolbarHeader(),
-                    new GridFieldTitleHeader(),
-                    new GridFieldEditableColumns(),
-                    new GridFieldDeleteAction(),
-                    new GridFieldAddNewInlineButton('toolbar-header-left')
-                )
-        );
-
-        // Setup fields and type dropdown
-        $discounts_field
-            ->getConfig()
-            ->getComponentByType('GridFieldEditableColumns')
-            ->setDisplayFields(array(
-                'Title' => array(
-                    'title' => 'Title',
-                    'field' => 'TextField'
-                ),
-                'Type'  => array(
-                    'title' => 'Type',
-                    'callback' => function($record, $column, $grid) {
-                        return DropdownField::create(
-                            $column,
-                            "Type",
-                            singleton('Discount')->dbObject('Type')->enumValues()
-                        )->setValue("Percentage");
-                    }
-                ),
-                'Code' => array(
-                    'title' => 'Code',
-                    'field' => 'TextField'
-                ),
-                'Amount' => array(
-                    'title' => 'Amount',
-                    'field' => 'NumericField'
-                ),
-                'Expires'  => array(
-                    'title' => 'Expires',
-                    'field' => 'DateField'
-                ),
-            ));
-
         // Setup compressed postage options
         $discounts_fields = ToggleCompositeField::create(
             'DiscountFields',
-            'Cart Discount',
+            'Discounts',
             array(
-                $discounts_field
+                GridField::create(
+                    'Discounts',
+                    '',
+                    $this->owner->Discounts(),
+                    GridFieldConfig_RecordEditor::create()
+                )
             )
         );
 
