@@ -54,6 +54,18 @@ class ShoppingCart extends Commerce_Controller {
     protected static $enabled = true;
 
     /**
+     * Show the discount form on the shopping cart
+     *
+     * @var boolean
+     * @config
+     */
+    private static $show_discount_form = false;
+
+    public function getShowDiscountForm() {
+        return $this->config()->show_discount_form;
+    }
+
+    /**
      * Track all items stored in the current shopping cart
      *
      * @var ArrayList

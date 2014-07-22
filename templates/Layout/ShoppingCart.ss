@@ -16,7 +16,9 @@
         <div class="units-row line">
             <div class="unit-66 unit size2of3">
                 <div class="commerce-cart-discounts line units-row-end">
-                    <h2><%t Commerce.Discount "Discount" %></h2>
+                    <% if $Discount || $ShowDiscountForm %>
+                        <h2><%t Commerce.Discount "Discount" %></h2>
+                    <% end_if %>
 
                     <% if $Discount %>
                         <p>
@@ -25,7 +27,9 @@
                         </p>
                     <% end_if %>
 
-                    $DiscountForm
+                    <% if $ShowDiscountForm %>
+                        $DiscountForm
+                    <% end_if %>
                 </div>
 
                 <hr/>
