@@ -11,32 +11,6 @@
 class ShoppingCart extends Commerce_Controller {
 
     /**
-     * Name of the current controller. Mostly used in templates.
-     *
-     * @var string
-     * @config
-     */
-    private static $class_name = "ShoppingCart";
-
-    /**
-     * Overwrite the default title for this controller which is taken
-     * from the translation files. This is used for Title and MetaTitle
-     * variables in templates.
-     *
-     * @var string
-     * @config
-     */
-    private static $title;
-
-    public function getTitle() {
-        return ($this->config()->title) ? $this->config()->title : _t("Commerce.CartName", "Shopping Cart");
-    }
-
-    public function getMetaTitle() {
-        return $this->getTitle();
-    }
-
-    /**
      * URL Used to access this controller
      *
      * @var string
@@ -44,6 +18,24 @@ class ShoppingCart extends Commerce_Controller {
      */
     private static $url_segment = 'commerce/cart';
 
+    /**
+     * Name of the current controller. Mostly used in templates.
+     *
+     * @var string
+     * @config
+     */
+    private static $class_name = "ShoppingCart";
+
+    private static $allowed_actions = array(
+        "remove",
+        "emptycart",
+        "clear",
+        "update",
+        "usediscount",
+        "CartForm",
+        "PostageForm",
+        "DiscountForm"
+    );
 
     /**
      * Determines if the shopping cart is currently enabled
@@ -54,16 +46,14 @@ class ShoppingCart extends Commerce_Controller {
     protected static $enabled = true;
 
     /**
-     * Show the discount form on the shopping cart
+     * Overwrite the default title for this controller which is taken
+     * from the translation files. This is used for Title and MetaTitle
+     * variables in templates.
      *
-     * @var boolean
+     * @var string
      * @config
      */
-    private static $show_discount_form = false;
-
-    public function getShowDiscountForm() {
-        return $this->config()->show_discount_form;
-    }
+    private static $title;
 
     /**
      * Track all items stored in the current shopping cart
@@ -79,41 +69,45 @@ class ShoppingCart extends Commerce_Controller {
      */
     protected $discount;
 
+    /**
+     * Show the discount form on the shopping cart
+     *
+     * @var boolean
+     * @config
+     */
+    private static $show_discount_form = false;
+
+
+    /**
+     * Getters and setters
+     *
+     */
+    public function getClassName() {
+        return self::config()->class_name;
+    }
+
+    public function getTitle() {
+        return ($this->config()->title) ? $this->config()->title : _t("Commerce.CartName", "Shopping Cart");
+    }
+
+    public function getMetaTitle() {
+        return $this->getTitle();
+    }
+
+    public function getShowDiscountForm() {
+        return $this->config()->show_discount_form;
+    }
+
+    public function getItems() {
+        return $this->items;
+    }
+
     public function getDiscount() {
         return $this->discount;
     }
 
     public function setDiscount(Discount $discount) {
         $this->discount = $discount;
-    }
-
-    private static $allowed_actions = array(
-        "remove",
-        "emptycart",
-        "clear",
-        "update",
-        "CartForm",
-        "PostageForm",
-        "DiscountForm"
-    );
-
-    /**
-     * Return the name of this class
-     *
-     * @return string
-     */
-    public function getClassName() {
-        return self::config()->class_name;
-    }
-
-
-    /**
-     * Get all items in the current shopping cart
-     *
-     * @return ArrayItems
-     */
-    public function getItems() {
-        return $this->items;
     }
 
     /**
@@ -145,6 +139,7 @@ class ShoppingCart extends Commerce_Controller {
      * Shortcut for ShoppingCart::create, exists because create()
      * doesn't seem quite right.
      *
+     * @return ShoppingCart
      */
     public static function get() {
         return ShoppingCart::create();
@@ -173,15 +168,15 @@ class ShoppingCart extends Commerce_Controller {
         parent::__construct();
     }
 
+   /**
+    * Actions for this controller
+    */
+
     /**
      * Default acton for the shopping cart
-     *
      */
     public function index() {
         $this->extend("onBeforeIndex");
-
-        // Check if there is a logged in member and if so, add a discount
-        // if they have one
 
         return $this->renderWith(array(
             'ShoppingCart',
@@ -222,6 +217,49 @@ class ShoppingCart extends Commerce_Controller {
         $this->save();
 
         return $this->redirectBack();
+    }
+
+
+    /**
+     * Action used to add a discount to the users session via a URL.
+     * This is preferable to using the dicount form as disount code
+     * forms seem to provide a less than perfect user experience
+     *
+     */
+    public function usediscount() {
+        $this->extend("onBeforeUseDiscount");
+
+        $code_to_search = $this->request->param("ID");
+
+        if(!$code_to_search)
+            return $this->httpError(404, "Page not found");
+
+        // First check if the discount is already added (so we don't
+        // query the DB if we don't have to).
+        if(!$this->discount || ($this->discount && $this->discount->Code != $code_to_search)) {
+            $code = Discount::get()
+                ->filter("Code", $code_to_search)
+                ->exclude("Expires:LessThan", date("Y-m-d"))
+                ->first();
+
+            if($code) $this->discount = $code;
+        }
+
+        // If nothing has been set, or is not available from a previous
+        // session, return an error
+        if(!$this->discount)
+            return $this->httpError(404, "Page not found");
+
+        $this->save();
+
+        return $this
+            ->customise(array(
+                "Discount" => $this->discount
+            ))->renderWith(array(
+                'ShoppingCart_discount',
+                'Commerce',
+                'Page'
+            ));
     }
 
     /**
@@ -516,33 +554,6 @@ class ShoppingCart extends Commerce_Controller {
     }
 
     /**
-     * Action that will update cart
-     *
-     * @param type $data
-     * @param type $form
-     */
-    public function doUpdate($data, $form) {
-        foreach($this->items as $cart_item) {
-            foreach($data as $key => $value) {
-                $sliced_key = explode("_", $key);
-                if($sliced_key[0] == "Quantity") {
-                    if(isset($cart_item) && ($cart_item->Key == $sliced_key[1])) {
-                        if($value > 0) {
-                            $this->update($cart_item->Key, $value);
-                        } else
-                            $this->remove($cart_item->Key);
-                    }
-                }
-            }
-        }
-
-        $this->save();
-
-        return $this->redirectBack();
-    }
-
-
-    /**
      * Form that allows you to add a discount code which then gets added
      * to the cart's list of discounts.
      *
@@ -571,33 +582,6 @@ class ShoppingCart extends Commerce_Controller {
         $this->extend("updateDiscountForm", $form);
 
         return $form;
-    }
-
-    /**
-     * Action that will find a discount based on the code
-     *
-     * @param type $data
-     * @param type $form
-     */
-    public function doAddDiscount($data, $form) {
-        $code_to_search = $data['DiscountCode'];
-
-        Debug::show($data['DiscountCode']);
-
-        // First check if the discount is already added (so we don't
-        // query the DB if we don't have to).
-        if(!$this->discount || ($this->discount && $this->discount->Code != $code_to_search)) {
-            $code = Discount::get()
-                ->filter("Code", $code_to_search)
-                ->exclude("Expires:LessThan", date("Y-m-d"))
-                ->first();
-
-            if($code) $this->discount = $code;
-        }
-
-        $this->save();
-
-        return $this->redirectBack();
     }
 
     /**
@@ -696,6 +680,57 @@ class ShoppingCart extends Commerce_Controller {
         $this->extend("updatePostageForm", $form);
 
         return $form;
+    }
+
+    /**
+     * Action that will update cart
+     *
+     * @param type $data
+     * @param type $form
+     */
+    public function doUpdate($data, $form) {
+        foreach($this->items as $cart_item) {
+            foreach($data as $key => $value) {
+                $sliced_key = explode("_", $key);
+                if($sliced_key[0] == "Quantity") {
+                    if(isset($cart_item) && ($cart_item->Key == $sliced_key[1])) {
+                        if($value > 0) {
+                            $this->update($cart_item->Key, $value);
+                        } else
+                            $this->remove($cart_item->Key);
+                    }
+                }
+            }
+        }
+
+        $this->save();
+
+        return $this->redirectBack();
+    }
+
+    /**
+     * Action that will find a discount based on the code
+     *
+     * @param type $data
+     * @param type $form
+     */
+    public function doAddDiscount($data, $form) {
+        $code_to_search = $data['DiscountCode'];
+
+        // First check if the discount is already added (so we don't
+        // query the DB if we don't have to).
+        if(!$this->discount || ($this->discount && $this->discount->Code != $code_to_search)) {
+            $code = Discount::get()
+                ->filter("Code", $code_to_search)
+                ->exclude("Expires:LessThan", date("Y-m-d"))
+                ->first();
+
+            if($code) $this->discount = $code;
+        }
+
+        $this->save();
+
+        return $this->redirectBack();
     }
 
     /**
