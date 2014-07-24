@@ -349,7 +349,7 @@ class Order extends DataObject implements PermissionProvider {
     public function getTotal() {
         $sub = ($this->DiscountAmount) ? $this->SubTotal - $this->DiscountAmount : $this->SubTotal;
 
-        return $sub + $this->Postage + $this->TaxTotal;
+        return number_format($sub + $this->Postage + $this->TaxTotal, 2);
     }
 
     /**

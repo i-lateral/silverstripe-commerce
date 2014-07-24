@@ -47,7 +47,7 @@ class PayPalHandler extends CommercePaymentHandler {
             HiddenField::create('invoice', null, $order->OrderNumber),
             HiddenField::create('custom', null, $order->OrderNumber), //Track the order number in the paypal custom field
             HiddenField::create('upload', null, 1),
-            HiddenField::create('discount_amount_cart', null, $order->Total),
+            HiddenField::create('discount_amount_cart', null, $order->DiscountAmount),
 
             // Amount and Currency details
             HiddenField::create('amount', null, $order->Total),
@@ -73,7 +73,7 @@ class PayPalHandler extends CommercePaymentHandler {
 
         foreach($order->Items() as $item) {
             $fields->add(HiddenField::create('item_name_' . $i, null, $item->Title));
-            $fields->add(HiddenField::create('amount_' . $i, null, ($item->Price + $item->Tax)));
+            $fields->add(HiddenField::create('amount_' . $i, null, number_format(($item->Price + $item->Tax), 2)));
             $fields->add(HiddenField::create('quantity_' . $i, null, $item->Quantity));
 
             $i++;
@@ -81,7 +81,7 @@ class PayPalHandler extends CommercePaymentHandler {
 
         // Add shipping as an extra product
         $fields->add(HiddenField::create('item_name_' . $i, null, _t("Commerce.Postage", "Postage")));
-        $fields->add(HiddenField::create('amount_' . $i, null, ($order->PostageCost + $order->PostageTax)));
+        $fields->add(HiddenField::create('amount_' . $i, null, number_format(($order->PostageCost + $order->PostageTax), 2)));
         $fields->add(HiddenField::create('quantity_' . $i, null, "1"));
 
         $actions = FieldList::create(
