@@ -4,6 +4,8 @@ en:
     PLURALNAME: Catalogs
     SINGULARNAME: Catalog
   Commerce:
+    Add: Add
+    AddDiscountURL: 'Add discount URL'
     AddToCart: 'Add to cart'
     AddedItemToCart: 'Added item to your shopping cart'
     Address: Address
@@ -24,13 +26,19 @@ en:
     Company: Company
     Confirm: Confirm
     ConfirmPay: 'Confirm and Pay'
+    ContinueShopping: 'Continue shopping'
     Country: Country
+    CurrentDiscount: 'Current discount'
     Date: Date
     DeliverThisAddress: 'Deliver to this address'
     DeliveryDetails: 'Delivery Details'
     Description: Description
-    DisableProduct: 'Disable this product?'
+    Discount: Discount
+    DiscountAdded: 'Discount Added'
+    DiscountCode: 'Discount Code'
+    DiscountTitleAdded: '{title} has been added to your shopping cart'
     Email: Email
+    EnterDiscountCode: 'Enter a discount code'
     EstimateShipping: 'Estimate Shipping'
     Excluding: Excluding
     FirstName: 'First Name(s)'
@@ -42,6 +50,7 @@ en:
     OrderComplete: 'Order Complete'
     OrderError: 'An error occured, Order ID''s do not match'
     OrderFailed: 'Order Failed'
+    OutOfStock: 'Out of stock'
     PackSize: 'Pack Size'
     Payment: Payment
     PaymentDetails: 'Enter Payment Details'
@@ -62,6 +71,7 @@ en:
     RedirectingToStore: 'We are now redirecting you, if you are not redirected automatically then click the link below.'
     RelatedProducts: 'Related Products'
     Reorder: Reorder
+    SaveAddress: 'Save this address for later'
     Search: Search
     SelectPostage: 'Select Postage'
     SetDeliveryAddress: 'Deliver to another address'
@@ -74,13 +84,25 @@ en:
     Tax: Tax
     Total: Total
     Update: Update
+    UseCustomAddress: 'Use a custom address'
+    UseSavedAddress: 'Use a saved address'
+    UseThisAddress: 'Use this address'
     ViewCart: 'View Cart'
     Weight: Weight
     ZipCode: 'Zip/Postal Code'
   CommerceAccount:
+    Add: Add
+    AddAddress: 'Add Address'
+    AddressRemoved: 'Address Removed'
+    AddressSaved: 'Address Saved'
+    Addresses: Addresses
     Company: Company
     ContinueGuest: 'Continue as a Guest'
+    Edit: Edit
+    EditAddress: 'Edit Address'
+    Error: 'There was an error'
     NoAccount: 'Don''t have an account'
+    NoAddrsses: 'You have no saved addresses.'
     NoOrders: 'There are currently no orders'
     NotFound: 'Order not found'
     Or: Or
@@ -88,7 +110,14 @@ en:
     OutstandingOrders: 'Outstanding Orders'
     PhoneNumber: 'Phone Number'
     Register: Register
+    Remove: Remove
+    Save: Save
     SignIn: 'Sign in'
+    YourAddresses: 'Your Addresses'
+  CommerceAdmin:
+    MetaDescHelp: 'Search engines use this content for displaying search results (although it will not influence their ranking).'
+    MetaExtraHelp: 'HTML tags for additional meta information. For example &lt;meta name="customName" content="your custom content here" /&gt;'
+    MetadataToggle: Metadata
   CommerceCurrency:
     PLURALNAME: 'Commerce Currencies'
     SINGULARNAME: 'Commerce Currency'
@@ -115,10 +144,16 @@ en:
     Paid: Paid
     Pending: Pending
     Processing: Processing
+  Discount:
+    PLURALNAME: Discounts
+    SINGULARNAME: Discount
   Form:
     FIELDISREQUIRED: '%s is required'
   GridField:
     NewRecord: 'New %s'
+  MemberAddress:
+    PLURALNAME: 'Member Addresss'
+    SINGULARNAME: 'Member Address'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Order:
@@ -166,7 +201,6 @@ en:
   SearchForm:
     SearchResults: 'Search Results'
   SiteTree:
-    MetadataToggle: Metadata
     PLURALNAME: Pages
     SINGULARNAME: Page
   WorldPay:
