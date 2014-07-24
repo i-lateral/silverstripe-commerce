@@ -94,8 +94,10 @@ class Payment_Controller extends Commerce_Controller {
      *
      */
     public function index() {
+        $cart = ShoppingCart::get();
+
         // If shopping cart doesn't exist, redirect to base
-        if(!ShoppingCart::create()->getItems()->exists() || $this->getPaymentHandler() === null)
+        if(!$cart->getItems()->exists() || $this->getPaymentHandler() === null)
             return $this->redirect(Director::BaseURL());
 
         // Get billing and delivery details and merge into an array
@@ -112,6 +114,9 @@ class Payment_Controller extends Commerce_Controller {
 
         // Merge billand and delivery data into an array
         $data = array_merge((array)$billing_data, (array)$delivery_data);
+
+        // Set discount info
+        $data['DiscountAmount'] = $cart->DiscountAmount();
 
         // Get postage data
         $data['PostageType'] = $postage->Title;
@@ -132,7 +137,7 @@ class Payment_Controller extends Commerce_Controller {
         $order->write();
 
         // Loop through each session cart item and add that item to the order
-        foreach(ShoppingCart::create()->getItems() as $cart_item) {
+        foreach($cart->getItems() as $cart_item) {
             $order_item = new OrderItem();
             $order_item->Title          = $cart_item->Title;
             $order_item->SKU            = $cart_item->SKU;
@@ -212,7 +217,7 @@ class Payment_Controller extends Commerce_Controller {
 
         // Clear our session data
         if(isset($_SESSION)) {
-            ShoppingCart::create()->clear();
+            ShoppingCart::get()->clear();
             unset($_SESSION['Commerce.Order']);
             unset($_SESSION['Commerce.PostageID']);
             unset($_SESSION['Commerce.PaymentMethod']);

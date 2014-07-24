@@ -86,6 +86,21 @@ commerce-action-back {
         text-align: right;
     }
 
+    .commerce-cart .commerce-cart-discounts {
+        padding: 0;
+    }
+    .commerce-cart .commerce-cart-discounts form fieldset {
+        width: 49%;
+        float: left;
+    }
+    .commerce-cart .commerce-cart-discounts form .Actions {
+        width: 49%;
+        float: right;
+    }
+    .commerce-cart .commerce-cart-discounts form label {
+        display: none;
+    }
+
 /**
  * TOTAL COLUMN
  */

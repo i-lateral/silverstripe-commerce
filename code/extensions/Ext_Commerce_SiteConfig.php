@@ -36,7 +36,8 @@ class Ext_Commerce_SiteConfig extends DataExtension {
 
     private static $has_many = array(
         'PostageAreas'      => 'PostageArea',
-        'PaymentMethods'    => 'CommercePaymentMethod'
+        'Discounts'         => 'Discount',
+        'PaymentMethods'    => 'CommercePaymentMethod',
     );
 
     private static $defaults = array(
@@ -220,6 +221,20 @@ class Ext_Commerce_SiteConfig extends DataExtension {
             )
         );
 
+        // Setup compressed postage options
+        $discounts_fields = ToggleCompositeField::create(
+            'DiscountFields',
+            'Discounts',
+            array(
+                GridField::create(
+                    'Discounts',
+                    '',
+                    $this->owner->Discounts(),
+                    GridFieldConfig_RecordEditor::create()
+                )
+            )
+        );
+
         // Payment Methods
         $payment_table = GridField::create(
             'PaymentMethods',
@@ -261,6 +276,7 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         $fields->addFieldToTab('Root.Commerce', $cart_fields);
         $fields->addFieldToTab('Root.Commerce', $email_fields);
         $fields->addFieldToTab('Root.Commerce', $postage_fields);
+        $fields->addFieldToTab('Root.Commerce', $discounts_fields);
         $fields->addFieldToTab('Root.Commerce', $payment_fields);
         $fields->addFieldToTab('Root.Commerce', $tax_fields);
     }

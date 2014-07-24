@@ -37,6 +37,8 @@ class Order extends DataObject implements PermissionProvider {
         'DeliveryCity'      => 'Varchar',
         'DeliveryPostCode'  => 'Varchar',
         'DeliveryCountry'   => 'Varchar',
+        // Discount provided
+        "DiscountAmount"    => "Currency",
         // Postage and Email notification
         'PostageType'       => 'Varchar',
         'PostageCost'       => 'Currency',
@@ -68,7 +70,8 @@ class Order extends DataObject implements PermissionProvider {
     );
 
     private static $defaults = array(
-        'EmailDispatchSent' => 0
+        'EmailDispatchSent' => 0,
+        'DiscountAmount'    => 0
     );
 
     private static $summary_fields = array(
@@ -134,21 +137,6 @@ class Order extends DataObject implements PermissionProvider {
             ReadonlyField::create('LastEdited', 'Last time order was saved')
         );
 
-        // Load basic list of ordered items
-        $item_config = GridFieldConfig::create()->addComponents(
-            new GridFieldSortableHeader(),
-            new GridFieldDataColumns(),
-            new GridFieldFooter()
-        );
-
-        $fields->addFieldToTab('Root.Items', GridField::create(
-            'Items',
-            "Order Items",
-            $this->Items(),
-            $item_config
-        ));
-
-
         // Structure billing details
         $billing_fields = ToggleCompositeField::create('BillingDetails', 'Billing Details',
             array(
@@ -187,6 +175,47 @@ class Order extends DataObject implements PermissionProvider {
         $fields->addFieldToTab('Root.Main', $billing_fields);
         $fields->addFieldToTab('Root.Main', $delivery_fields);
         $fields->addFieldToTab('Root.Main', $postage_fields);
+
+
+        // Add order totals
+        $fields->addFieldToTab(
+            "Root.Items",
+            ReadonlyField::create("SubTotal")
+                ->setValue($this->getSubTotal())
+        );
+
+        $fields->addFieldToTab(
+            "Root.Items",
+            ReadonlyField::create("DiscountAmount")
+                ->setValue($this->DiscountAmount)
+        );
+
+        $fields->addFieldToTab(
+            "Root.Items",
+            ReadonlyField::create("Tax")
+                ->setValue($this->getTaxTotal())
+        );
+
+        $fields->addFieldToTab(
+            "Root.Items",
+            ReadonlyField::create("Total")
+                ->setValue($this->getTotal())
+        );
+
+        // Load basic list of ordered items
+        $item_config = GridFieldConfig::create()->addComponents(
+            new GridFieldSortableHeader(),
+            new GridFieldDataColumns(),
+            new GridFieldFooter()
+        );
+
+        $fields->addFieldToTab('Root.Items', GridField::create(
+            'Items',
+            "Order Items",
+            $this->Items(),
+            $item_config
+        ));
+
 
 
         // Add non-editable payment ID
@@ -318,9 +347,16 @@ class Order extends DataObject implements PermissionProvider {
      * @return Decimal
      */
     public function getTotal() {
-        return $this->SubTotal + $this->Postage + $this->TaxTotal;
+        $sub = ($this->DiscountAmount) ? $this->SubTotal - $this->DiscountAmount : $this->SubTotal;
+
+        return $sub + $this->Postage + $this->TaxTotal;
     }
 
+    /**
+     * Return a list string summarising each item in this order
+     *
+     * @return string
+     */
     public function getItemSummary() {
         $return = '';
 
