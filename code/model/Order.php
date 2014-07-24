@@ -297,6 +297,11 @@ class Order extends DataObject implements PermissionProvider {
         return $address;
     }
 
+
+    public function hasDiscount() {
+         return (ceil($this->DiscountAmount)) ? true : false;
+    }
+
     /**
      * Total values of items in this order (without any tax)
      *
@@ -347,7 +352,7 @@ class Order extends DataObject implements PermissionProvider {
      * @return Decimal
      */
     public function getTotal() {
-        $sub = ($this->DiscountAmount) ? $this->SubTotal - $this->DiscountAmount : $this->SubTotal;
+        $sub = ($this->hasDiscount()) ? $this->SubTotal - $this->DiscountAmount : $this->SubTotal;
 
         return number_format($sub + $this->Postage + $this->TaxTotal, 2);
     }

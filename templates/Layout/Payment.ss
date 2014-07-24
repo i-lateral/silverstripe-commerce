@@ -10,7 +10,7 @@
                 $SubTotal.Nice
                 <br/>
 
-                <% if $DiscountAmount.Int %>
+                <% if $hasDiscount %>
                     <strong><%  _t('Commerce.Discount', 'Discount') %>:</strong>
                     $DiscountAmount.Nice
                     <br/>
