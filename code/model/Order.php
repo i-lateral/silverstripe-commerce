@@ -235,42 +235,44 @@ class Order extends DataObject implements PermissionProvider {
             $fields->addFieldToTab("Root.Gateway", $gateway_data);
         }
 
-        // Setup basic history of this order
-        $versions = $this->AllVersions();
-        $curr_version = $versions->First()->Version;
-        $message = "";
+        if(Permission::check(array('COMMERCE_ORDER_HISTORY','ADMIN'), 'any', $member)) {
+            // Setup basic history of this order
+            $versions = $this->AllVersions();
+            $curr_version = $versions->First()->Version;
+            $message = "";
 
-        foreach($versions as $version) {
-            $i = $version->Version;
-            $name = "History_{$i}";
+            foreach($versions as $version) {
+                $i = $version->Version;
+                $name = "History_{$i}";
 
-            if($i > 1) {
-                $frm = Versioned::get_version($this->class, $this->ID, $i - 1);
-                $to = Versioned::get_version($this->class, $this->ID, $i);
-                $diff = new DataDifferencer($frm, $to);
+                if($i > 1) {
+                    $frm = Versioned::get_version($this->class, $this->ID, $i - 1);
+                    $to = Versioned::get_version($this->class, $this->ID, $i);
+                    $diff = new DataDifferencer($frm, $to);
 
-                if($version->Author())
-                    $message = "<p>{$version->Author()->FirstName} ({$version->LastEdited})</p>";
-                else
-                    $message = "<p>Unknown ({$version->LastEdited})</p>";
+                    if($version->Author())
+                        $message = "<p>{$version->Author()->FirstName} ({$version->LastEdited})</p>";
+                    else
+                        $message = "<p>Unknown ({$version->LastEdited})</p>";
 
-                if($diff->ChangedFields()->exists()) {
-                    $message .= "<ul>";
+                    if($diff->ChangedFields()->exists()) {
+                        $message .= "<ul>";
 
-                    // Now loop through all changed fields and track as message
-                    foreach($diff->ChangedFields() as $change) {
-                        if($change->Name != "LastEdited")
-                            $message .= "<li>{$change->Title}: {$change->Diff}</li>";
+                        // Now loop through all changed fields and track as message
+                        foreach($diff->ChangedFields() as $change) {
+                            if($change->Name != "LastEdited")
+                                $message .= "<li>{$change->Title}: {$change->Diff}</li>";
+                        }
+
+                        $message .= "</ul>";
                     }
-
-                    $message .= "</ul>";
                 }
-            }
 
-            $fields->addFieldToTab("Root.History", LiteralField::create(
-                $name,
-                "<div class=\"field\">{$message}</div>"
-            ));
+                $fields->addFieldToTab("Root.History", LiteralField::create(
+                    $name,
+                    "<div class=\"field\">{$message}</div>"
+                ));
+            }
         }
 
         $this->extend("updateCMSFields", $fields);
