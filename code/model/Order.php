@@ -177,7 +177,20 @@ class Order extends DataObject implements PermissionProvider {
         $fields->addFieldToTab('Root.Main', $postage_fields);
 
 
-        // Add order totals
+        // Add order items and totals
+        $fields->addFieldToTab(
+            'Root.Items',
+            GridField::create(
+                'Items',
+                "Order Items",
+                $this->Items(),
+                GridFieldConfig::create()->addComponents(
+                    new GridFieldSortableHeader(),
+                    new GridFieldDataColumns()
+                )
+            )
+        );
+
         $fields->addFieldToTab(
             "Root.Items",
             ReadonlyField::create("SubTotal")
@@ -202,37 +215,25 @@ class Order extends DataObject implements PermissionProvider {
                 ->setValue($this->getTotal())
         );
 
-        // Load basic list of ordered items
-        $item_config = GridFieldConfig::create()->addComponents(
-            new GridFieldSortableHeader(),
-            new GridFieldDataColumns(),
-            new GridFieldFooter()
-        );
+        $member = Member::currentUser();
 
-        $fields->addFieldToTab('Root.Items', GridField::create(
-            'Items',
-            "Order Items",
-            $this->Items(),
-            $item_config
-        ));
+        if(Permission::check('ADMIN', 'any', $member)) {
+            // Add non-editable payment ID
+            $paymentid_field = TextField::create('PaymentID', "Payment gateway ID number")
+                ->setReadonly(true)
+                ->performReadonlyTransformation();
 
 
-
-        // Add non-editable payment ID
-        $paymentid_field = TextField::create('PaymentID', "Payment gateway ID number")
-            ->setReadonly(true)
-            ->performReadonlyTransformation();
-
-
-        $gateway_data = LiteralField::create(
-            "FormattedGatewayData",
-            "<strong>Data returned from the payment gateway:</strong><br/><br/>" .
-            str_replace(",",",<br/>",$this->GatewayData)
-        );
+            $gateway_data = LiteralField::create(
+                "FormattedGatewayData",
+                "<strong>Data returned from the payment gateway:</strong><br/><br/>" .
+                str_replace(",",",<br/>",$this->GatewayData)
+            );
 
 
-        $fields->addFieldToTab('Root.Gateway', $paymentid_field);
-        $fields->addFieldToTab("Root.Gateway", $gateway_data);
+            $fields->addFieldToTab('Root.Gateway', $paymentid_field);
+            $fields->addFieldToTab("Root.Gateway", $gateway_data);
+        }
 
         // Setup basic history of this order
         $versions = $this->AllVersions();
@@ -550,24 +551,24 @@ class Order extends DataObject implements PermissionProvider {
                 'category' => 'Commerce',
                 'sort' => 97
             ),
+            "COMMERCE_ORDER_HISTORY" => array(
+                'name' => 'View order history',
+                'help' => 'Allow user to see the history of an order',
+                'category' => 'Commerce',
+                'sort' => 96
+            )
         );
     }
 
     /**
-     * Anyone can create orders, even guest users
-     *
-     * @return Boolean
-     */
-    public function canCreate($member = null) {
-        return true;
-    }
-
-    /**
-     * Only order creaters or users with VIEW admin rights can view an order
+     * Only order creators or users with VIEW admin rights can view
      *
      * @return Boolean
      */
     public function canView($member = null) {
+        $extended = $this->extend('canView', $member);
+        if($extended && $extended !== null) return $extended;
+
         if($member instanceof Member)
             $memberID = $member->ID;
         else if(is_numeric($member))
@@ -584,11 +585,26 @@ class Order extends DataObject implements PermissionProvider {
     }
 
     /**
-     * Only order creaters or users with EDIT admin rights can view an order
+     * Anyone can create orders, even guest users
+     *
+     * @return Boolean
+     */
+    public function canCreate($member = null) {
+        $extended = $this->extend('canCreate', $member);
+        if($extended && $extended !== null) return $extended;
+
+        return true;
+    }
+
+    /**
+     * Only users with EDIT admin rights can view an order
      *
      * @return Boolean
      */
     public function canEdit($member = null) {
+        $extended = $this->extend('canEdit', $member);
+        if($extended && $extended !== null) return $extended;
+
         if($member instanceof Member)
             $memberID = $member->ID;
         else if(is_numeric($member))
@@ -597,8 +613,6 @@ class Order extends DataObject implements PermissionProvider {
             $memberID = Member::currentUserID();
 
         if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_EDIT_ORDERS")))
-            return true;
-        else if($memberID && $memberID == $this->CustomerID)
             return true;
 
         return false;
@@ -610,6 +624,9 @@ class Order extends DataObject implements PermissionProvider {
      * @return Boolean
      */
     public function canDelete($member = null) {
+        $extended = $this->extend('canDelete', $member);
+        if($extended && $extended !== null) return $extended;
+
         return false;
     }
 }

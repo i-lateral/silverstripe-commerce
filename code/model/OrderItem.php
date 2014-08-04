@@ -99,15 +99,63 @@ class OrderItem extends DataObject {
         return $htmltext;
     }
 
+    /**
+     * Only order creators or users with VIEW admin rights can view
+     *
+     * @return Boolean
+     */
+    public function canView($member = null) {
+        $extended = $this->extend('canView', $member);
+        if($extended && $extended !== null) return $extended;
+
+        if($member instanceof Member)
+            $memberID = $member->ID;
+        else if(is_numeric($member))
+            $memberID = $member;
+        else
+            $memberID = Member::currentUserID();
+
+        if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_VIEW_ORDERS")))
+            return true;
+        else if($memberID && $memberID == $this->CustomerID)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Anyone can create an order item
+     *
+     * @return Boolean
+     */
     public function canCreate($member = null) {
+        $extended = $this->extend('canCreate', $member);
+        if($extended && $extended !== null) return $extended;
+
         return true;
     }
 
+    /**
+     * No one can edit items once they are created
+     *
+     * @return Boolean
+     */
     public function canEdit($member = null) {
-        return true;
+        $extended = $this->extend('canEdit', $member);
+        if($extended && $extended !== null) return $extended;
+
+        return false;
     }
 
+    /**
+     * No one can delete items once they are created
+     *
+     * @return Boolean
+     */
     public function canDelete($member = null) {
-        return true;
+        $extended = $this->extend('canDelete', $member);
+        if($extended && $extended !== null) return $extended;
+
+        return false;
     }
 }
