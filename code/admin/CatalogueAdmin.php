@@ -83,11 +83,7 @@ class CatalogueAdmin extends ModelAdmin {
             );
 
             $field_config
-                ->removeComponentsByType('GridFieldExportButton')
-                ->removeComponentsByType('GridFieldPrintButton')
-                ->removeComponentsByType('GridFieldAddNewButton')
                 ->addComponents(
-                    $add_button,
                     $manager,
                     GridFieldOrderableRows::create('Sort')
                 );
