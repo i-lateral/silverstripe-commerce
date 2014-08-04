@@ -12,7 +12,7 @@ class Product extends DataObject {
         "ExtraMeta"         => "HTMLText",
         "Sort"              => "Int",
         "PackSize"          => "Varchar",
-        "Weight"            => "Int",
+        "Weight"            => "Decimal",
         "Disabled"          => "Boolean"
     );
 
@@ -400,14 +400,14 @@ class Product extends DataObject {
 
         // If no images are set, add our default image (if it exists)
         if(!$this->Images()->exists()) {
-			$config = SiteConfig::current_site_config();
-			if ($config->NoProductImageID){
-				$image = $config->NoProductImage();
-			} else {
-				$image = Image::get()
-					->filter('Name','no-image.png')
-					->first();
-			}
+            $config = SiteConfig::current_site_config();
+            if ($config->NoProductImageID){
+                $image = $config->NoProductImage();
+            } else {
+                $image = Image::get()
+                    ->filter('Name','no-image.png')
+                    ->first();
+            }
 
             if($image) {
                 $this->Images()->add($image->ID);
