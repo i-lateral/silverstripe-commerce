@@ -8,7 +8,12 @@
  */
 class ProductCSVBulkLoader extends CsvBulkLoader {
 
-    function __construct($objectClass = null) {
+    public $duplicateChecks = array(
+        'ID'    => 'ID',
+        'SKU'   => 'SKU'
+    );
+
+    public function __construct($objectClass = null) {
         if(!$objectClass) $objectClass = 'Product';
 
         parent::__construct($objectClass);
@@ -23,14 +28,27 @@ class ProductCSVBulkLoader extends CsvBulkLoader {
 
         $this->extend("onBeforeProcess", $record, $object);
 
-        // Get all categories by name
-        if(isset($record['Categories']) && $record['Categories']) {
-            $cat_names = explode(",",$record["Categories"]);
-            $categories = ProductCategory::get()
-                ->filter("Title", $cat_names);
+        // Loop through all fields and setup associations
+        foreach($record as $key => $value) {
 
-            foreach($categories as $category) {
-                $object->Categories()->add($category);
+            // Find any categories (denoted by a 'CategoryXX' column)
+            if(strpos($key,'Category') !== false) {
+                $category = ProductCategory::get()
+                    ->filter("Title", $value)
+                    ->first();
+
+                if($category)
+                    $object->Categories()->add($category);
+            }
+
+            // Find any Images (denoted by a 'ImageXX' column)
+            if(strpos($key,'Image') !== false) {
+                $image = Image::get()
+                    ->filter("Name", $value)
+                    ->first();
+
+                if($image)
+                    $object->Images()->add($image);
             }
         }
 

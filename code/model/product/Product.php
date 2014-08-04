@@ -17,12 +17,12 @@ class Product extends DataObject {
     );
 
     private static $has_many = array(
-        'Attributes'    => 'ProductAttribute',
-        'Customisations'=> 'ProductCustomisation'
+        "Attributes"    => "ProductAttribute",
+        "Customisations"=> "ProductCustomisation"
     );
 
     private static $many_many = array(
-        'Images'        => 'Image',
+        "Images"        => "Image",
         "RelatedProducts"=>"Product"
     );
 
@@ -31,32 +31,33 @@ class Product extends DataObject {
     );
 
     private static $belongs_many_many = array(
-        'Categories'    => 'ProductCategory'
+        "Categories"    => "ProductCategory"
     );
 
     private static $casting = array(
-        'MenuTitle'         => 'Varchar',
-        'CategoriesList'    => 'Varchar',
-        'CMSThumbnail'      => 'Varchar',
-        "PriceWithTax"      => 'Decimal',
-        "Tax"               => 'Decimal',
-        "TaxName"           => 'Varchar'
+        "MenuTitle"         => "Varchar",
+        "CategoriesList"    => "Varchar",
+        "CMSThumbnail"      => "Varchar",
+        "PriceWithTax"      => "Decimal",
+        "Tax"               => "Decimal",
+        "TaxName"           => "Varchar"
     );
 
     private static $summary_fields = array(
-        'CMSThumbnail'  => 'Thumbnail',
-        'Title'         => 'Title',
-        'Quantity'      => 'Qty',
-        'SKU'           => 'SKU',
-        'Price'         => 'Price',
-        'CategoriesList'=> 'Categories',
+        "CMSThumbnail"  => "Thumbnail",
+        "Title"         => "Title",
+        "Quantity"      => "Qty",
+        "SKU"           => "SKU",
+        "Price"         => "Price",
+        "Weight"        => "Weight",
+        "CategoriesList"=> "Categories",
         "Disabled"      => "Disabled"
     );
 
     private static $searchable_fields = array(
-        'Title',
-        'SKU',
-        'Description'
+        "Title",
+        "SKU",
+        "Description"
     );
 
     private static $default_sort = "\"Sort\" ASC, \"Title\" ASC";
