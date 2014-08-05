@@ -37,6 +37,7 @@ class Product extends DataObject {
     private static $casting = array(
         "MenuTitle"         => "Varchar",
         "CategoriesList"    => "Varchar",
+        "ImagesList"        => "Varchar",
         "CMSThumbnail"      => "Varchar",
         "PriceWithTax"      => "Decimal",
         "Tax"               => "Decimal",
@@ -51,6 +52,22 @@ class Product extends DataObject {
         "Price"         => "Price",
         "Weight"        => "Weight",
         "CategoriesList"=> "Categories",
+        "Disabled"      => "Disabled"
+    );
+
+    /**
+     * Fields used for CSV Export
+     *
+     * @config
+     */
+    private static $export_fields = array(
+        "Title"         => "Title",
+        "Quantity"      => "Qty",
+        "SKU"           => "SKU",
+        "Price"         => "Price",
+        "Weight"        => "Weight",
+        "CategoriesList"=> "Categories",
+        "ImagesList"    => "Images",
         "Disabled"      => "Disabled"
     );
 
@@ -204,11 +221,30 @@ class Product extends DataObject {
 
     public function getCategoriesList() {
         $list = '';
+        $categories = $this->Categories();
+        $i = 1;
 
-        if($this->Categories()->exists()){
-            foreach($this->Categories() as $category) {
+        if($categories->exists()){
+            foreach($categories as $category) {
                 $list .= $category->Title;
-                $list .= ', ';
+                if($i < $categories->count()) $list .= ',';
+                $i++;
+            }
+        }
+
+        return $list;
+    }
+
+    public function getImagesList() {
+        $list = '';
+        $images = $this->SortedImages();
+        $i = 1;
+
+        if($images->exists()){
+            foreach($images as $image) {
+                $list .= $image->Name;
+                if($i < $images->count()) $list .= ',';
+                $i++;
             }
         }
 

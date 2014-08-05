@@ -28,6 +28,18 @@ class CatalogueAdmin extends ModelAdmin {
         parent::init();
     }
 
+    /**
+     * Update the list of export fields for products
+     *
+     * @return array
+     */
+    public function getExportFields() {
+        if($this->modelClass == 'Product')
+            return Product::config()->export_fields;
+        else
+            return singleton($this->modelClass)->summaryFields();
+    }
+
     public function getList() {
         $list = parent::getList();
 
