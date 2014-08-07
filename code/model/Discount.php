@@ -19,6 +19,29 @@ class Discount extends DataObject {
     );
 
     /**
+     * Generate a random string that we can use for the code by default
+     *
+     * @return string
+     */
+    private static function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $string = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $string .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        return $string;
+    }
+
+    /**
+     * Set more complex default data
+     */
+    public function populateDefaults() {
+        $this->setField('Code', self::generateRandomString());
+    }
+
+    /**
      * Return a URL that allows this code to be added to a cart
      * automatically
      *
