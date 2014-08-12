@@ -24,7 +24,7 @@ class DeliveryDetailsForm extends Form {
             HeaderField::create(
                 'AddressHeader',
                 _t('Commerce.Address','Address'),
-                2
+                3
             ),
             TextField::create('DeliveryAddress1',_t('Commerce.Address1','Address Line 1') . '*'),
             TextField::create('DeliveryAddress2',_t('Commerce.Address2','Address Line 2')),
