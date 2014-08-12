@@ -8,33 +8,41 @@ class BillingDetailsForm extends Form {
     public function __construct($controller, $name = "BillingDetailsForm") {
 
         $personal_fields = CompositeField::create(
-                HeaderField::create('PersonalHeader', _t('Commerce.PersonalDetails','Personal Details'), 2),
-                TextField::create('FirstName',_t('Commerce.FirstName','First Name(s)') . '*'),
-                TextField::create('Surname',_t('Commerce.Surname','Surname') . '*'),
-                TextField::create("Company",_t('Commerce.Company',"Company")),
-                EmailField::create('Email',_t('Commerce.Email','Email') . '*'),
-                TextField::create('PhoneNumber',_t('Commerce.Phone','Phone Number'))
-            )->setName("PersonalFields")
-            ->addExtraClass('unit')
-            ->addExtraClass('size1of2')
-            ->addExtraClass('unit-50');
+            HeaderField::create(
+                'PersonalHeader',
+                _t('Commerce.PersonalDetails','Personal Details'),
+                3
+            ),
+            TextField::create('FirstName',_t('Commerce.FirstName','First Name(s)') . '*'),
+            TextField::create('Surname',_t('Commerce.Surname','Surname') . '*'),
+            TextField::create("Company",_t('Commerce.Company',"Company")),
+            EmailField::create('Email',_t('Commerce.Email','Email') . '*'),
+            TextField::create('PhoneNumber',_t('Commerce.Phone','Phone Number'))
+        )->setName("PersonalFields")
+        ->addExtraClass('unit')
+        ->addExtraClass('size1of2')
+        ->addExtraClass('unit-50');
 
         $address_fields = CompositeField::create(
-                HeaderField::create('AddressHeader', _t('Commerce.Address','Address'), 2),
-                TextField::create('Address1',_t('Commerce.Address1','Address Line 1') . '*'),
-                TextField::create('Address2',_t('Commerce.Address2','Address Line 2')),
-                TextField::create('City',_t('Commerce.City','City') . '*'),
-                TextField::create('PostCode',_t('Commerce.PostCode','Post Code') . '*'),
-                CountryDropdownField::create(
-                    'Country',
-                    _t('Commerce.Country','Country') . '*',
-                    null,
-                    'GB'
-                )->setAttribute("class",'countrydropdown dropdown btn')
-            )->setName("AddressFields")
-            ->addExtraClass('unit')
-            ->addExtraClass('size1of2')
-            ->addExtraClass('unit-50');
+            HeaderField::create(
+                'AddressHeader',
+                _t('Commerce.Address','Address'),
+                3
+            ),
+            TextField::create('Address1',_t('Commerce.Address1','Address Line 1') . '*'),
+            TextField::create('Address2',_t('Commerce.Address2','Address Line 2')),
+            TextField::create('City',_t('Commerce.City','City') . '*'),
+            TextField::create('PostCode',_t('Commerce.PostCode','Post Code') . '*'),
+            CountryDropdownField::create(
+                'Country',
+                _t('Commerce.Country','Country') . '*',
+                null,
+                'GB'
+            )->setAttribute("class",'countrydropdown dropdown btn')
+        )->setName("AddressFields")
+        ->addExtraClass('unit')
+        ->addExtraClass('size1of2')
+        ->addExtraClass('unit-50');
 
         $fields= FieldList::create(
             // Add default fields

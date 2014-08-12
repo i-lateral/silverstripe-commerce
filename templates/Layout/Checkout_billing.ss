@@ -4,7 +4,7 @@
     <h1>$Title</h1>
 
     <% if $CurrentMember && $CurrentMember.Addresses.exists %>
-        <h2><%t Commerce.UseSavedAddress "Use a saved address" %></h2>
+        <h2><%t Commerce.UseBillingSavedAddress "Use a saved billing address" %></h2>
 
         <div class="units-row line">
             <% loop $CurrentMember.Addresses %>
@@ -28,7 +28,7 @@
 
         <hr/>
 
-        <h2><%t Commerce.UseCustomAddress "Use a custom address" %></h2>
+        <h2><%t Commerce.EnterDifferentAddress "Enter a different address" %></h2>
     <% end_if %>
 
     $Form
