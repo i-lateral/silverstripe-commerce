@@ -604,11 +604,19 @@ class ShoppingCart extends Commerce_Controller {
         if($available_postage) {
             $search_text = _t('Commerce.Update',"Update");
 
+            // Loop through all postage areas and generate a new list
+            $postage_array = array();
+            foreach($available_postage as $area) {
+                $area_currency = new Currency("Cost");
+                $area_currency->setValue($area->Cost);
+                $postage_array[$area->ID] = $area->Title . " (" . $area_currency->Nice() . ")";
+            }
+
             $postage_select = CompositeField::create(
                 OptionsetField::create(
                     "PostageID",
                     _t('Commerce.SelectPostage',"Select Postage"),
-                    $available_postage->map()
+                    $postage_array
                 )
             )->addExtraClass("size1of2")
             ->addExtraClass("unit")

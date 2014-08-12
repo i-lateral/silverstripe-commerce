@@ -17,7 +17,7 @@
                 <% end_if %>
 
                 <strong><%  _t('Commerce.Postage', 'Postage') %>:</strong>
-                $PostageType $PostageCost.Nice
+                $PostageType ($PostageCost.Nice)
                 <br/>
 
                 <% if $Top.SiteConfig.TaxRate > 0 %>
