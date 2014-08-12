@@ -6,7 +6,7 @@
         <% if $Discount.Type == 'Percentage' %>
             <p><%t Commerce.DiscountFixedText "{title} will be deducted from your next order" title=$Discount.Title  %></p>
         <% else_if $Discount.Type == 'Fixed' %>
-            <p><%t Commerce.DiscountPercentText "A credit of £{amount} will be applied to your order" title=$Discount.Amount  %></p>
+            <p><%t Commerce.DiscountPercentText "A credit of £{amount} will be applied to your order" amount=$Discount.Amount  %></p>
         <% end_if %>
 
         <p>
