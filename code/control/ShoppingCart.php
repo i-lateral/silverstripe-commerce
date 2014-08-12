@@ -230,6 +230,7 @@ class ShoppingCart extends Commerce_Controller {
         $this->extend("onBeforeUseDiscount");
 
         $code_to_search = $this->request->param("ID");
+        $code = false;
 
         if(!$code_to_search)
             return $this->httpError(404, "Page not found");
@@ -237,20 +238,20 @@ class ShoppingCart extends Commerce_Controller {
         // First check if the discount is already added (so we don't
         // query the DB if we don't have to).
         if(!$this->discount || ($this->discount && $this->discount->Code != $code_to_search)) {
-            $code = Discount::get()
+            $codes = Discount::get()
                 ->filter("Code", $code_to_search)
-                ->exclude("Expires:LessThan", date("Y-m-d"))
-                ->first();
+                ->exclude("Expires:LessThan", date("Y-m-d"));
 
-            if($code) $this->discount = $code;
-        }
-
-        // If discount is set, save cart
-        if($this->discount) $this->save();
+            if($codes->exists()) {
+                $this->discount = $codes->first();
+                $this->save();
+            }
+        } elseif($this->discount && $this->discount->Code == $code_to_search)
+            $code = $this->discount;
 
         return $this
             ->customise(array(
-                "Discount" => $this->discount
+                "Discount" => $code
             ))->renderWith(array(
                 'ShoppingCart_discount',
                 'Commerce',

@@ -18,6 +18,12 @@ class Discount extends DataObject {
         "Groups"    => "Group"
     );
 
+    private static $summary_fields = array(
+        "Title",
+        "Code",
+        "Expires"
+    );
+
     /**
      * Generate a random string that we can use for the code by default
      *
