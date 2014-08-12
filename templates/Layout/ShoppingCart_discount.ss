@@ -1,11 +1,28 @@
 <div class="commerce-content-container typography commerce-cart">
-    <h1><%t Commerce.DiscountAdded 'Discount Added' %></h1>
 
-    <p><%t Commerce.DiscountTitleAdded "{title} has been added to your shopping cart" title=$Discount.Title  %></p>
+    <% if $Discount %>
+        <h1><%t Commerce.DiscountAdded 'Discount Added' %></h1>
 
-    <p>
-        <a href="$BaseHref">
-            <%t Commerce.ContinueShopping "Continue shopping" %>
-        </a>
-    </p>
+        <% if $Discount.Type == 'Percentage' %>
+            <p><%t Commerce.DiscountFixedText "{title} will be deducted from your next order" title=$Discount.Title  %></p>
+        <% else_if $Discount.Type == 'Fixed' %>
+            <p><%t Commerce.DiscountPercentText "A credit of £{amount} will be applied to your order" title=$Discount.Amount  %></p>
+        <% end_if %>
+
+        <p>
+            <a class="btn" href="$BaseHref">
+                <%t Commerce.StartShopping "Start shopping" %>
+            </a>
+        </p>
+    <% else %>
+        <h1><%t Commerce.DiscountNotValid 'Discount Not Valid' %></h1>
+
+        <p><%t Commerce.DiscountNotValidText "This discount is either not valid or has expired"  %>.</p>
+
+        <p>
+            <a class="btn" href="{$BaseHref}">
+                <%t Commerce.StartShopping "Start shopping" %>
+            </a>
+        </p>
+    <% end_if %>
 </div>

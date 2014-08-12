@@ -22,7 +22,7 @@
 
                     <% if $Discount %>
                         <p>
-                            <%t Commerce.CurrentDiscount "Current discount" %>
+                            <%t Commerce.Discount "Discount" %>
                             $Discount.Title
                         </p>
                     <% end_if %>

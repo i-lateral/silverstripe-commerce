@@ -245,12 +245,8 @@ class ShoppingCart extends Commerce_Controller {
             if($code) $this->discount = $code;
         }
 
-        // If nothing has been set, or is not available from a previous
-        // session, return an error
-        if(!$this->discount)
-            return $this->httpError(404, "Page not found");
-
-        $this->save();
+        // If discount is set, save cart
+        if($this->discount) $this->save();
 
         return $this
             ->customise(array(
