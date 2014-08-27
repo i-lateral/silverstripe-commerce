@@ -31,7 +31,9 @@ class Product extends DataObject {
     );
 
     private static $belongs_many_many = array(
-        "Categories"    => "ProductCategory"
+        "Categories"    => "ProductCategory",
+        "DiscountBlackListed" => "Discount",
+        "DiscountWhiteListed" => "Discount"
     );
 
     private static $casting = array(

@@ -468,13 +468,34 @@ class ShoppingCart extends Commerce_Controller {
      */
     public function DiscountAmount() {
         $total = 0;
+        $subtotal = 0;
         $discount = $this->discount;
 
         if($discount) {
-            if($discount->Type == "Fixed")
-                $total += $discount->Amount;
-            elseif($discount->Type == "Percentage" && $discount->Amount)
-                $total += (($discount->Amount / 100) * $this->SubTotalCost());
+            // Are we using a whitelist
+            $whitelist = $discount->WhiteList()->exists();
+
+            // Now get the total of any allowed items
+            foreach($this->items as $item) {
+                $allow = false;
+
+                // If item is in our whitelist, then allow discount
+                if($whitelist && $discount->WhiteList()->filter("ID", $item->ProductID)->first())
+                    $allow = true;
+
+                // If item is NOT in our blacklist, all adding discount
+                if(!$whitelist && !$discount->BlackList()->filter("ID", $item->ProductID)->first())
+                    $allow = true;
+
+                if($allow) $subtotal = $subtotal + ($item->Quantity * $item->Price);
+            }
+
+            // If subtotal amount it greater than discount, use discount
+            if($subtotal && $discount->Type == "Fixed")
+                $total = ($subtotal > $discount->Amount) ? $discount->Amount : $subtotal;
+            // Else, calculate a percentage
+            elseif($subtotal && $discount->Type == "Percentage" && $discount->Amount)
+                $total = (($discount->Amount / 100) * $subtotal);
         }
 
         return number_format($total,2);
@@ -492,14 +513,8 @@ class ShoppingCart extends Commerce_Controller {
         $total = 0;
 
         if($config->TaxRate > 0) {
-            // Find tax on items
-            foreach($this->items as $item) {
-                if($item->Tax > 0) $total += ($item->Quantity * $item->Tax);
-            }
-
-            // Now find tax on postage
-            $postage = $this->PostageCost();
-            $total += ($postage > 0) ? ((float)$postage / 100) * $config->TaxRate : 0;
+            $total = ($this->SubTotalCost() + $this->PostageCost()) - $this->DiscountAmount();
+            $total = ($total > 0) ? ((float)$total / 100) * $config->TaxRate : 0;
         }
 
         return  number_format($total,2);

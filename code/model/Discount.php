@@ -15,7 +15,9 @@ class Discount extends DataObject {
     );
 
     private static $many_many = array(
-        "Groups"    => "Group"
+        "Groups"    => "Group",
+        "WhiteList" => "Product",
+        "BlackList" => "Product"
     );
 
     private static $summary_fields = array(
@@ -70,13 +72,30 @@ class Discount extends DataObject {
         if($this->Code) {
             $fields->addFieldToTab(
                 "Root.Main",
-                ReadonlyField::create(
+                LiteralField::create(
                     "DiscountURL",
-                    _t("Commerce.AddDiscountURL", "Add discount URL"),
-                    $this->AddLink()
+                    "<div class=\"field\"><label class=\"left\">" .
+                    _t("Commerce.AddDiscountURL", "Add discount URL") .
+                    "</label>".
+                    "<div class=\"middleColumn\"><a href=\"{$this->AddLink()}\">{$this->AddLink()}</a></div>" .
+                    "</div>"
                 ),
                 "Code"
             );
+        }
+
+        // Remove add product button from black list
+        if($blacklist = $fields->dataFieldByName("BlackList")) {
+            $blacklist
+                ->getConfig()
+                ->removeComponentsByType("GridFieldAddNewButton");
+        }
+
+        // Remove add product button from white list
+        if($whitelist = $fields->dataFieldByName("WhiteList")) {
+            $whitelist
+                ->getConfig()
+                ->removeComponentsByType("GridFieldAddNewButton");
         }
 
         return $fields;
