@@ -27,6 +27,7 @@ class WorldPayHandler extends CommercePaymentHandler {
             // Account details
             HiddenField::create('instId', null, $this->payment_gateway->InstallID),
             HiddenField::create('cartId', null, $order->OrderNumber),
+            HiddenField::create('MC_callback-ppe', null, $callback_url),
 
             // Amount and Currency details
             HiddenField::create('amount', null, $order->Total),
