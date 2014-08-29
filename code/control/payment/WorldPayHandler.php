@@ -46,6 +46,9 @@ class WorldPayHandler extends CommercePaymentHandler {
         if($this->payment_gateway->GatewayMessage)
             $fields->add(HiddenField::create('desc', null, $this->payment_gateway->GatewayMessage));
 
+        if($curr_local = str_replace("_","-",i18n::get_locale()))
+            $fields->add(HiddenField::create('lang', null, $curr_local));
+
         if(Director::isDev())
             $fields->add(HiddenField::create('testMode', null, '100'));
 
