@@ -1,0 +1,16 @@
+---
+Name: orderconfig
+---
+# Config overwrites
+Checkout:
+    simple_checkout: false
+# Extensions
+Controller:
+  extensions:
+    - CommerceControllerExtension
+Payment_Controller:
+  extensions:
+    - CommercePaymentControllerExtension
+SiteConfig:
+  extensions:
+    - CommerceSiteConfigExtension

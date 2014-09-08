@@ -7,11 +7,3 @@ Director:
     'commerce/cart//$Action/$ID/$Quantity': 'ShoppingCart'
     'commerce/checkout//$Action/$ID/$OtherID': 'Checkout_Controller'
     'commerce/payment//$Action/$ID': 'Payment_Controller'
----
-Name: modelascontrollerroutes
-After: cms/routes#modelascontrollerroutes
----
-Director:
-  rules:
-    '': 'RootURLController'
-    '$URLSegment//$Action/$ID/$OtherID': 'CommerceURLController'

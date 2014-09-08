@@ -6,34 +6,24 @@
  */
 class AddItemToCartForm extends Form {
 
-    public function __construct($controller, $product, $name = "AddItemForm") {
-        $productID = ($product) ? $product->ID : 0;
+    public function __construct($controller, $object, $name = "AddItemForm") {
+        $id = ($object) ? $object->ID : 0;
 
         $fields = FieldList::create(
-            HiddenField::create('ProductID')->setValue($productID)
+            HiddenField::create('ID')->setValue($id)
         );
 
         $actions = FieldList::create(
-            FormAction::create('doAddItemToCart',_t('Commerce.AddToCart','Add to Cart'))
+            FormAction::create('doAddItemToCart',_t('Checkout.AddToCart','Add to Cart'))
                 ->addExtraClass('btn')
+                ->addExtraClass('btn-green')
         );
 
         $requirements = new RequiredFields(array("Quantity"));
 
-        // If product colour customisations are set, add them to the item form
-        if($product && $product->Customisations()->exists()) {
-            foreach($product->Customisations() as $customisation) {
-                $field = $customisation->Field();
-                $fields->add($field);
-
-                // Check if field required
-                if($customisation->Required) $requirements->addRequiredField($field->getName());
-            }
-        }
-
-        $quantity_fields = QuantityField::create('Quantity', _t('Commerce.CartQty','Qty'))
+        $quantity_fields = QuantityField::create('Quantity', _t('Checkout.Qty','Qty'))
             ->setValue('1')
-            ->addExtraClass('commerce-additem-quantity');
+            ->addExtraClass('checkout-additem-quantity');
 
         // Add quantity, so it appears at the end of the fields
         $fields->add($quantity_fields);
@@ -42,7 +32,7 @@ class AddItemToCartForm extends Form {
     }
 
     public function doAddItemToCart($data) {
-        $product = Product::get()->byID($data['ProductID']);
+        $object = Product::get()->byID($data['ID']);
         $customisations = array();
 
         foreach($data as $key => $value) {
@@ -71,17 +61,14 @@ class AddItemToCartForm extends Form {
             }
         }
 
-        if($product) {
-            $cart = ShoppingCart::create();
-            $cart->add($product, $data['Quantity'], $customisations);
+        if($object) {
+            $cart = ShoppingCart::get();
+            $cart->add($object->ClassName, $object->ID, $data['Quantity'], $customisations);
             $cart->save();
 
-            // Clear any postage data that has been set
-            Session::clear("Commerce.PostageID");
-
-            $message = _t('Commerce.AddedItemToCart', 'Added item to your shopping cart');
+            $message = _t('Checkout.AddedItemToCart', 'Added item to your shopping cart');
             $message .= ' <a href="'. $cart->Link() .'">';
-            $message .= _t('Commerce.ViewCart', 'View cart');
+            $message .= _t('Checkout.ViewCart', 'View cart');
             $message .= '</a>';
 
             $this->controller->setSessionMessage(
