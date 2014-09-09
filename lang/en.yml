@@ -1,7 +1,7 @@
 en:
   Catalog:
     DESCRIPTION: 'Generic content page'
-    PLURALNAME: Catalogs
+    PLURALNAME: Catalog
     SINGULARNAME: Catalog
   Commerce:
     Add: Add
@@ -26,18 +26,21 @@ en:
     Company: Company
     Confirm: Confirm
     ConfirmPay: 'Confirm and Pay'
-    ContinueShopping: 'Continue shopping'
     Country: Country
-    CurrentDiscount: 'Current discount'
     Date: Date
     DeliverThisAddress: 'Deliver to this address'
     DeliveryDetails: 'Delivery Details'
+    DeliverySavedAddress: 'Deliver to a saved address'
     Description: Description
     Discount: Discount
     DiscountAdded: 'Discount Added'
     DiscountCode: 'Discount Code'
-    DiscountTitleAdded: '{title} has been added to your shopping cart'
+    DiscountFixedText: '{title} will be deducted from your next order'
+    DiscountNotValid: 'Discount Not Valid'
+    DiscountNotValidText: 'This discount is either not valid or has expired'
+    DiscountPercentText: 'A credit of £{amount} will be applied to your order'
     Email: Email
+    EnterDifferentAddress: 'Enter a different address'
     EnterDiscountCode: 'Enter a discount code'
     EstimateShipping: 'Estimate Shipping'
     Excluding: Excluding
@@ -76,6 +79,7 @@ en:
     SelectPostage: 'Select Postage'
     SetDeliveryAddress: 'Deliver to another address'
     Shipping: Shipping
+    StartShopping: 'Start shopping'
     Status: Status
     SubTotal: 'Sub Total'
     Summary: Summary
@@ -84,8 +88,7 @@ en:
     Tax: Tax
     Total: Total
     Update: Update
-    UseCustomAddress: 'Use a custom address'
-    UseSavedAddress: 'Use a saved address'
+    UseBillingSavedAddress: 'Use a saved billing address'
     UseThisAddress: 'Use this address'
     ViewCart: 'View Cart'
     Weight: Weight
@@ -163,7 +166,7 @@ en:
     PLURALNAME: 'Order Items'
     SINGULARNAME: 'Order Item'
   PayPal:
-    PLURALNAME: 'Pay Pals'
+    PLURALNAME: 'Pay Pal'
     SINGULARNAME: 'Pay Pal'
   PostageArea:
     PLURALNAME: 'Postage Areas'
@@ -172,7 +175,7 @@ en:
     PLURALNAME: Products
     SINGULARNAME: Product
   ProductAttribute:
-    PLURALNAME: 'Product Attributs'
+    PLURALNAME: 'Product Attributes'
     SINGULARNAME: 'Product Attribute'
   ProductCategory:
     PLURALNAME: 'Product Categories'
@@ -190,10 +193,10 @@ en:
     PLURALNAME: 'Product Weights'
     SINGULARNAME: 'Product Weight'
   SagePay:
-    PLURALNAME: 'Sage Paies'
+    PLURALNAME: 'Sage Pay'
     SINGULARNAME: 'Sage Pay'
   SagePayForms:
-    PLURALNAME: 'Sage Pay Formss'
+    PLURALNAME: 'Sage Pay Forms'
     SINGULARNAME: 'Sage Pay Forms'
   SagePayServer:
     PLURALNAME: 'Sage Pay Servers'
@@ -204,7 +207,7 @@ en:
     PLURALNAME: Pages
     SINGULARNAME: Page
   WorldPay:
-    PLURALNAME: 'World Paies'
+    PLURALNAME: 'World Pay'
     SINGULARNAME: 'World Pay'
   CatalogueAdmin:
     MENUTITLE: Catalogue
