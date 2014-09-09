@@ -243,7 +243,8 @@ class ShoppingCart extends Commerce_Controller {
                 ->exclude("Expires:LessThan", date("Y-m-d"));
 
             if($codes->exists()) {
-                $this->discount = $codes->first();
+                $code = $codes->first();
+                $this->discount = $code;
                 $this->save();
             }
         } elseif($this->discount && $this->discount->Code == $code_to_search)
