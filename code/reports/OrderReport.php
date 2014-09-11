@@ -76,15 +76,25 @@ class OrderReport extends SS_Report {
     public function parameterFields() {
         $fields = new FieldList();
 
+        if(class_exists("Subsite")) {
+            $first_order = Subsite::get_from_all_subsites("Order")
+                ->sort('Created','ASC')
+                ->first();
+        } else {
+            $first_order = Order::get()
+                ->sort('Created','ASC')
+                ->first();
+        }
+
         // Check if any order exist
-        if(Order::get()->exists()) {
+        if($first_order) {
             // List all months
             $months = array('All');
             for ($i = 1; $i <= 12; $i++) { $months[] = date("F", mktime(0, 0, 0, $i + 1, 0, 0)); }
 
             // Get the first order, then count down from current year to that
             $firstyear = new SS_Datetime('FirstDate');
-            $firstyear->setValue(Subsite::get_from_all_subsites("Order", null, 'Created ASC', null, 1)->First()->Created);
+            $firstyear->setValue($first_order->Created);
             $years = array();
             for ($i = date('Y'); $i >= $firstyear->Year(); $i--) { $years[$i] = $i; }
 
