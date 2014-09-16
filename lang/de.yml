@@ -1,9 +1,11 @@
 de:
   Catalog:
     DESCRIPTION: 'Generic content page'
-    PLURALNAME: Catalogs
+    PLURALNAME: Catalog
     SINGULARNAME: Catalog
   Commerce:
+    Add: Eingeben
+    AddDiscountURL: 'Add discount URL'
     AddToCart: 'In den Warenkorb'
     AddedItemToCart: 'Artikel wurde zum Einkaufswagen hinzugefügt'
     Address: Adresse
@@ -28,9 +30,18 @@ de:
     Date: Datum
     DeliverThisAddress: 'An dieser Adresse liefern'
     DeliveryDetails: Lieferanschrift
+    DeliverySavedAddress: 'An einer gespeicherten Adresse liefern'
     Description: Beschreibung
-    DisableProduct: 'Disable this product?'
+    Discount: Rabatt
+    DiscountAdded: 'Rabatt hinzugefügt wurde'
+    DiscountCode: 'Rabatt-Code'
+    DiscountFixedText: '{title} wird bei Ihrer nächste Bestellung abgezogen'
+    DiscountNotValid: 'ungultigen Rabatt-Code'
+    DiscountNotValidText: 'Diese Rabatt-Code ist ungültig'
+    DiscountPercentText: 'Ein Gutschein zu EUR{amount} wird auf Ihrer nächste Bestellung angerechnet'
     Email: 'E-Mail'
+    EnterDifferentAddress: 'Geben Sie eine neue Adresse ein'
+    EnterDiscountCode: 'Enter a discount code'
     EstimateShipping: 'Versandkosten abschätzen'
     Excluding: Exklusive
     FirstName: 'Vorname(n)'
@@ -42,6 +53,7 @@ de:
     OrderComplete: 'Auftrag fertig'
     OrderError: 'Leider konnten wir Ihren Auftrag nicht bearbeiten.'
     OrderFailed: 'Auftrag fehlgeschlagen'
+    OutOfStock: 'Nicht mehr ins Lager'
     PackSize: Gebindegröße
     Payment: Zahlung
     PaymentDetails: 'Zahlungsangaben eingeben'
@@ -55,16 +67,19 @@ de:
     PostagePayment: 'Versand und Zahlungt'
     PostageSelection: 'Bitte wählen Sie eine Versandart'
     Price: Preis
+    Processing: Bearbeitung
     ProductDescription: 'Artikelbeschreibung'
     Qty: Menge
     ReadMore: 'Lesen Sie mehr'
     RedirectingToStore: 'Umleitung. Wenn Sie sich nicht automatisch umgeleitet wurden, klicken Sie auf den Link unten.'
     RelatedProducts: 'Entsprechenden Artikeln'
     Reorder: Wiederverkaufen
+    SaveAddress: 'Diese Adresse speichern'
     Search: Versuch
     SelectPostage: 'Versand wählen'
     SetDeliveryAddress: 'An andere Adresse liefern'
     Shipping: Versand
+    StartShopping: 'Fangen Sie Das Einkauf an'
     Status: Status
     SubTotal: 'Zwischensumme'
     Summary: Zusammenfassung
@@ -72,22 +87,40 @@ de:
     Surname: Familienname
     Tax: Steuer
     Total: Summe
-    Update: Update
+    Update: 'aktualisieren'
+    UseBillingSavedAddress: 'Eine gespeicherte Rechnungsadresse auswählen'
+    UseThisAddress: 'An diese Adresse senden'
     ViewCart: Warenkorb
     Weight: Gewicht
     ZipCode: 'Postleitzahl'
   CommerceAccount:
-    Company: Company
-    ContinueGuest: 'Continue as a Guest'
-    NoAccount: 'Don''t have an account'
-    NoOrders: 'There are currently no orders'
-    NotFound: 'Order not found'
-    Or: Or
-    OrderHistory: 'Order history'
-    OutstandingOrders: 'Outstanding Orders'
-    PhoneNumber: 'Phone Number'
-    Register: Register
-    SignIn: 'Sign in'
+    Add: Eingeben
+    AddAddress: 'Adresse eingeben'
+    AddressRemoved: 'Adresse gelöscht wurde'
+    AddressSaved: 'Adresse gescheichert wurde'
+    Addresses: Adressen
+    Company: Firma
+    ContinueGuest: 'Als Gast fortfahren'
+    Edit: bearbeiten
+    EditAddress: 'Adresse bearbeiten'
+    Error: 'Ein Fehler passiert ist'
+    NoAccount: 'kein Konto gefunden wurde'
+    NoAddrsses: 'Sie haben keinen gespeicherten Adressen.'
+    NoOrders: 'Keine Bestellungen'
+    NotFound: 'Bestellung nicht gefunden wurde'
+    Or: Oder
+    OrderHistory: 'herausragende Geschichte'
+    OutstandingOrders: 'Offene Aufträge'
+    PhoneNumber: 'Telefon'
+    Register: 'Anmelden'
+    Remove: 'Löschen'
+    Save: 'Speichern'
+    SignIn: 'Einloggen'
+    YourAddresses: 'Ihren Adressen'
+  CommerceAdmin:
+    MetaDescHelp: 'Search engines use this content for displaying search results (although it will not influence their ranking).'
+    MetaExtraHelp: 'HTML tags for additional meta information. For example &lt;meta name="customName" content="your custom content here" /&gt;'
+    MetadataToggle: Metadata
   CommerceCurrency:
     PLURALNAME: 'Commerce Currencies'
     SINGULARNAME: 'Commerce Currency'
@@ -114,10 +147,16 @@ de:
     Paid: Bezahlt
     Pending: anstehend
     Processing: Bearbeitung
+  Discount:
+    PLURALNAME: Discounts
+    SINGULARNAME: Discount
   Form:
     FIELDISREQUIRED: '%s is required'
   GridField:
     NewRecord: 'New %s'
+  MemberAddress:
+    PLURALNAME: 'Member Addresss'
+    SINGULARNAME: 'Member Address'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Order:

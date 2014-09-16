@@ -1,9 +1,11 @@
 fr:
   Catalog:
     DESCRIPTION: 'Generic content page'
-    PLURALNAME: Catalogs
+    PLURALNAME: Catalog
     SINGULARNAME: Catalog
   Commerce:
+    Add: Ajouter
+    AddDiscountURL: 'Expédier à une adresse enregistrée'
     AddToCart: 'Ajouter au panier'
     AddedItemToCart: 'Article a été ajouté au panier'
     Address: Adresse
@@ -28,9 +30,18 @@ fr:
     Date: Date
     DeliverThisAddress: 'Expédier à cette adresse'
     DeliveryDetails: 'Informations de livraison'
+    DeliverySavedAddress: 'Deliver to a saved address'
     Description: Description
-    DisableProduct: 'Disable this product?'
+    Discount: Remise
+    DiscountAdded: 'Remise enregistrée'
+    DiscountCode: 'Code promo'
+    DiscountFixedText: '{title} de reduction s'applique à votre commande prochaine'
+    DiscountNotValid: 'Code promo invalide'
+    DiscountNotValidText: 'Ce code promo est invalide'
+    DiscountPercentText: 'Un bon d'achat de EUR {amount} s'applique à votre commande'
     Email: 'E-mail'
+    EnterDifferentAddress: 'Enregistrer autre adresse'
+    EnterDiscountCode: 'Enter a discount code'
     EstimateShipping: 'Estimer frais de livraison'
     Excluding: Exclusif
     FirstName: 'Prénom(s)'
@@ -42,6 +53,7 @@ fr:
     OrderComplete: 'Commande confirmée'
     OrderError: 'Erreur. Les numéros de commande ne s’accordent pas'
     OrderFailed: 'La commande n'a pas été prise en compte'
+    OutOfStock: 'Hors stock'
     PackSize: Qté du lot'
     Payment: Paiement
     PaymentDetails: 'Veuillez saisir les informations relatives au paiement'
@@ -62,10 +74,12 @@ fr:
     RedirectingToStore: 'Vous êtes en train de rédirection. Si vous n'êtes pas automatiquement redirigé, cliquez sur le lien ci-dessus.'
     RelatedProducts: 'Articles liés'
     Reorder: 'Commander encore'
+    SaveAddress: 'Enregistrer cette adresse'
     Search: Recherches
     SelectPostage: 'Selectionner mode d’expédition'
     SetDeliveryAddress: 'Expédier à une autre adresse'
     Shipping: Expédition
+    StartShopping: 'Commencer votre achat'
     Status: État
     SubTotal: 'Sous-total'
     Summary: 'Récapitulatif'
@@ -74,21 +88,39 @@ fr:
     Tax: Taxe
     Total: Total
     Update: Actualiser
+    UseBillingSavedAddress: 'Choisir une adresse enregistrée'
+    UseThisAddress: 'Choisir cette adresse'
     ViewCart: 'Votre panier'
     Weight: Poids
     ZipCode: 'Code postal'
   CommerceAccount:
-    Company: Company
-    ContinueGuest: 'Continue as a Guest'
-    NoAccount: 'Don''t have an account'
-    NoOrders: 'There are currently no orders'
-    NotFound: 'Order not found'
-    Or: Or
-    OrderHistory: 'Order history'
-    OutstandingOrders: 'Outstanding Orders'
-    PhoneNumber: 'Phone Number'
-    Register: Register
-    SignIn: 'Sign in'
+    Add: Ajouter
+    AddAddress: 'Ajouter une adresse'
+    AddressRemoved: 'Adress supprimée'
+    AddressSaved: 'Adress enregistrée'
+    Addresses: Adresses
+    Company: Société
+    ContinueGuest: 'Continuer en tant qu'invité'
+    Edit: Modifier
+    EditAddress: 'Modifier cette adresse'
+    Error: 'Une erreur est passé'
+    NoAccount: 'Compte n'existe pas'
+    NoAddrsses: 'Vous n'avez pas d'adresses enregistrées.'
+    NoOrders: 'Vous n'avez passé aucune commande'
+    NotFound: 'Commande non trouvée'
+    Or: Ou
+    OrderHistory: 'historique des commandes'
+    OutstandingOrders: 'Commandes en cours'
+    PhoneNumber: 'Numéro de téléphone'
+    Register: Adherez
+    Remove: Supprimer
+    Save: Enregistrer
+    SignIn: 'Identifiez-vous'
+    YourAddresses: 'Vos Adresses'
+  CommerceAdmin:
+    MetaDescHelp: 'Search engines use this content for displaying search results (although it will not influence their ranking).'
+    MetaExtraHelp: 'HTML tags for additional meta information. For example &lt;meta name="customName" content="your custom content here" /&gt;'
+    MetadataToggle: Metadata
   CommerceCurrency:
     PLURALNAME: 'Commerce Currencies'
     SINGULARNAME: 'Commerce Currency'
@@ -115,6 +147,9 @@ fr:
     Paid: Payée
     Pending: 'en attendant'
     Processing: 'Traitement en cours'
+  Discount:
+    PLURALNAME: Discounts
+    SINGULARNAME: Discount
   Form:
     FIELDISREQUIRED: '%s is required'
   GridField:
@@ -128,7 +163,7 @@ fr:
     PLURALNAME: 'Order Items'
     SINGULARNAME: 'Order Item'
   PayPal:
-    PLURALNAME: 'Pay Pals'
+    PLURALNAME: 'Pay Pal'
     SINGULARNAME: 'Pay Pal'
   PostageArea:
     PLURALNAME: 'Postage Areas'
@@ -137,7 +172,7 @@ fr:
     PLURALNAME: Products
     SINGULARNAME: Product
   ProductAttribute:
-    PLURALNAME: 'Product Attributs'
+    PLURALNAME: 'Product Attributes'
     SINGULARNAME: 'Product Attribute'
   ProductCategory:
     PLURALNAME: 'Product Categories'
@@ -152,16 +187,16 @@ fr:
     PLURALNAME: 'Product Customisation Options'
     SINGULARNAME: 'Product Customisation Option'
   ProductWeight:
-    PLURALNAME: 'Product Weights'
+    PLURALNAME: 'Product Weight'
     SINGULARNAME: 'Product Weight'
   SagePay:
-    PLURALNAME: 'Sage Paies'
+    PLURALNAME: 'Sage Pay'
     SINGULARNAME: 'Sage Pay'
   SagePayForms:
-    PLURALNAME: 'Sage Pay Formss'
+    PLURALNAME: 'Sage Pay Forms'
     SINGULARNAME: 'Sage Pay Forms'
   SagePayServer:
-    PLURALNAME: 'Sage Pay Servers'
+    PLURALNAME: 'Sage Pay Server'
     SINGULARNAME: 'Sage Pay Server'
   SearchForm:
     SearchResults: 'Search Results'
@@ -170,7 +205,7 @@ fr:
     PLURALNAME: Pages
     SINGULARNAME: Page
   WorldPay:
-    PLURALNAME: 'World Paies'
+    PLURALNAME: 'World Pay'
     SINGULARNAME: 'World Pay'
   CatalogueAdmin:
     MENUTITLE: Catalogue
