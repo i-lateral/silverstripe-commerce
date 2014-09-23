@@ -17,10 +17,10 @@
     },
     "require": {
         "silverstripe/framework": ">=3.1",
-        "i-lateral/silverstripe-sessionmessenger": "dev-master",
-        "ajshort/silverstripe-gridfieldextensions": "dev-master",
-        "colymba/gridfield-bulk-editing-tools": "dev-master",
-        "bummzack/sortablefile": "dev-master"
+        "i-lateral/silverstripe-sessionmessenger": "*",
+        "ajshort/silverstripe-gridfieldextensions": "*",
+        "colymba/gridfield-bulk-editing-tools": "*",
+        "bummzack/sortablefile": "*"
     },
     "suggest": {
         "silverstripe/cms": "Add full content management support to your site",
