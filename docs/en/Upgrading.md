@@ -45,3 +45,7 @@ The following column names will need to also be changed
 ### CatalogueProduct_RelatedProducts (formerly CommerceProduct_RelatedProducts)
 
 * CommerceProductID > CatalogueProductID
+
+### OrderItem
+
+* SKU > StockID
