@@ -20,6 +20,7 @@
         "i-lateral/silverstripe-catalogue": "*",
         "i-lateral/silverstripe-checkout": "*",
         "i-lateral/silverstripe-orders": "*",
+        "i-lateral/silverstripe-sessionmessenger": "*",
         "ajshort/silverstripe-gridfieldextensions": "*",
         "colymba/gridfield-bulk-editing-tools": "*",
         "bummzack/sortablefile": "*"
