@@ -16,14 +16,5 @@ class CommerceControllerExtension extends Extension {
             // Set the location
             i18n::set_locale(Subsite::currentSubsite()->Language);
         }
-        
-        $config = SiteConfig::current_site_config();
-        
-        // Set order prefix to the one stored in DB
-        if($config->OrderPrefix)
-            Order::config()->order_prefix = $config->OrderPrefix;
-        
-        //if($config->Currency)
-        //   Currency::setCurrencySymbol(Commerce::config()->currency_units[$config->Currency]);
     }
 }
