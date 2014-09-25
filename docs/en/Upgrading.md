@@ -13,13 +13,13 @@ write a migration script to simplify this process.
 These tables will be need to be renamed in order to retain old data:
 
 ### Categories
-* CommerceCategory > CatalogueCategory
-* CommerceCategory_Products > CatalogueCategory_Products
+* ProductCategory > CatalogueCategory
+* ProductCategory_Products > CatalogueCategory_Products
 
 ## Products
-* CommerceProduct > CatalogueProduct
-* CommerceProduct_RelatedProducts > CatalogueProduct_RelatedProducts
-* CommerceProduct_Images > CatalogueProduct_Images
+* Product > CatalogueProduct
+* Product_RelatedProducts > CatalogueProduct_RelatedProducts
+* Product_Images > CatalogueProduct_Images
 
 ## Payment Methods
 * CommercePaymentMethod > PaymentMethod 
@@ -28,23 +28,23 @@ These tables will be need to be renamed in order to retain old data:
 
 The following column names will need to also be changed
 
-### CatalogueCategory_Products (formerly CommerceCategory_Products)
+### CatalogueCategory_Products (formerly ProductCategory_Products)
 
-* CommerceCategoryID > CatalogueCategoryID
-* CommerceProductID > CatalogueProductID
+* ProductCategoryID > CatalogueCategoryID
+* ProductID > CatalogueProductID
 
-### CatalogueProduct (formerly CommerceProduct)
+### CatalogueProduct (formerly Product)
 
 * Description > Content
 * SKU > StockID
 
-### CatalogueProduct_Images (formerly CommerceProduct_Images)
+### CatalogueProduct_Images (formerly Product_Images)
 
-* CommerceProductID > CatalogueProductID
+* ProductID > CatalogueProductID
 
-### CatalogueProduct_RelatedProducts (formerly CommerceProduct_RelatedProducts)
+### CatalogueProduct_RelatedProducts (formerly Product_RelatedProducts)
 
-* CommerceProductID > CatalogueProductID
+* ProductID > CatalogueProductID
 
 ### OrderItem
 
