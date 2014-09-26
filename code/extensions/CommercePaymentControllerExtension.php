@@ -30,15 +30,18 @@ class CommercePaymentControllerExtension extends Extension {
         foreach($cart->getItems() as $cart_item) {
             $order_item = new OrderItem();
             
-            $order_item->Title          = $cart_item->Object->Title;
-            $order_item->Customisation  = serialize($cart_item->Customised);
+            $order_item->Title          = $cart_item->Title;
+            $order_item->Customisation  = serialize($cart_item->Customisation);
             $order_item->Quantity       = $cart_item->Quantity;
             
-            if($cart_item->Object->StockID)
-                $order_item->StockID = $cart_item->Object->StockID;
+            if($cart_item->StockID)
+                $order_item->StockID = $cart_item->StockID;
             
-            if($cart_item->Object->Price)
-                $order_item->Price = $cart_item->Object->Price;
+            if($cart_item->Price)
+                $order_item->Price = $cart_item->Price->RAW();
+            
+            if($cart_item->Tax)
+                $order_item->Tax = $cart_item->Tax->RAW();
             
             $order_item->write();
 
