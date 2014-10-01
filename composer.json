@@ -22,7 +22,7 @@
         "i-lateral/silverstripe-orders": "*",
         "i-lateral/silverstripe-sessionmessenger": "*",
         "ajshort/silverstripe-gridfieldextensions": "*",
-        "colymba/gridfield-bulk-editing-tools": ">=2.0.2",
+        "colymba/gridfield-bulk-editing-tools": "2.0.2",
         "bummzack/sortablefile": "*"
     },
     "suggest": {
