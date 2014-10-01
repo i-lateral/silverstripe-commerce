@@ -64,6 +64,8 @@ class CommercePaymentControllerExtension extends Extension {
             
             if(array_key_exists("GatewayData",$callback))
                 $order->GatewayData = $callback["GatewayData"];
+                
+            $order->write();
             
             $this->owner->setOrder($order);
         }
