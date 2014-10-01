@@ -11,8 +11,9 @@ class CommercePaymentControllerExtension extends Extension {
      * Tap into the checkout process and setup a new order
      * 
      */
-    public function onBeforeIndex($data, $return) {
+    public function onBeforeIndex() {
         $cart = ShoppingCart::get();
+        $data = $this->owner->getData();
         $data['OrderNumber'] = "";
         
         // Setup an order based on the data from the shopping cart and load data
@@ -49,7 +50,9 @@ class CommercePaymentControllerExtension extends Extension {
         }
 
         $order->write();
-
+        
+        $this->owner->setOrder($order);
+            
         Session::set("Commerce.Order", $order);
     }
     
@@ -61,6 +64,10 @@ class CommercePaymentControllerExtension extends Extension {
             
             if(array_key_exists("GatewayData",$callback))
                 $order->GatewayData = $callback["GatewayData"];
+            
+            $order->write();
+            
+            $this->owner->setOrder($order);
         }
     }
 }
