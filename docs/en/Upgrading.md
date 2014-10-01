@@ -37,6 +37,7 @@ The following column names will need to also be changed
 
 * Description > Content
 * SKU > StockID
+* Price > BasePrice
 
 ### CatalogueProduct_Images (formerly Product_Images)
 
