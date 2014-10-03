@@ -42,7 +42,10 @@ class CommercePaymentControllerExtension extends Extension {
                 $order_item->Price = $cart_item->Price->RAW();
             
             if($cart_item->Tax)
-                $order_item->Tax = $cart_item->Tax->RAW();
+                $order_item->TaxAmount = $cart_item->Tax->RAW();
+            
+            if($cart_item->TaxRate)
+                $order_item->TaxRate = $cart_item->TaxRate;
             
             $order_item->write();
 
