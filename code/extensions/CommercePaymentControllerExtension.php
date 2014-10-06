@@ -32,7 +32,7 @@ class CommercePaymentControllerExtension extends Extension {
             $order_item = new OrderItem();
             
             $order_item->Title          = $cart_item->Title;
-            $order_item->Customisation  = serialize($cart_item->Customisation);
+            $order_item->Customisation  = serialize($cart_item->Customisations);
             $order_item->Quantity       = $cart_item->Quantity;
             
             if($cart_item->StockID)
@@ -51,9 +51,10 @@ class CommercePaymentControllerExtension extends Extension {
 
         $order->write();
         
+        // Setup the owners order and order data
+        $data['OrderNumber'] = $order->OrderNumber;
         $this->owner->setOrder($order);
-            
-        Session::set("Commerce.Order", $order);
+        $this->owner->setData($data);
     }
     
     
