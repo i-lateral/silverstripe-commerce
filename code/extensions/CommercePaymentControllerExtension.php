@@ -67,8 +67,8 @@ class CommercePaymentControllerExtension extends Extension {
             if($order) {
                 $order->Status = $callback["Status"];
                 
-                if(array_key_exists("GatewayData",$callback))
-                    $order->GatewayData = $callback["GatewayData"];
+                if(array_key_exists("GatewayData",$callback) && is_array($callback["GatewayData"]))
+                    $order->GatewayData = json_encode($callback["GatewayData"]);
                     
                 $order->write();
                 
