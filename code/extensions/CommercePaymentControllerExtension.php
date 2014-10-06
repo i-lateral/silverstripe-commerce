@@ -60,15 +60,20 @@ class CommercePaymentControllerExtension extends Extension {
     
     public function onBeforeCallback($callback) {
         if(array_key_exists("OrderID",$callback) && array_key_exists("Status",$callback)) {
-            $order = Order::get()->byID($callback["OrderID"]);
-            $order->Status = $callback["Status"];
-            
-            if(array_key_exists("GatewayData",$callback))
-                $order->GatewayData = $callback["GatewayData"];
+            $order = Order::get()
+                ->filter("OrderNumber", $callback["OrderID"])
+                ->first();
                 
-            $order->write();
-            
-            $this->owner->setOrder($order);
+            if($order) {
+                $order->Status = $callback["Status"];
+                
+                if(array_key_exists("GatewayData",$callback))
+                    $order->GatewayData = $callback["GatewayData"];
+                    
+                $order->write();
+                
+                $this->owner->setOrder($order);
+            }
         }
     }
 }
