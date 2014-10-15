@@ -20,3 +20,6 @@ OrderItem:
 CatalogueProductController:
   extensions:
     - CommerceCatalogueProductControllerExtension
+CatalogueProduct:
+  extensions:
+    - CommerceCatalogueProductExtension
