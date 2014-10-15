@@ -1,5 +1,5 @@
 ---
-Name: orderconfig
+Name: commerceconfig
 ---
 # Config overwrites
 Checkout:
@@ -17,3 +17,6 @@ SiteConfig:
 OrderItem:
   extensions:
     - CommerceOrderItem
+CatalogueProductController:
+  extensions:
+    - CommerceCatalogueProductControllerExtension
