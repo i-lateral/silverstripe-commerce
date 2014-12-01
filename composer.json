@@ -20,8 +20,9 @@
         "i-lateral/silverstripe-catalogue": "*",
         "i-lateral/silverstripe-checkout": "*",
         "i-lateral/silverstripe-orders": "*",
+        
         "i-lateral/silverstripe-sessionmessenger": "*",
-        "ajshort/silverstripe-gridfieldextensions": "*",
+        "silverstripe-australia/gridfieldextensions": "*",
         "colymba/gridfield-bulk-editing-tools": "2.0.2",
         "bummzack/sortablefile": "*"
     },
