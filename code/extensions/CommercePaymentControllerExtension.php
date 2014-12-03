@@ -39,7 +39,7 @@ class CommercePaymentControllerExtension extends Extension {
                 $order_item->StockID = $cart_item->StockID;
             
             if($cart_item->Price)
-                $order_item->Price = $cart_item->Price->RAW();
+                $order_item->Price = $cart_item->Price;
             
             if($cart_item->TaxRate)
                 $order_item->TaxRate = $cart_item->TaxRate;

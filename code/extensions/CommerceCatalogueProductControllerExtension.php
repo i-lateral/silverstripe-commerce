@@ -54,17 +54,18 @@ class CommerceCatalogueProductControllerExtension extends Extension {
             else
                 $tax_rate = 0;
             
-            $item_to_add = new ArrayData(array(
+            $item_to_add = array(
+                "Key" => $object->ID,
                 "Title" => $object->Title,
                 "Content" => $object->Content,
-                "Price" => $object->Price(),
+                "BasePrice" => $object->Price(),
                 "TaxRate" => $tax_rate,
                 "Image" => $object->Images()->first(),
                 "StockID" => $object->StockID,
                 "ID" => $object->ID,
                 "Weight" => $object->Weight,
                 "ClassName" => $object->ClassName
-            ));
+            );
             
             $cart->add($item_to_add, $data['Quantity']);
             $cart->save();
