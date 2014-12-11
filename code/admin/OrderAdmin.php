@@ -34,7 +34,7 @@ class OrderAdmin extends ModelAdmin {
             // Bulk manager
             $manager = new GridFieldBulkManager();
             $manager->removeBulkAction("bulkedit");
-            $manager->removeBulkAction("unlink");
+            $manager->removeBulkAction("unLink");
             $manager->removeBulkAction("delete");
 
             $manager->addBulkAction(
