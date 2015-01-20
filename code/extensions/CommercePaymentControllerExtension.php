@@ -54,7 +54,7 @@ class CommercePaymentControllerExtension extends Extension {
         // Setup the owners order and order data
         $data['OrderNumber'] = $order->OrderNumber;
         $this->owner->setOrder($order);
-        $this->owner->setData($data);
+        $this->owner->setPaymentData($data);
     }
     
     
