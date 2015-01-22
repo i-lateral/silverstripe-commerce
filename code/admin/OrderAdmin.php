@@ -106,7 +106,6 @@ class OrderAdmin extends ModelAdmin {
             // Add dispatch button
             $field_config = $gridField->getConfig();
             $field_config
-                ->removeComponentsByType('GridFieldExportButton')
                 ->addComponent($manager);
 
             // Update list of items for subsite (if used)
