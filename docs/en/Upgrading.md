@@ -1,6 +1,12 @@
 Upgrading from the old Commerce Module
 ======================================
 
+NOTE: There is now an upgrade script (1.0-2.0.sql) located in the "sql"
+directory that makes upgrading the database a lot less painfull!
+
+The module also tries to accomodate auto updating by trying to auto
+run the script when dev/build is run.
+
 If you have been using the old commerce module, there are a lof of
 small changes in 2.0 that need to be considered. Mostly around the
 database.
