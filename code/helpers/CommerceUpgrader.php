@@ -83,7 +83,7 @@ class CommerceUpgrader extends Object {
 
         foreach(self::$upgrade_tables as $up_key => $up_value) {
             foreach($tables as $ta_key => $ta_value) {
-                if(strtolower($up_key) == $ta_key) {
+                if($ta_key == "CommercePaymentMethod") {
                     return true;
                 }
             }
