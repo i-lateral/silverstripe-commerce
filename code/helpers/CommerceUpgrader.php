@@ -10,11 +10,28 @@
 class CommerceUpgrader extends Object {
 
     /**
+     * List of tables to check, we need to check that all tables exist,
+     * if not, we need to upgrade.
+     * 
+     * This is pretty basic, but seems to be the simplest way to check. 
+     *
+     * @var array
+     */
+    public static $check_tables = array(
+        "CatalogueCategory",
+        "CatalogueProduct",
+        "CatalogueCategory_Products",
+        "CatalogueProduct_Images",
+        "CatalogueProduct_RelatedProducts",
+        "PaymentMethod"
+    );
+    
+    /**
      * List of tables to upgrade
      *
      * @var array
      */
-    protected static $upgrade_tables = array(
+    public static $upgrade_tables = array(
         "ProductCategory" => "CatalogueCategory",
         "ProductCategory_Products" => "CatalogueCategory_Products",
         "Product" => "CatalogueProduct",
@@ -28,7 +45,7 @@ class CommerceUpgrader extends Object {
      *
      * @var array
      */
-    protected static $upgrade_table_columns = array(
+    public static $upgrade_table_columns = array(
         "CatalogueCategory_Products" => array(
             "ProductCategoryID" => "CatalogueCategoryID",
             "ProductID" => "CatalogueProductID"
@@ -74,91 +91,28 @@ class CommerceUpgrader extends Object {
 
 
     /**
-     * Check to see if any upgrade tables are in need of upgrading
+     * Check to see if any tables are in need of upgrading
      *
      * @return Boolean
      */
     public static function check() {
         $tables = self::get_curr_tables();
+        $tables_to_check = self::$check_tables;
+        $checked_tables = 0;
 
-        foreach(self::$upgrade_tables as $up_key => $up_value) {
-            foreach($tables as $ta_key => $ta_value) {
-                if($ta_key == "commercepaymentmethod") {
-                    return true;
+        foreach($tables_to_check as $ch_table) {
+            foreach($tables as $ta_key => $ta_value) {                
+                if($ta_key == strtolower($ch_table)) {
+                    $checked_tables++;
                 }
             }
         }
-
-        return false;
-    }
-
-
-    /**
-     * Use the ORM to upgrade the database
-     *
-     * @return Boolean
-     */
-    public static function upgrade() {
-        $tables = self::get_curr_tables();
-        $conn = DB::getConn();
-        $conn_type = get_class($conn);
-
-        // First loop through existing tables and rename if needed
-        foreach(self::$upgrade_tables as $up_key => $up_value) {
-            foreach($tables as $ta_key => $ta_value) {
-                // If we have an old table, rename
-                if(strtolower($up_key) == $ta_key) {
-                    $conn->renameTable($up_key, $up_value);
-                }
-            }
-        }
-
-        // Stall while we wait for connection to finish
-        do {
-            $i = 0;
-        } while($conn->isSchemaUpdating());
-
-
-        // Re connect to make changes
-        $conn = DB::getConn();
-
-        // Check if there are any columns that need altering
-        foreach(self::$upgrade_table_columns as $table => $columns) {
-            foreach($conn->fieldList($table) as $field => $options) {
-                foreach($columns as $old_col => $new_col) {
-                    // Check if there is a column that needs upgrading
-                    // and generate upgrade statement.
-                    if(strtolower($field) == strtolower($old_col)) {
-                        $sql = "";
-
-                        switch ($conn_type) {
-                            case "MySQLDatabase":
-                                $sql = "ALTER TABLE `{$table}` CHANGE `{$old_col}` `{$new_col}` {$options}";
-                                break;
-                            case "PostgreSQLDatabase":
-                                $pos_table = strtolower($table);
-                                $sql = "ALTER TABLE `{$pos_table}` RENAME COLUMN `{$old_col}` `{$new_col}`";
-                                break;
-                            case "MSSQLDatabase":
-                                $sql = "EXEC sp_RENAME '{$table}.{$old_col}' , '{$new_col}', 'COLUMN'";
-                                break;
-                        }
-
-                        if($sql) $conn->query($sql);
-                    }
-                }
-            }
-        }
-
-        // Stall while we wait for connection to finish
-        do {
-            $i = 0;
-        } while($conn->isSchemaUpdating());
-
-        // Set new tables list so future checks don't fall over
-        self::$curr_tables = DB::tableList();
-
-        return true;
+        
+        // If we have all tables that we need, we don't need to upgrade
+        if($checked_tables == count($tables_to_check))
+            return false;
+        else
+            return true;
     }
 
 }

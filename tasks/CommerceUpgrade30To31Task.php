@@ -6,11 +6,11 @@
  * @package commerce
  * @subpackage tasks
  */
-class CommerceUpgradeTask extends BuildTask {
+class CommerceUpgrade30To31Task extends BuildTask {
 
-    protected $title = 'Upgrade commerce module';
+    protected $title = 'Upgrade commerce module from SS3.0 to SS3.1';
 
-    protected $description = 'Run an upgrade to the sites using the commerce module and running Silverstripe 3.0 to Silverstripe 3.1';
+    protected $description = 'Run an upgrade to a site commerce module running on Silverstripe 3.0 to Silverstripe 3.1';
 
     public function run($request) {
         echo "Upgrading commerce module...\n\n";

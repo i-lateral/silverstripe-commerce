@@ -19,14 +19,7 @@ class CommerceControllerExtension extends Extension {
         
         // Only check if the DB needs upgrading on a dev build
         if($controller == "DevelopmentAdmin" && $action == "build" && CommerceUpgrader::check()) {
-            $upgraded = CommerceUpgrader::upgrade();
-            
-            if(!$upgraded) user_error("Could not upgrade the Commerce module, please check the documentation on upgrading.");
-        }
-        
-        if(class_exists('Subsite') && Subsite::currentSubsite()) {
-            // Set the location
-            i18n::set_locale(Subsite::currentSubsite()->Language);
+            user_error("The commerce module requires you manually upgrade your database. Please run dev/tasks/CommerceUpgrade1To2Task or check the documentation.", E_USER_ERROR);
         }
     }
 }
