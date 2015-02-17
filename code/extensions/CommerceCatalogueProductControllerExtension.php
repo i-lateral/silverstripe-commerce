@@ -22,7 +22,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
         $form
             ->Fields()
             ->push(
-                QuantityField::create('Quantity', _t('Checkout.Qty','Qty'))
+                QuantityField::create('Quantity', _t('Commerce.Qty','Qty'))
                     ->setValue('1')
                     ->addExtraClass('checkout-additem-quantity')
             );
@@ -31,7 +31,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
         $form
             ->Actions()
             ->push(
-                FormAction::create('doAddItemToCart',_t('Checkout.AddToCart','Add to Cart'))
+                FormAction::create('doAddItemToCart',_t('Commerce.AddToCart','Add to Cart'))
                     ->addExtraClass('btn')
                     ->addExtraClass('btn-green')
             );
@@ -70,9 +70,9 @@ class CommerceCatalogueProductControllerExtension extends Extension {
             $cart->add($item_to_add, $data['Quantity']);
             $cart->save();
 
-            $message = _t('Checkout.AddedItemToCart', 'Added item to your shopping cart');
+            $message = _t('Commerce.AddedItemToCart', 'Added item to your shopping cart');
             $message .= ' <a href="'. $cart->Link() .'">';
-            $message .= _t('Checkout.ViewCart', 'View cart');
+            $message .= _t('Commerce.ViewCartNow', 'View cart now');
             $message .= '</a>';
 
             $this->owner->setSessionMessage(
@@ -82,7 +82,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
         } else {
             $this->owner->setSessionMessage(
                 "bad",
-                _t("Checkout.ThereWasAnError", "There was an error")
+                _t("Commerce.ThereWasAnError", "There was an error")
             );
         }
 
