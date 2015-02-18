@@ -13,17 +13,16 @@ class CommerceSiteConfigExtension extends DataExtension {
 
     public function updateCMSFields(FieldList $fields) {
         // Compress default commerce settings
-        $settings_fields = ToggleCompositeField::create(
-            'UnitSettings',
-            'Unit Settings',
+        $fields->addFieldsToTab(
+            "Root.Catalogue",
             array(
                 DropdownField::create(
                     'Currency',
                     'Currency to use',
-                    array_keys(Commerce::config()->currency_units),
+                    Commerce::config()->currency_codes,
                     $this->owner->Currency
                 )->setEmptyString('Please Select'),
-                
+
                 DropdownField::create(
                     'Weight',
                     'Weight to use',
@@ -31,10 +30,7 @@ class CommerceSiteConfigExtension extends DataExtension {
                     $this->owner->Weight
                 )->setEmptyString('Please Select')
             )
-        )->setHeadingLevel(4);
-
-        // Add config sets
-        $fields->addFieldToTab('Root.Main', $settings_fields);
+        );
     }
 
     public function requireDefaultRecords() {
