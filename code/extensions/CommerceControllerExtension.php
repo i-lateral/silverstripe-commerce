@@ -19,9 +19,7 @@ class CommerceControllerExtension extends Extension {
 
         // Only check if the DB needs upgrading on a dev build
         if($controller == "DevelopmentAdmin" && $action == "build" && CommerceUpgrader::check()) {
-            $upgraded = CommerceUpgrader::upgrade();
-
-            if(!$upgraded) user_error("Could not upgrade the Commerce module, please check the documentation on upgrading.");
+            user_error("You need to alter your database, please either run dev/tasks/CommerceUpgrade1To2Task or check the commerce module documentation.", E_USER_ERROR);
         }
 
         if($controller != "DevelopmentAdmin" && $action != "build") {
