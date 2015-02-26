@@ -1,0 +1,8 @@
+fr:
+  Commerce:
+    AddToCart: 'Ajouter au panier'
+    AddedItemToCart: 'Article a été ajouté au panier'
+    Qty: Qté
+    ThereWasAnError: 'There was an error'
+    ViewCartNow: 'View cart now'
+
