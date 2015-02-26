@@ -9,21 +9,21 @@
  */
 class CommerceUpgrader extends Object {
 
+    
     /**
-     * List of tables to check, we need to check that all tables exist,
-     * if not, we need to upgrade.
+     * List of tables to check, we need to check that all old tables 
+     * exist, if not, we need to build the database from scratch.
      * 
      * This is pretty basic, but seems to be the simplest way to check. 
      *
      * @var array
      */
     public static $check_tables = array(
-        "CatalogueCategory",
-        "CatalogueProduct",
-        "CatalogueCategory_Products",
-        "CatalogueProduct_Images",
-        "CatalogueProduct_RelatedProducts",
-        "PaymentMethod"
+        "ProductCategory",
+        "ProductCategory_Products",
+        "Product_RelatedProducts",
+        "Product_Images",
+        "CommercePaymentMethod"
     );
     
     /**
@@ -110,9 +110,9 @@ class CommerceUpgrader extends Object {
         
         // If we have all tables that we need, we don't need to upgrade
         if($checked_tables == count($tables_to_check))
-            return false;
-        else
             return true;
+        else
+            return false;
     }
 
 }
