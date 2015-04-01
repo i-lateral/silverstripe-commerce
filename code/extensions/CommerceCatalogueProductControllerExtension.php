@@ -58,7 +58,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
                 "Key" => $object->ID,
                 "Title" => $object->Title,
                 "Content" => $object->Content,
-                "BasePrice" => $object->Price(),
+                "BasePrice" => $object->Price,
                 "TaxRate" => $tax_rate,
                 "Image" => $object->Images()->first(),
                 "StockID" => $object->StockID,
