@@ -5,20 +5,22 @@
  * @author i-lateral (http://www.i-lateral.com)
  * @package commerce
  */
-class CommercePaymentControllerExtension extends Extension {
+class CommercePaymentHandlerExtension extends Extension {
     
     /**
-     * Tap into the checkout process and setup a new order
+     * Tap into the checkout process and setup a new order then pass its
+     * order number back to our payment controller.
      * 
      */
     public function onBeforeIndex() {
         $cart = ShoppingCart::get();
-        $data = $this->owner->getData();
-        $data['OrderNumber'] = "";
+        $data = $this->owner->getOrderData();
         
         // Setup an order based on the data from the shopping cart and load data
         $order = new Order();
+        
         $order->update($data);
+        $order->OrderNumber = "";
 
         // If user logged in, track it against an order
         if(Member::currentUserID())
@@ -48,32 +50,32 @@ class CommercePaymentControllerExtension extends Extension {
 
             $order->Items()->add($order_item);
         }
-
-        $order->write();
         
-        // Setup the owners order and order data
-        $data['OrderNumber'] = $order->OrderNumber;
-        $this->owner->setOrder($order);
-        $this->owner->setPaymentData($data);
+        // Overwrite the default order number
+        $this->owner->getOrderData()->OrderNumber = $order->OrderNumber;
     }
     
     
-    public function onBeforeCallback($callback) {
-        if(array_key_exists("OrderID",$callback) && array_key_exists("Status",$callback)) {
+    public function onAfterCallback() {
+        $data = $this->owner->getPaymentData();
+        $order = null;
+        
+        if($data->Status && $data->OrderID) {
             $order = Order::get()
-                ->filter("OrderNumber", $callback["OrderID"])
+                ->filter("OrderNumber", $data->OrderID)
                 ->first();
-                
-            if($order) {
-                $order->Status = $callback["Status"];
-                
-                if(array_key_exists("GatewayData",$callback) && is_array($callback["GatewayData"]))
-                    $order->GatewayData = json_encode($callback["GatewayData"]);
-                    
-                $order->write();
-                
-                $this->owner->setOrder($order);
-            }
+        }
+        
+        if($data->Status && $data->PaymentID) {
+            $order = Order::get()
+                ->filter("PaymentNo", $data->PaymentID)
+                ->first();
+        }
+        
+        if($order) {
+            $order->Status = $data->Status;
+            $order->GatewayData = json_encode($data->GatewayData);
+            $order->write();
         }
     }
 }
