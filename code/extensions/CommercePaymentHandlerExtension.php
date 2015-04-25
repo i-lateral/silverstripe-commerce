@@ -66,7 +66,7 @@ class CommercePaymentHandlerExtension extends Extension {
                 ->first();
         }
         
-        if($data->Status && $data->PaymentID) {
+        if(!$order && $data->Status && $data->PaymentID) {
             $order = Order::get()
                 ->filter("PaymentNo", $data->PaymentID)
                 ->first();
@@ -74,6 +74,7 @@ class CommercePaymentHandlerExtension extends Extension {
         
         if($order) {
             $order->Status = $data->Status;
+            $order->PaymentNo = $data->PaymentID;
             $order->GatewayData = json_encode($data->GatewayData);
             $order->write();
         }
