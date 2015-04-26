@@ -55,6 +55,25 @@ class CommercePaymentHandlerExtension extends Extension {
         $this->owner->getOrderData()->OrderNumber = $order->OrderNumber;
     }
     
+    /**
+     * Some payment gateways will return a Payment ID before we can
+     * proceed. Make sure this is tracked before going to the provider
+     * 
+     */
+    public function onAfterIndex() {
+        $data = $this->owner->getOrderData();
+        
+        // If a payment is set, add to the order order
+        if($data->PaymentID) {
+            $order = Order::get()
+                ->filter("OrderNumber", $data->OrderNumber)
+                ->first();
+                  
+            $order->PaymentNo = $data->PaymentID;
+            $order->write();
+        }
+    }
+    
     
     public function onAfterCallback() {
         $data = $this->owner->getPaymentData();
