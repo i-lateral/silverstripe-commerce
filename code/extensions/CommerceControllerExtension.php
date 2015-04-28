@@ -36,6 +36,7 @@ class CommerceControllerExtension extends Extension {
                     // Make sure we set the default currency setting
                     Config::inst()->update('Currency', 'currency_symbol', $currency_codes[$currency]);
                     Config::inst()->update('Checkout', 'currency_symbol', $currency_codes[$currency]);
+                    Config::inst()->update('Checkout', 'currency_code', $currency);
                 }
             }
         }
