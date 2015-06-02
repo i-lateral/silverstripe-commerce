@@ -67,18 +67,32 @@ class CommerceCatalogueProductControllerExtension extends Extension {
                 "ClassName" => $object->ClassName
             );
             
-            $cart->add($item_to_add, $data['Quantity']);
-            $cart->save();
+            // Try and add item to cart, return any exceptions raised
+            // as a message
+            try {
+                $cart->add($item_to_add, $data['Quantity']);
+                $cart->save();
+                
+                $message = _t('Commerce.AddedItemToCart', 'Added item to your shopping cart');
+                $message .= ' <a href="'. $cart->Link() .'">';
+                $message .= _t('Commerce.ViewCartNow', 'View cart now');
+                $message .= '</a>';
 
-            $message = _t('Commerce.AddedItemToCart', 'Added item to your shopping cart');
-            $message .= ' <a href="'. $cart->Link() .'">';
-            $message .= _t('Commerce.ViewCartNow', 'View cart now');
-            $message .= '</a>';
-
-            $this->owner->setSessionMessage(
-                "success",
-                $message
-            );
+                $this->owner->setSessionMessage(
+                    "success",
+                    $message
+                );
+            } catch(ValidationException $e) {
+                $this->owner->setSessionMessage(
+                    "bad",
+                    $e->getMessage()
+                );
+            } catch(Exception $e) {
+                $this->owner->setSessionMessage(
+                    "bad",
+                    $e->getMessage()
+                );
+            }
         } else {
             $this->owner->setSessionMessage(
                 "bad",
