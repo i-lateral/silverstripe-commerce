@@ -21,6 +21,10 @@ class CommercePaymentHandlerExtension extends Extension {
         
         $order->update($data);
         $order->OrderNumber = "";
+        
+        // If we are using collection, track it here
+        if($cart->isCollection())
+            $order->Action = "collect";
 
         // If user logged in, track it against an order
         if(Member::currentUserID())
