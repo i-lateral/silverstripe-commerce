@@ -5,7 +5,21 @@ class CommerceCatalogueProductExtension extends DataExtension {
         "PackSize" => "Int",
         "Weight" => "Decimal"
     );
-
+    
+    /**
+     * Get a list of suitable shipping bands
+     * 
+     */
+    public function Shipping() {
+        // Set a wildcard for all shipping
+        $shipping = new ShippingCalculator("*");
+        $shipping
+            ->setCost($this->owner->Price)
+            ->setWeight($this->owner->Weight);
+            
+        return $shipping->getPostageAreas();
+    }
+    
     public function updateCMSFields(FieldList $fields) {
         $fields->addFieldToTab(
             "Root.Settings",
