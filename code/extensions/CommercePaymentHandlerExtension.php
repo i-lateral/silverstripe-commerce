@@ -97,6 +97,7 @@ class CommercePaymentHandlerExtension extends Extension {
         
         if($order) {
             $order->Status = $data->Status;
+            $order->PaymentProvider = $data->PaymentProvider;
             $order->PaymentNo = $data->PaymentID;
             $order->GatewayData = json_encode($data->GatewayData);
             $order->write();
