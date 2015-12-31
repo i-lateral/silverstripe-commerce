@@ -4,7 +4,8 @@
  *
  * @author morven
  */
-class Ext_Commerce_SiteConfig extends DataExtension {
+class Ext_Commerce_SiteConfig extends DataExtension
+{
     private static $db = array(
         // Commerce Configs
         'ContactEmail'          => 'Varchar(100)',
@@ -51,13 +52,14 @@ class Ext_Commerce_SiteConfig extends DataExtension {
      *
      * @return String
      */
-    public function getTaxString() {
+    public function getTaxString()
+    {
         $return = "";
 
-        if($this->owner->TaxName && $this->owner->TaxPriceInclude) {
+        if ($this->owner->TaxName && $this->owner->TaxPriceInclude) {
             $return .= _t("Commerce.Including", "Including");
             $return .= " " . $this->owner->TaxName;
-        } elseif($this->owner->TaxName && !$this->owner->TaxPriceInclude) {
+        } elseif ($this->owner->TaxName && !$this->owner->TaxPriceInclude) {
             $return .= _t("Commerce.Excluding", "Excluding");
             $return .= " " . $this->owner->TaxName;
         }
@@ -65,27 +67,31 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         return $return;
     }
 
-    public function sendCommerceEmail($recipient, $status) {
-        if($recipient == 'Customer')
-                $array = array('Customer', 'Both');
-        elseif($recipient == 'Vendor')
-                $array = array('Vendor', 'Both');
-        else
-                $array = array();
+    public function sendCommerceEmail($recipient, $status)
+    {
+        if ($recipient == 'Customer') {
+            $array = array('Customer', 'Both');
+        } elseif ($recipient == 'Vendor') {
+            $array = array('Vendor', 'Both');
+        } else {
+            $array = array();
+        }
 
-        if($status == 'paid' && in_array($this->owner->SendPaidEmail, $array))
-                return true;
-        elseif($status == 'failed' && in_array($this->owner->SendFailedEmail, $array))
-                return true;
-        elseif($status == 'processing' && in_array($this->owner->SendProcessingEmail, $array))
-                return true;
-        elseif($status == 'dispatched' && in_array($this->owner->SendDispatchedEmail, $array))
-                return true;
-        else
-                return false;
+        if ($status == 'paid' && in_array($this->owner->SendPaidEmail, $array)) {
+            return true;
+        } elseif ($status == 'failed' && in_array($this->owner->SendFailedEmail, $array)) {
+            return true;
+        } elseif ($status == 'processing' && in_array($this->owner->SendProcessingEmail, $array)) {
+            return true;
+        } elseif ($status == 'dispatched' && in_array($this->owner->SendDispatchedEmail, $array)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function updateCMSFields(FieldList $fields) {
+    public function updateCMSFields(FieldList $fields)
+    {
         $fields->removeByName('ContactEmail');
         $fields->removeByName('ContactPhone');
 
@@ -109,7 +115,7 @@ class Ext_Commerce_SiteConfig extends DataExtension {
                 TextField::create('OrderPrefix', 'Short code that can appear at the start of order numbers', null, 9),
                 DropdownField::create('CurrencyID', 'Currency to use', CommerceCurrency::get()->map(), $this->owner->CurrencyID)->setEmptyString('Please Select'),
                 DropdownField::create('WeightID', 'Weight to use', ProductWeight::get()->map(), $this->owner->WeightID)->setEmptyString('Please Select'),
-                UploadField::create('NoProductImage','Overwrite default "image unavailable" image')
+                UploadField::create('NoProductImage', 'Overwrite default "image unavailable" image')
             )
         )->setHeadingLevel(4);
 
@@ -193,7 +199,7 @@ class Ext_Commerce_SiteConfig extends DataExtension {
                 ),
                 'Calculation'  => array(
                     'title' => 'Base unit',
-                    'callback' => function($record, $column, $grid) {
+                    'callback' => function ($record, $column, $grid) {
                         return DropdownField::create(
                             $column,
                             "Based on",
@@ -265,7 +271,7 @@ class Ext_Commerce_SiteConfig extends DataExtension {
             'Tax',
             array(
                 NumericField::create('TaxRate'),
-                TextField::create("TaxName","Name of your tax (EG 'VAT')"),
+                TextField::create("TaxName", "Name of your tax (EG 'VAT')"),
                 CheckboxField::create('TaxPriceInclude', 'Show price including tax?')
             )
         )->setHeadingLevel(4);
@@ -281,10 +287,11 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         $fields->addFieldToTab('Root.Commerce', $tax_fields);
     }
 
-    public function requireDefaultRecords() {
+    public function requireDefaultRecords()
+    {
 
         // If "no product image" is not in DB, add it
-        if(!Image::get()->filter('Name','no-image.png')->first()) {
+        if (!Image::get()->filter('Name', 'no-image.png')->first()) {
             $image = new Image();
             $image->Name = 'no-image.png';
             $image->Title = 'No Image';
@@ -296,16 +303,17 @@ class Ext_Commerce_SiteConfig extends DataExtension {
         }
     }
 
-    public function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
 
         // If product image has not been set, add the default
-        if(!$this->owner->NoProductImageID) {
+        if (!$this->owner->NoProductImageID) {
             $image = Image::get()
-                ->filter('Name','no-image.png')
+                ->filter('Name', 'no-image.png')
                 ->first();
 
-            if($image) {
+            if ($image) {
                 $this->owner->NoProductImageID = $image->ID;
             }
         }

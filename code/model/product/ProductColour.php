@@ -1,6 +1,7 @@
 <?php
 
-class ProductColour extends DataObject {
+class ProductColour extends DataObject
+{
     private static $db = array(
         'Title'         => 'Varchar',
         'ColourCode'    => 'Varchar',

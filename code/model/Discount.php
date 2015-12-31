@@ -1,6 +1,7 @@
 <?php
 
-class Discount extends DataObject {
+class Discount extends DataObject
+{
 
     private static $db = array(
         "Title"     => "Varchar",
@@ -31,7 +32,8 @@ class Discount extends DataObject {
      *
      * @return string
      */
-    private static function generateRandomString($length = 10) {
+    private static function generateRandomString($length = 10)
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $string = '';
 
@@ -45,7 +47,8 @@ class Discount extends DataObject {
     /**
      * Set more complex default data
      */
-    public function populateDefaults() {
+    public function populateDefaults()
+    {
         $this->setField('Code', self::generateRandomString());
     }
 
@@ -55,7 +58,8 @@ class Discount extends DataObject {
      *
      * @return String
      */
-    public function AddLink() {
+    public function AddLink()
+    {
         $link = Controller::join_links(
             Director::absoluteBaseURL(),
             ShoppingCart::config()->url_segment,
@@ -66,10 +70,11 @@ class Discount extends DataObject {
         return $link;
     }
 
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
 
-        if($this->Code) {
+        if ($this->Code) {
             $fields->addFieldToTab(
                 "Root.Main",
                 LiteralField::create(
@@ -85,14 +90,14 @@ class Discount extends DataObject {
         }
 
         // Remove add product button from black list
-        if($blacklist = $fields->dataFieldByName("BlackList")) {
+        if ($blacklist = $fields->dataFieldByName("BlackList")) {
             $blacklist
                 ->getConfig()
                 ->removeComponentsByType("GridFieldAddNewButton");
         }
 
         // Remove add product button from white list
-        if($whitelist = $fields->dataFieldByName("WhiteList")) {
+        if ($whitelist = $fields->dataFieldByName("WhiteList")) {
             $whitelist
                 ->getConfig()
                 ->removeComponentsByType("GridFieldAddNewButton");
@@ -101,23 +106,26 @@ class Discount extends DataObject {
         return $fields;
     }
 
-    public function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
 
         // Ensure that the code is URL safe
         $this->Code = Convert::raw2url($this->Code);
     }
 
-    public function canCreate($member = null) {
+    public function canCreate($member = null)
+    {
         return true;
     }
 
-    public function canEdit($member = null) {
+    public function canEdit($member = null)
+    {
         return true;
     }
 
-    public function canDelete($member = null) {
+    public function canDelete($member = null)
+    {
         return true;
     }
-
 }

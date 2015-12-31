@@ -5,7 +5,8 @@
  * particular payment class
  *
  */
-abstract class CommercePaymentHandler extends Controller {
+abstract class CommercePaymentHandler extends Controller
+{
 
     /**
      * The current payment gateway we are using
@@ -14,11 +15,13 @@ abstract class CommercePaymentHandler extends Controller {
      */
     protected $payment_gateway;
 
-    public function getPaymentGateway() {
+    public function getPaymentGateway()
+    {
         return $this->payment_gateway;
     }
 
-    public function setPaymentGateway($gateway) {
+    public function setPaymentGateway($gateway)
+    {
         $this->payment_gateway = $gateway;
         return $this;
     }
@@ -30,16 +33,19 @@ abstract class CommercePaymentHandler extends Controller {
      */
     protected $order;
 
-    public function getOrder() {
+    public function getOrder()
+    {
         return $this->order;
     }
 
-    public function setOrder($order) {
+    public function setOrder($order)
+    {
         $this->order = $order;
         return $this;
     }
 
-    public function getPaymentInfo() {
+    public function getPaymentInfo()
+    {
         return $this->payment_gateway->PaymentInfo;
     }
 

@@ -7,7 +7,8 @@
  * @package commerce
  */
 
-class Payment_Controller extends Commerce_Controller {
+class Payment_Controller extends Commerce_Controller
+{
 
     /**
      * @var string
@@ -23,11 +24,13 @@ class Payment_Controller extends Commerce_Controller {
 
     protected $payment_handler;
 
-    public function getPaymentHandler() {
+    public function getPaymentHandler()
+    {
         return $this->payment_handler;
     }
 
-    public function setPaymentHandler($handler) {
+    public function setPaymentHandler($handler)
+    {
         $this->payment_handler = $handler;
         return $this;
     }
@@ -35,11 +38,13 @@ class Payment_Controller extends Commerce_Controller {
 
     protected $payment_method;
 
-    public function getPaymentMethod() {
+    public function getPaymentMethod()
+    {
         return $this->payment_method;
     }
 
-    public function setPaymentMethod($method) {
+    public function setPaymentMethod($method)
+    {
         $this->payment_method = $method;
         return $this;
     }
@@ -49,26 +54,31 @@ class Payment_Controller extends Commerce_Controller {
      *
      * @return Order
      */
-    public function getOrder() {
+    public function getOrder()
+    {
         return Session::get('Commerce.Order');
     }
 
-    public function getClassName() {
-        return str_replace("_Controller","",get_class($this));
+    public function getClassName()
+    {
+        return str_replace("_Controller", "", get_class($this));
     }
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         // Check if payment slug is set and that corresponds to a payment
-        if($this->request->param('ID') && $method = CommercePaymentMethod::get()->byID($this->request->param('ID')))
+        if ($this->request->param('ID') && $method = CommercePaymentMethod::get()->byID($this->request->param('ID'))) {
             $this->payment_method = $method;
+        }
         // Then check session
-        elseif($method = CommercePaymentMethod::get()->byID(Session::get('Commerce.PaymentMethodID')))
+        elseif ($method = CommercePaymentMethod::get()->byID(Session::get('Commerce.PaymentMethodID'))) {
             $this->payment_method = $method;
+        }
 
         // Setup payment handler
-        if($this->payment_method && $this->payment_method !== null) {
+        if ($this->payment_method && $this->payment_method !== null) {
             $handler = $this->payment_method->ClassName;
             $handler = $handler::$handler;
 
@@ -93,20 +103,23 @@ class Payment_Controller extends Commerce_Controller {
      * in the "Postage and Payment" form.
      *
      */
-    public function index() {
+    public function index()
+    {
         $cart = ShoppingCart::get();
 
         // If shopping cart doesn't exist, redirect to base
-        if(!$cart->getItems()->exists() || $this->getPaymentHandler() === null)
+        if (!$cart->getItems()->exists() || $this->getPaymentHandler() === null) {
             return $this->redirect(Director::BaseURL());
+        }
 
         // Get billing and delivery details and merge into an array
         $billing_data = Session::get("Commerce.BillingDetailsForm.data");
         $delivery_data = Session::get("Commerce.DeliveryDetailsForm.data");
         $postage = PostageArea::get()->byID(Session::get('Commerce.PostageID'));
 
-        if(!$postage || !$billing_data || !$delivery_data)
+        if (!$postage || !$billing_data || !$delivery_data) {
             return $this->redirect(Checkout_Controller::create()->Link());
+        }
 
         // Work out if an order prefix string has been set in siteconfig
         $config = SiteConfig::current_site_config();
@@ -131,13 +144,15 @@ class Payment_Controller extends Commerce_Controller {
         $order->update($data);
 
         // If user logged in, track it against an order
-        if(Member::currentUserID()) $order->CustomerID = Member::currentUserID();
+        if (Member::currentUserID()) {
+            $order->CustomerID = Member::currentUserID();
+        }
 
         // Write so we can setup our foreign keys
         $order->write();
 
         // Loop through each session cart item and add that item to the order
-        foreach($cart->getItems() as $cart_item) {
+        foreach ($cart->getItems() as $cart_item) {
             $order_item = new OrderItem();
             $order_item->Title          = $cart_item->Title;
             $order_item->SKU            = $cart_item->SKU;
@@ -174,9 +189,10 @@ class Payment_Controller extends Commerce_Controller {
      * either post data or get data and then sends it to the relevent payment
      * method for processing.
      */
-    public function callback() {
+    public function callback()
+    {
         // If post data exists, process. Otherwise provide error
-        if($this->payment_handler !== null) {
+        if ($this->payment_handler !== null) {
             $callback = $this->payment_handler->callback();
         } else {
             // Redirect to error page
@@ -196,18 +212,20 @@ class Payment_Controller extends Commerce_Controller {
      *
      * @return String
      */
-    public function complete() {
+    public function complete()
+    {
         $site = SiteConfig::current_site_config();
         $order = $this->getOrder();
 
         $id = $this->request->param('ID');
 
-        if($id == "error")
+        if ($id == "error") {
             $return = $this->error_data();
-        else
+        } else {
             $return = $this->success_data();
+        }
 
-        if($order) {
+        if ($order) {
             $return['CommerceOrderSuccess'] = true;
             $return['Order'] = $order;
         } else {
@@ -216,7 +234,7 @@ class Payment_Controller extends Commerce_Controller {
         }
 
         // Clear our session data
-        if(isset($_SESSION)) {
+        if (isset($_SESSION)) {
             ShoppingCart::get()->clear();
             unset($_SESSION['Commerce.Order']);
             unset($_SESSION['Commerce.PostageID']);
@@ -236,11 +254,12 @@ class Payment_Controller extends Commerce_Controller {
      *
      * @return array
      */
-    public function success_data() {
+    public function success_data()
+    {
         $site = SiteConfig::current_site_config();
 
         return array(
-            'Title' => _t('Commerce.OrderComplete','Order Complete'),
+            'Title' => _t('Commerce.OrderComplete', 'Order Complete'),
             'Content' => ($site->SuccessCopy) ? nl2br(Convert::raw2xml($site->SuccessCopy), true) : false
         );
     }
@@ -250,11 +269,12 @@ class Payment_Controller extends Commerce_Controller {
      *
      * @return array
      */
-    public function error_data() {
+    public function error_data()
+    {
         $site = SiteConfig::current_site_config();
 
         return array(
-            'Title'     => _t('Commerce.OrderFailed','Order Failed'),
+            'Title'     => _t('Commerce.OrderFailed', 'Order Failed'),
             'Content'   => ($site->FailerCopy) ? nl2br(Convert::raw2xml($site->FailerCopy), true) : false
         );
     }

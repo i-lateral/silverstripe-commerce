@@ -1,6 +1,7 @@
 <?php
 
-class Product extends DataObject {
+class Product extends DataObject
+{
     private static $db = array(
         "Title"             => "Varchar(255)",
         "SKU"               => "Varchar(99)",
@@ -86,7 +87,8 @@ class Product extends DataObject {
      *
      * @return string URL to cart controller
      */
-    public function Link($action = null){
+    public function Link($action = null)
+    {
         return Controller::join_links(
             BASE_URL,
             $this->URLSegment,
@@ -97,11 +99,13 @@ class Product extends DataObject {
     /**
      * Return the absolute link to this product
      */
-    public function AbsoluteLink($action = null) {
+    public function AbsoluteLink($action = null)
+    {
         return Director::absoluteURL($this->Link($action));
     }
 
-    public function getMenuTitle() {
+    public function getMenuTitle()
+    {
         return $this->Title;
     }
 
@@ -113,15 +117,18 @@ class Product extends DataObject {
      *
      * @return Decimal
      */
-    public function getTax() {
+    public function getTax()
+    {
         $config = SiteConfig::current_site_config();
         (float)$price = $this->Price;
         (float)$rate = $config->TaxRate;
 
-        if($rate > 0)
-            (float)$tax = ($price / 100) * $rate; // Get our tax amount from the price
-        else
+        if ($rate > 0) {
+            (float)$tax = ($price / 100) * $rate;
+        } // Get our tax amount from the price
+        else {
             (float)$tax = 0;
+        }
 
         return number_format($tax, 2);
     }
@@ -135,7 +142,8 @@ class Product extends DataObject {
      *
      * @return Decimal
      */
-    public function getPriceWithTax() {
+    public function getPriceWithTax()
+    {
         (float)$price = $this->Price;
         (float)$tax = $this->Tax;
 
@@ -148,13 +156,15 @@ class Product extends DataObject {
      *
      * @return Decimal
      */
-    public function getFrontPrice() {
+    public function getFrontPrice()
+    {
         $config = SiteConfig::current_site_config();
 
-        if($config->TaxPriceInclude)
+        if ($config->TaxPriceInclude) {
             return $this->getPriceWithTax();
-        else
+        } else {
             return $this->Price;
+        }
     }
 
     /**
@@ -163,10 +173,11 @@ class Product extends DataObject {
      *
      * @return ArrayList
      */
-    public function SortedImages(){
-        if($this->Images()->exists())
+    public function SortedImages()
+    {
+        if ($this->Images()->exists()) {
             $images = $this->Images()->Sort('SortOrder');
-        else {
+        } else {
             $images = new ArrayList();
             $default_image = new Image();
             $default_image->ID = -1;
@@ -186,14 +197,15 @@ class Product extends DataObject {
      *
      * @return string The breadcrumb trail.
      */
-    public function Breadcrumbs($maxDepth = 20) {
+    public function Breadcrumbs($maxDepth = 20)
+    {
         $items = array();
 
-        if($this->Categories()->exists()) {
+        if ($this->Categories()->exists()) {
             $items[] = $this;
             $category = $this->Categories()->first();
 
-            foreach($category->parentStack() as $item) {
+            foreach ($category->parentStack() as $item) {
                 $items[] = $item;
             }
         }
@@ -205,8 +217,9 @@ class Product extends DataObject {
         ))));
     }
 
-    public function getCMSThumbnail() {
-        return $this->SortedImages()->first()->PaddedImage(50,50);
+    public function getCMSThumbnail()
+    {
+        return $this->SortedImages()->first()->PaddedImage(50, 50);
     }
 
     /**
@@ -214,22 +227,27 @@ class Product extends DataObject {
      *
      * return Boolean
      */
-    public function HasMultipleImages() {
-        if($this->Images()->exists() && $this->Images()->count() > 1)
+    public function HasMultipleImages()
+    {
+        if ($this->Images()->exists() && $this->Images()->count() > 1) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
-    public function getCategoriesList() {
+    public function getCategoriesList()
+    {
         $list = '';
         $categories = $this->Categories();
         $i = 1;
 
-        if($categories->exists()){
-            foreach($categories as $category) {
+        if ($categories->exists()) {
+            foreach ($categories as $category) {
                 $list .= $category->Title;
-                if($i < $categories->count()) $list .= ',';
+                if ($i < $categories->count()) {
+                    $list .= ',';
+                }
                 $i++;
             }
         }
@@ -237,15 +255,18 @@ class Product extends DataObject {
         return $list;
     }
 
-    public function getImagesList() {
+    public function getImagesList()
+    {
         $list = '';
         $images = $this->SortedImages();
         $i = 1;
 
-        if($images->exists()){
-            foreach($images as $image) {
+        if ($images->exists()) {
+            foreach ($images as $image) {
                 $list .= $image->Name;
-                if($i < $images->count()) $list .= ',';
+                if ($i < $images->count()) {
+                    $list .= ',';
+                }
                 $i++;
             }
         }
@@ -253,7 +274,8 @@ class Product extends DataObject {
         return $list;
     }
 
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = new FieldList(
             $rootTab = new TabSet("Root",
                 // Main Tab Fields
@@ -275,10 +297,10 @@ class Product extends DataObject {
                     ToggleCompositeField::create('Metadata', _t('CommerceAdmin.MetadataToggle', 'Metadata'),
                         array(
                             $metaFieldDesc = TextareaField::create("MetaDescription", $this->fieldLabel('MetaDescription')),
-                            $metaFieldExtra = TextareaField::create("ExtraMeta",$this->fieldLabel('ExtraMeta'))
+                            $metaFieldExtra = TextareaField::create("ExtraMeta", $this->fieldLabel('ExtraMeta'))
                         )
                     )->setHeadingLevel(4),
-                    CheckboxField::create("Disabled",$this->fieldLabel('Disabled'))
+                    CheckboxField::create("Disabled", $this->fieldLabel('Disabled'))
                 ),
                 $tabImages = new Tab('Images',
                     SortableUploadField::create('Images', $this->fieldLabel('Images'), $this->Images())
@@ -306,7 +328,7 @@ class Product extends DataObject {
 
 
         // Once product is saved, deal with more complex associations
-        if($this->ID) {
+        if ($this->ID) {
             // Deal with product features
             $add_button = new GridFieldAddNewInlineButton('toolbar-header-left');
             $add_button->setTitle('Add Attribute');
@@ -360,8 +382,9 @@ class Product extends DataObject {
         return $fields;
     }
 
-    public function getCMSValidator() {
-        return new RequiredFields(array("Title","Price"));
+    public function getCMSValidator()
+    {
+        return new RequiredFields(array("Title", "Price"));
     }
 
     /**
@@ -373,19 +396,22 @@ class Product extends DataObject {
      *
      * @return bool
      */
-    public function validURLSegment() {
+    public function validURLSegment()
+    {
         $objects_to_check = array("SiteTree", "Product", "ProductCategory");
 
         $segment = Convert::raw2sql($this->URLSegment);
 
-        foreach($objects_to_check as $classname) {
+        foreach ($objects_to_check as $classname) {
             $return = $classname::get()
                 ->filter(array(
                     "URLSegment"=> $segment,
                     "ID:not"    => $this->ID
                 ));
 
-            if($return->exists()) return false;
+            if ($return->exists()) {
+                return false;
+            }
         }
 
         return true;
@@ -402,12 +428,15 @@ class Product extends DataObject {
      * @param string $title Page title.
      * @return string Generated url segment
      */
-    public function generateURLSegment($title){
+    public function generateURLSegment($title)
+    {
         $filter = URLSegmentFilter::create();
         $t = $filter->filter($title);
 
         // Fallback to generic page name if path is empty (= no valid, convertable characters)
-        if(!$t || $t == '-' || $t == '-1') $t = "page-$this->ID";
+        if (!$t || $t == '-' || $t == '-1') {
+            $t = "page-$this->ID";
+        }
 
         // Hook for extensions
         $this->extend('updateURLSegment', $t, $title);
@@ -415,72 +444,80 @@ class Product extends DataObject {
         return $t;
     }
 
-    public function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
 
         // If there is no URLSegment set, generate one from Title
-        if((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
+        if ((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
             $this->URLSegment = $this->generateURLSegment($this->Title);
-        } else if($this->isChanged('URLSegment', 2)) {
+        } elseif ($this->isChanged('URLSegment', 2)) {
             // Do a strict check on change level, to avoid double encoding caused by
             // bogus changes through forceChange()
             $filter = URLSegmentFilter::create();
             $this->URLSegment = $filter->filter($this->URLSegment);
             // If after sanitising there is no URLSegment, give it a reasonable default
-            if(!$this->URLSegment) $this->URLSegment = "page-$this->ID";
+            if (!$this->URLSegment) {
+                $this->URLSegment = "page-$this->ID";
+            }
         }
 
         // Ensure that this object has a non-conflicting URLSegment value.
         $count = 2;
-        while(!$this->validURLSegment()) {
+        while (!$this->validURLSegment()) {
             $this->URLSegment = preg_replace('/-[0-9]+$/', null, $this->URLSegment) . '-' . $count;
             $count++;
         }
 
         // If no images are set, add our default image (if it exists)
-        if(!$this->Images()->exists()) {
+        if (!$this->Images()->exists()) {
             $config = SiteConfig::current_site_config();
-            if ($config->NoProductImageID){
+            if ($config->NoProductImageID) {
                 $image = $config->NoProductImage();
             } else {
                 $image = Image::get()
-                    ->filter('Name','no-image.png')
+                    ->filter('Name', 'no-image.png')
                     ->first();
             }
 
-            if($image) {
+            if ($image) {
                 $this->Images()->add($image->ID);
             }
         }
     }
 
-    public function onBeforeDelete() {
+    public function onBeforeDelete()
+    {
         // Delete all attributes when this opbect is deleted
-        foreach($this->Attributes() as $attribute) {
+        foreach ($this->Attributes() as $attribute) {
             $attribute->delete();
         }
 
         // Delete all customisations when this opbect is deleted
-        foreach($this->Customisations() as $cusomisation) {
+        foreach ($this->Customisations() as $cusomisation) {
             $cusomisation->delete();
         }
 
         parent::onBeforeDelete();
     }
 
-    public function canView($member = false) {
+    public function canView($member = false)
+    {
         return true;
     }
 
-    public function canCreate($member = null) {
+    public function canCreate($member = null)
+    {
         return true;
     }
 
-    public function canEdit($member = null) {
+    public function canEdit($member = null)
+    {
         return true;
     }
 
-    public function canDelete($member = null) {
+    public function canDelete($member = null)
+    {
         return true;
     }
 }

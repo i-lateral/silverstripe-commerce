@@ -5,7 +5,8 @@
  *
  * @package commerce
  */
-class CommerceProductBulkAction extends GridFieldBulkActionHandler {
+class CommerceProductBulkAction extends GridFieldBulkActionHandler
+{
 
     private static $allowed_actions = array(
         'enable',
@@ -17,10 +18,11 @@ class CommerceProductBulkAction extends GridFieldBulkActionHandler {
         'disable' => 'disable'
     );
 
-    public function enable(SS_HTTPRequest $request) {
+    public function enable(SS_HTTPRequest $request)
+    {
         $ids = array();
 
-        foreach($this->getRecords() as $record) {
+        foreach ($this->getRecords() as $record) {
             array_push($ids, $record->ID);
 
             $record->Disabled = 0;
@@ -37,10 +39,11 @@ class CommerceProductBulkAction extends GridFieldBulkActionHandler {
         return $response;
     }
 
-    public function disable(SS_HTTPRequest $request) {
+    public function disable(SS_HTTPRequest $request)
+    {
         $ids = array();
 
-        foreach($this->getRecords() as $record) {
+        foreach ($this->getRecords() as $record) {
             array_push($ids, $record->ID);
 
             $record->Disabled = 1;

@@ -1,11 +1,13 @@
 <?php
 
-class WorldPayHandler extends CommercePaymentHandler {
+class WorldPayHandler extends CommercePaymentHandler
+{
 
     /**
      * Default action
      */
-    public function index() {
+    public function index()
+    {
         // Setup payment gateway form
         $site = SiteConfig::current_site_config();
         $order = $this->order;
@@ -44,33 +46,36 @@ class WorldPayHandler extends CommercePaymentHandler {
             HiddenField::create('email', null, $order->Email)
         );
 
-        if($this->payment_gateway->GatewayMessage)
+        if ($this->payment_gateway->GatewayMessage) {
             $fields->add(HiddenField::create('desc', null, $this->payment_gateway->GatewayMessage));
+        }
 
-        if($curr_local = str_replace("_","-",i18n::get_locale()))
+        if ($curr_local = str_replace("_", "-", i18n::get_locale())) {
             $fields->add(HiddenField::create('lang', null, $curr_local));
+        }
 
-        if(Director::isDev())
+        if (Director::isDev()) {
             $fields->add(HiddenField::create('testMode', null, '100'));
+        }
 
         $actions = FieldList::create(
-            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.ConfirmPay','Confirm and Pay'))
+            LiteralField::create('BackButton', '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back', 'Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.ConfirmPay', 'Confirm and Pay'))
                 ->addExtraClass('btn')
                 ->addExtraClass('btn-green')
         );
 
-        $form = Form::create($this,'Form',$fields,$actions)
+        $form = Form::create($this, 'Form', $fields, $actions)
             ->addExtraClass('forms')
             ->setFormMethod('POST')
             ->setFormAction($this->payment_gateway->GatewayURL());
 
-        $this->extend('updateForm',$form);
+        $this->extend('updateForm', $form);
 
 
         return array(
-            "Title"     => _t('Commerce.CheckoutSummary',"Summary"),
-            "MetaTitle" => _t('Commerce.CheckoutSummary',"Summary"),
+            "Title"     => _t('Commerce.CheckoutSummary', "Summary"),
+            "MetaTitle" => _t('Commerce.CheckoutSummary', "Summary"),
             "Form"      => $form
         );
     }
@@ -78,7 +83,8 @@ class WorldPayHandler extends CommercePaymentHandler {
     /**
      * Retrieve and process order data from the request
      */
-    public function callback() {
+    public function callback()
+    {
         $data = $this->request->postVars();
 
         $success_url = Controller::join_links(
@@ -100,20 +106,20 @@ class WorldPayHandler extends CommercePaymentHandler {
         );
 
         // Check if CallBack data exists and install id matches the saved ID
-        if(
+        if (
             isset($data) && // Data and order are set
             (isset($data['instId']) && isset($data['cartId']) && isset($data['transStatus']) && isset($data["callbackPW"])) && // check required
             $this->payment_gateway->InstallID == $data['instId'] && // The current install ID matches the postback ID
             $this->payment_gateway->ResponsePassword == $data["callbackPW"]
         ) {
             $order = Order::get()
-                ->filter('OrderNumber',$data['cartId'])
+                ->filter('OrderNumber', $data['cartId'])
                 ->first();
 
             $order_status = $data['transStatus'];
 
-            if($order) {
-                if($order_status == 'Y') {
+            if ($order) {
+                if ($order_status == 'Y') {
                     $order->Status = 'paid';
                     $vars["RedirectURL"] = $success_url;
                 } else {
@@ -128,5 +134,4 @@ class WorldPayHandler extends CommercePaymentHandler {
 
         return $this->renderWith(array("Payment_WorldPay"), $vars);
     }
-
 }

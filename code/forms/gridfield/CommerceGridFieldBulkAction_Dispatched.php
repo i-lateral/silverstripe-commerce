@@ -5,7 +5,8 @@
  *
  * @package commerce
  */
-class CommerceGridFieldBulkAction_Dispatched extends GridFieldBulkActionHandler {
+class CommerceGridFieldBulkAction_Dispatched extends GridFieldBulkActionHandler
+{
 
     private static $allowed_actions = array(
         'dispatched'
@@ -15,10 +16,11 @@ class CommerceGridFieldBulkAction_Dispatched extends GridFieldBulkActionHandler 
         'dispatched' => 'dispatched'
     );
 
-    public function dispatched(SS_HTTPRequest $request) {
+    public function dispatched(SS_HTTPRequest $request)
+    {
         $ids = array();
 
-        foreach($this->getRecords() as $record) {
+        foreach ($this->getRecords() as $record) {
             array_push($ids, $record->ID);
 
             $record->Status = 'dispatched';

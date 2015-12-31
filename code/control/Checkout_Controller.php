@@ -4,7 +4,8 @@
  * Controller used to render the checkout process
  *
  */
-class Checkout_Controller extends Commerce_Controller {
+class Checkout_Controller extends Commerce_Controller
+{
 
     /**
      * Name of the current controller. Mostly used in templates for
@@ -32,16 +33,19 @@ class Checkout_Controller extends Commerce_Controller {
         "PostagePaymentForm"
     );
 
-    public function getClassName() {
+    public function getClassName()
+    {
         return self::config()->class_name;
     }
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         // If no shopping cart doesn't exist, redirect to base
-        if(!ShoppingCart::create()->getItems()->exists())
+        if (!ShoppingCart::create()->getItems()->exists()) {
             return $this->redirect(ShoppingCart::config()->url_segment);
+        }
     }
 
     /**
@@ -49,12 +53,14 @@ class Checkout_Controller extends Commerce_Controller {
      * or "checkout as guest" options.
      *
      */
-    public function index() {
-        if(Member::currentUserID())
+    public function index()
+    {
+        if (Member::currentUserID()) {
             return $this->redirect($this->Link('billing'));
+        }
 
         $this->customise(array(
-            'Title'     => _t('CommerceAccount.SignIn',"Sign in"),
+            'Title'     => _t('CommerceAccount.SignIn', "Sign in"),
             "Login"     => true,
             'Content'   => $this->renderWith("Commerce_Checkout_Login"),
             'LoginForm' => $this->LoginForm()
@@ -75,15 +81,17 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return array
      */
-    public function billing() {
+    public function billing()
+    {
         $form = $this->BillingForm();
 
         // Pre populate form with member info
-        if(Member::currentUserID())
+        if (Member::currentUserID()) {
             $form->loadDataFrom(Member::currentUser());
+        }
 
         $this->customise(array(
-            'Title'     => _t('Commerce.BillingDetails',"Billing Details"),
+            'Title'     => _t('Commerce.BillingDetails', "Billing Details"),
             'Form'      => $form
         ));
 
@@ -103,9 +111,10 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @var array
      */
-    public function delivery() {
+    public function delivery()
+    {
         $this->customise(array(
-            'Title'     => _t('Commerce.DeliveryDetails',"Delivery Details"),
+            'Title'     => _t('Commerce.DeliveryDetails', "Delivery Details"),
             'Form'      => $this->DeliveryForm()
         ));
 
@@ -127,7 +136,8 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return redirect
      */
-    public function usememberaddress() {
+    public function usememberaddress()
+    {
         $allowed_otherids = array("billing","delivery");
         $id = $this->request->param("ID");
         $otherid = $this->request->param("OtherID");
@@ -137,7 +147,7 @@ class Checkout_Controller extends Commerce_Controller {
         $action = "billing";
 
         // If our required details are not set, return a server error
-        if(
+        if (
             !$address ||
             !$member ||
             ($address && !$address->canView($member)) ||
@@ -151,7 +161,7 @@ class Checkout_Controller extends Commerce_Controller {
         }
 
         // Set the session data
-        if($otherid == "billing") {
+        if ($otherid == "billing") {
             $data["FirstName"]  = $address->FirstName;
             $data["Surname"]    = $address->Surname;
             $data["Address1"]   = $address->Address1;
@@ -167,7 +177,7 @@ class Checkout_Controller extends Commerce_Controller {
             $action = "delivery";
         }
 
-        if($otherid == "delivery") {
+        if ($otherid == "delivery") {
             $data['DeliveryFirstnames']  = $address->FirstName;
             $data['DeliverySurname']    = $address->Surname;
             $data['DeliveryAddress1']   = $address->Address1;
@@ -191,18 +201,20 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return array
      */
-    public function finish() {
+    public function finish()
+    {
         // Check the users details are set, if not, send them to the cart
         $billing_data = Session::get("Commerce.BillingDetailsForm.data");
         $delivery_data = Session::get("Commerce.DeliveryDetailsForm.data");
 
-        if(!is_array($billing_data) && !is_array($delivery_data))
+        if (!is_array($billing_data) && !is_array($delivery_data)) {
             return $this->redirect("index");
+        }
 
         $form = $this->PostagePaymentForm();
 
         $this->customise(array(
-            'Title'     => _t('Commerce.PostagePayment',"Postage and Payment"),
+            'Title'     => _t('Commerce.PostagePayment', "Postage and Payment"),
             'Form'      => $form
         ));
 
@@ -220,7 +232,8 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return MemberLoginForm
      */
-    public function LoginForm() {
+    public function LoginForm()
+    {
         $form = CommerceLoginForm::create($this, 'LoginForm');
         $form->setAttribute("action", $this->Link("LoginForm"));
 
@@ -243,14 +256,17 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return BillingDetailsForm
      */
-    public function BillingForm() {
+    public function BillingForm()
+    {
         $form = BillingDetailsForm::create($this, 'BillingForm')
             ->addExtraClass('forms')
             ->addExtraClass('columnar')
             ->addExtraClass('row');
 
         $data = Session::get("Commerce.BillingDetailsForm.data");
-        if(is_array($data)) $form->loadDataFrom($data);
+        if (is_array($data)) {
+            $form->loadDataFrom($data);
+        }
 
         $this->extend("updateBillingForm", $form);
 
@@ -262,14 +278,17 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return DeliveryDetailsForm
      */
-    public function DeliveryForm() {
+    public function DeliveryForm()
+    {
         $form = DeliveryDetailsForm::create($this, 'DeliveryForm')
             ->addExtraClass('forms')
             ->addExtraClass('columnar')
             ->addExtraClass('row');
 
         $data = Session::get("Commerce.DeliveryDetailsForm.data");
-        if(is_array($data)) $form->loadDataFrom($data);
+        if (is_array($data)) {
+            $form->loadDataFrom($data);
+        }
 
         $this->extend("updateDeliveryForm", $form);
 
@@ -281,8 +300,9 @@ class Checkout_Controller extends Commerce_Controller {
      *
      * @return PostagePaymentForm
      */
-    public function PostagePaymentForm() {
-        $form = PostagePaymentForm::create($this,"PostagePaymentForm")
+    public function PostagePaymentForm()
+    {
+        $form = PostagePaymentForm::create($this, "PostagePaymentForm")
             ->addExtraClass("forms");
 
         $this->extend("updatePostagePaymentForm", $form);

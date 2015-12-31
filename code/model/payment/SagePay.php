@@ -1,6 +1,7 @@
 <?php
 
-class SagePay extends CommercePaymentMethod {
+class SagePay extends CommercePaymentMethod
+{
 
     public static $hidden = true;
 
@@ -15,10 +16,11 @@ class SagePay extends CommercePaymentMethod {
     );
 
 
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
 
-        if($this->ID) {
+        if ($this->ID) {
             // Payment Gateway Options
             $email_options = array(
                 "Don't",
@@ -57,7 +59,7 @@ class SagePay extends CommercePaymentMethod {
 
             $fields->addFieldToTab(
                 "Root.Main",
-                EmailField::create('EmailRecipient','Email address of user to recieve email'),
+                EmailField::create('EmailRecipient', 'Email address of user to recieve email'),
                 "Summary"
             );
         }
@@ -66,21 +68,24 @@ class SagePay extends CommercePaymentMethod {
     }
 
 
-    public function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
 
         $this->CallBackSlug = (!$this->CallBackSlug) ? 'sagepay' : Convert::raw2url($this->CallBackSlug);
 
-        if(!$this->Summary)
+        if (!$this->Summary) {
             $this->Summary = "Pay with credit/debit card securely via SagePay";
+        }
 
-        if(!$this->GatewayMessage)
+        if (!$this->GatewayMessage) {
             $this->GatewayMessage = "Thank you for your order from: " . SiteConfig::current_site_config()->Title;
+        }
     }
-
 }
 
-class SagePayForms extends SagePay {
+class SagePayForms extends SagePay
+{
 
     public static $hidden = false;
 
@@ -89,7 +94,8 @@ class SagePayForms extends SagePay {
     public $Title = 'SagePay Forms Integration';
 }
 
-class SagePayServer extends SagePay {
+class SagePayServer extends SagePay
+{
 
     public static $hidden = false;
 

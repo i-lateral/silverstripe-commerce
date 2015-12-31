@@ -7,7 +7,8 @@
  * @package commerce
  * @author i-lateral (http://www.i-lateral.com)
  */
-class MemberAddress extends DataObject {
+class MemberAddress extends DataObject
+{
 
     public static $db = array(
         'FirstName'         => 'Varchar',
@@ -28,13 +29,17 @@ class MemberAddress extends DataObject {
      *
      * @return Boolean
      */
-    public function canCreate($member = null) {
-        if(!$member) $member = Member::currentUser();
+    public function canCreate($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
 
-        if($member)
+        if ($member) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -42,15 +47,19 @@ class MemberAddress extends DataObject {
      *
      * @return Boolean
      */
-    public function canView($member = null) {
-        if(!$member) $member = Member::currentUser();
+    public function canView($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
 
-        if($member && $this->OwnerID == $member->ID)
+        if ($member && $this->OwnerID == $member->ID) {
             return true;
-        else if($member && Permission::checkMember($member->ID, array("ADMIN")))
+        } elseif ($member && Permission::checkMember($member->ID, array("ADMIN"))) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -58,15 +67,19 @@ class MemberAddress extends DataObject {
      *
      * @return Boolean
      */
-    public function canEdit($member = null) {
-        if(!$member) $member = Member::currentUser();
+    public function canEdit($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
 
-        if($member && $this->OwnerID == $member->ID)
+        if ($member && $this->OwnerID == $member->ID) {
             return true;
-        else if($member && Permission::checkMember($member->ID, array("ADMIN")))
+        } elseif ($member && Permission::checkMember($member->ID, array("ADMIN"))) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -74,14 +87,18 @@ class MemberAddress extends DataObject {
      *
      * @return Boolean
      */
-    public function canDelete($member = null) {
-        if(!$member) $member = Member::currentUser();
+    public function canDelete($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
 
-        if($member && $this->OwnerID == $member->ID)
+        if ($member && $this->OwnerID == $member->ID) {
             return true;
-        else if($member && Permission::checkMember($member->ID, array("ADMIN")))
+        } elseif ($member && Permission::checkMember($member->ID, array("ADMIN"))) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }

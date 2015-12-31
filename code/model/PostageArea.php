@@ -4,7 +4,8 @@
  *
  * @author morven
  */
-class PostageArea extends DataObject {
+class PostageArea extends DataObject
+{
 
     private static $db = array(
         "Title"         => "Varchar",
@@ -19,15 +20,18 @@ class PostageArea extends DataObject {
         "Site"          => "SiteConfig"
     );
 
-    public function canCreate($member = null) {
+    public function canCreate($member = null)
+    {
         return true;
     }
 
-    public function canEdit($member = null) {
+    public function canEdit($member = null)
+    {
         return true;
     }
 
-    public function canDelete($member = null) {
+    public function canDelete($member = null)
+    {
         return true;
     }
 }

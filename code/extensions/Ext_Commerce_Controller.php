@@ -5,25 +5,28 @@
  *
  * @package commerce
  */
-class Ext_Commerce_Controller extends Extension {
+class Ext_Commerce_Controller extends Extension
+{
 
     /**
      * @return void
      */
-    public function onBeforeInit() {
-        if(class_exists('Subsite') && Subsite::currentSubsite()) {
+    public function onBeforeInit()
+    {
+        if (class_exists('Subsite') && Subsite::currentSubsite()) {
             // Set the location
             i18n::set_locale(Subsite::currentSubsite()->Language);
 
             // Check if url is primary domain, if not, re-direct
-            if($_SERVER['HTTP_HOST'] != Subsite::currentSubsite()->getPrimaryDomain())
+            if ($_SERVER['HTTP_HOST'] != Subsite::currentSubsite()->getPrimaryDomain()) {
                 $this->owner->redirect(Subsite::currentSubsite()->absoluteBaseURL());
+            }
         }
 
         // Setup currency globally based on what is set in admin
         $config = SiteConfig::current_site_config();
 
-        if($config->Currency()) {
+        if ($config->Currency()) {
             Currency::setCurrencySymbol($config->Currency()->HTMLNotation);
         }
     }
@@ -34,9 +37,10 @@ class Ext_Commerce_Controller extends Extension {
      * @param Parent the ID of a parent cetegory
      * @return DataList
      */
-    public function getCommerceCategories($ParentID = 0) {
+    public function getCommerceCategories($ParentID = 0)
+    {
         return ProductCategory::get()
-            ->filter("ParentID",$ParentID);
+            ->filter("ParentID", $ParentID);
     }
 
     /**
@@ -44,11 +48,13 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @param ParentCategory the ID of
      */
-    public function getCommerceProducts($ParentCategory = null) {
+    public function getCommerceProducts($ParentCategory = null)
+    {
         $products = Product::get();
 
-        if(isset($ParentCategory) && is_int($ParentCategory))
+        if (isset($ParentCategory) && is_int($ParentCategory)) {
             $products = $products->where("ParentID = {$ParentID}");
+        }
 
         return $products;
     }
@@ -58,12 +64,13 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @return HTML
      */
-    public function getCommerceCategoryNav($ParentID = 0) {
+    public function getCommerceCategoryNav($ParentID = 0)
+    {
         $vars = array(
             'ProductCategories' => $this->owner->getCommerceCategories($ParentID)
         );
 
-        return $this->owner->renderWith('Commerce_CategoryNav',$vars);
+        return $this->owner->renderWith('Commerce_CategoryNav', $vars);
     }
 
 
@@ -72,7 +79,8 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @return string URL to cart controller
      */
-    public function getCommerceCartLink(){
+    public function getCommerceCartLink()
+    {
         return Controller::join_links(
             BASE_URL,
             ShoppingCart::config()->url_segment
@@ -85,13 +93,14 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @return string Rendered HTML of cart button
      */
-    public function getCommerceCartButton(){
+    public function getCommerceCartButton()
+    {
         $vars = array(
             'Link'  => $this->owner->getCommerceCartLink(),
             'Cart' => $this->owner->getCommerceCart()
         );
 
-        return $this->owner->renderWith('Commerce_CartButton',$vars);
+        return $this->owner->renderWith('Commerce_CartButton', $vars);
     }
 
 
@@ -100,7 +109,8 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @return ShoppingCart
      */
-    public function getCommerceCart() {
+    public function getCommerceCart()
+    {
         return ShoppingCart::create();
     }
 
@@ -109,7 +119,8 @@ class Ext_Commerce_Controller extends Extension {
      *
      * @return Boolean
      */
-    public function getCommerceCartEnabled() {
+    public function getCommerceCartEnabled()
+    {
         return ShoppingCart::config()->enabled;
     }
 }

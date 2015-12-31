@@ -4,7 +4,8 @@
   *
   * @package Commerce
   */
-class OrderAdmin extends ModelAdmin {
+class OrderAdmin extends ModelAdmin
+{
 
     private static $url_segment = 'orders';
 
@@ -22,8 +23,9 @@ class OrderAdmin extends ModelAdmin {
      * For an order, export all fields by default
      * 
      */
-    public function getExportFields() {
-        if($this->modelClass == 'Order') {
+    public function getExportFields()
+    {
+        if ($this->modelClass == 'Order') {
             $return = array(
                 "OrderNumber"       => "#",
                 "Status"            => "Status",
@@ -60,21 +62,25 @@ class OrderAdmin extends ModelAdmin {
 
         $extend = $this->extend("updateExportFields", $return);
 
-        if($extend && is_array($extend)) $return = $extend;
+        if ($extend && is_array($extend)) {
+            $return = $extend;
+        }
 
-        return $return; 
+        return $return;
     }
 
-    public function getList() {
+    public function getList()
+    {
         $list = parent::getList();
 
         return $list;
     }
 
-    public function getEditForm($id = null, $fields = null) {
+    public function getEditForm($id = null, $fields = null)
+    {
         $form = parent::getEditForm($id, $fields);
 
-        if($this->modelClass == 'Order') {
+        if ($this->modelClass == 'Order') {
             $fields = $form->Fields();
             $gridField = $fields->fieldByName('Order');
 
@@ -109,7 +115,7 @@ class OrderAdmin extends ModelAdmin {
                 ->addComponent($manager);
 
             // Update list of items for subsite (if used)
-            if(class_exists('Subsite')) {
+            if (class_exists('Subsite')) {
                 $list = $gridField
                     ->getList()
                     ->filter(array(

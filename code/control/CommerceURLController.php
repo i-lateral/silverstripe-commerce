@@ -7,12 +7,15 @@
  * @package commerce
  * @subpackage control
  */
-class CommerceURLController extends Controller {
-    public function init() {
+class CommerceURLController extends Controller
+{
+    public function init()
+    {
         parent::init();
     }
 
-    public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+    public function handleRequest(SS_HTTPRequest $request, DataModel $model)
+    {
         $this->pushCurrent();
         $this->urlParams = $request->allParams();
         $this->request = $request;
@@ -27,13 +30,15 @@ class CommerceURLController extends Controller {
         $this->extend('onAfterInit');
 
         // First check products against URL segment
-        if($product = Product::get()->filter(array('URLSegment'=>$urlsegment,'Disabled'=>0))->first()) {
+        if ($product = Product::get()->filter(array('URLSegment'=>$urlsegment, 'Disabled'=>0))->first()) {
             $controller = Catalogue_Controller::create($product);
-        } elseif($category = ProductCategory::get()->filter('URLSegment',$urlsegment)->first()) {
+        } elseif ($category = ProductCategory::get()->filter('URLSegment', $urlsegment)->first()) {
             $controller = Catalogue_Controller::create($category);
         } else {
             // If CMS is installed
-            if(class_exists('ModelAsController')) $controller = ModelAsController::create();
+            if (class_exists('ModelAsController')) {
+                $controller = ModelAsController::create();
+            }
         }
 
         $result = $controller->handleRequest($request, $model);

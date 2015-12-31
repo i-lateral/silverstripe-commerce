@@ -4,7 +4,8 @@
  *
  * @author morven
  */
-class OrderItem extends DataObject {
+class OrderItem extends DataObject
+{
     private static $db = array(
         'Title'         => 'Varchar',
         'SKU'           => 'Varchar(100)',
@@ -44,10 +45,12 @@ class OrderItem extends DataObject {
      *
      * @return Product
      */
-    public function Product() {
+    public function Product()
+    {
         // If the SKU is set, and it matches a product, return product
-        if($this->SKU && $product = Product::get()->filter("SKU", $this->SKU)->first())
+        if ($this->SKU && $product = Product::get()->filter("SKU", $this->SKU)->first()) {
             return $product;
+        }
 
         // If nothing has matched, return an empty product
         return Product::create();
@@ -58,7 +61,8 @@ class OrderItem extends DataObject {
      *
      * @return Product
      */
-    public function getMatchProduct() {
+    public function getMatchProduct()
+    {
         return $this->Product();
     }
 
@@ -67,7 +71,8 @@ class OrderItem extends DataObject {
      *
      * @return Decimal
      */
-    public function getSubTotal() {
+    public function getSubTotal()
+    {
         return $this->Quantity * $this->Price;
     }
 
@@ -76,7 +81,8 @@ class OrderItem extends DataObject {
      *
      * @return Decimal
      */
-    public function getTaxTotal() {
+    public function getTaxTotal()
+    {
         return $this->Quantity * $this->Tax;
     }
 
@@ -85,7 +91,8 @@ class OrderItem extends DataObject {
      *
      * @return Currency
      */
-    public function getTotal() {
+    public function getTotal()
+    {
         return $this->SubTotal + $this->TaxTotal;
     }
 
@@ -94,14 +101,15 @@ class OrderItem extends DataObject {
      * HTML string
      *
      */
-    public function getCustomDetails() {
+    public function getCustomDetails()
+    {
         $htmltext = HTMLText::create();
         $return = "";
 
-        if($this->Customisation) {
+        if ($this->Customisation) {
             $customisations = unserialize($this->Customisation);
 
-            foreach($customisations as $custom) {
+            foreach ($customisations as $custom) {
                 $return .= $custom->Title . ': ' . $custom->Value . ";<br/>";
             }
         }
@@ -115,21 +123,26 @@ class OrderItem extends DataObject {
      *
      * @return Boolean
      */
-    public function canView($member = null) {
+    public function canView($member = null)
+    {
         $extended = $this->extend('canView', $member);
-        if($extended && $extended !== null) return $extended;
+        if ($extended && $extended !== null) {
+            return $extended;
+        }
 
-        if($member instanceof Member)
+        if ($member instanceof Member) {
             $memberID = $member->ID;
-        else if(is_numeric($member))
+        } elseif (is_numeric($member)) {
             $memberID = $member;
-        else
+        } else {
             $memberID = Member::currentUserID();
+        }
 
-        if($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_VIEW_ORDERS")))
+        if ($memberID && Permission::checkMember($memberID, array("ADMIN", "COMMERCE_VIEW_ORDERS"))) {
             return true;
-        else if($memberID && $memberID == $this->CustomerID)
+        } elseif ($memberID && $memberID == $this->CustomerID) {
             return true;
+        }
 
         return false;
     }
@@ -139,9 +152,12 @@ class OrderItem extends DataObject {
      *
      * @return Boolean
      */
-    public function canCreate($member = null) {
+    public function canCreate($member = null)
+    {
         $extended = $this->extend('canCreate', $member);
-        if($extended && $extended !== null) return $extended;
+        if ($extended && $extended !== null) {
+            return $extended;
+        }
 
         return true;
     }
@@ -151,9 +167,12 @@ class OrderItem extends DataObject {
      *
      * @return Boolean
      */
-    public function canEdit($member = null) {
+    public function canEdit($member = null)
+    {
         $extended = $this->extend('canEdit', $member);
-        if($extended && $extended !== null) return $extended;
+        if ($extended && $extended !== null) {
+            return $extended;
+        }
 
         return false;
     }
@@ -163,9 +182,12 @@ class OrderItem extends DataObject {
      *
      * @return Boolean
      */
-    public function canDelete($member = null) {
+    public function canDelete($member = null)
+    {
         $extended = $this->extend('canDelete', $member);
-        if($extended && $extended !== null) return $extended;
+        if ($extended && $extended !== null) {
+            return $extended;
+        }
 
         return false;
     }

@@ -1,16 +1,20 @@
 <?php
 
-class OrderReport extends SS_Report {
+class OrderReport extends SS_Report
+{
 
-    public function title() {
+    public function title()
+    {
         return "Commerce Orders";
     }
 
-    public function description() {
+    public function description()
+    {
         return "View reports on all orders made through this site";
     }
 
-    public function columns() {
+    public function columns()
+    {
         return array(
             'OrderNumber' => 'Order<br/>Number',
             'Created' => 'Order<br/>Date',
@@ -27,22 +31,25 @@ class OrderReport extends SS_Report {
         );
     }
 
-    public function exportColumns() {
+    public function exportColumns()
+    {
         // Loop through all colls and replace BR's with spaces
         $cols = array();
 
-        foreach($this->columns() as $key => $value) {
+        foreach ($this->columns() as $key => $value) {
             $cols[$key] = str_replace('<br/>', ' ', $value);
         }
 
         return $cols;
     }
 
-    public function sortColumns() {
+    public function sortColumns()
+    {
         return array();
     }
 
-    public function getReportField() {
+    public function getReportField()
+    {
         $gridField = parent::getReportField();
 
         // Edit CSV export button
@@ -52,18 +59,24 @@ class OrderReport extends SS_Report {
         return $gridField;
     }
 
-    public function sourceRecords($params, $sort, $limit) {
+    public function sourceRecords($params, $sort, $limit)
+    {
         // Check filters
         $where_filter = array();
 
         $where_filter[] = (isset($params['Filter_Year'])) ? "YEAR(\"Created\") = '{$params['Filter_Year']}'" : "YEAR(\"Created\") = '".date('Y')."'";
-        if(!empty($params['Filter_Month'])) $where_filter[] = "Month(\"Created\") = '{$params['Filter_Month']}'";
-        if(!empty($params['Filter_Status'])) $where_filter[] = "Status = '{$params['Filter_Status']}'";
+        if (!empty($params['Filter_Month'])) {
+            $where_filter[] = "Month(\"Created\") = '{$params['Filter_Month']}'";
+        }
+        if (!empty($params['Filter_Status'])) {
+            $where_filter[] = "Status = '{$params['Filter_Status']}'";
+        }
 
         $limit = (isset($params['ResultsLimit']) && $params['ResultsLimit'] != 0) ? $params['ResultsLimit'] : '';
 
-        if(!isset($sort))
+        if (!isset($sort)) {
             $sort = (isset($params['Sort'])) ? Convert::raw2sql($params['Sort']) : 'Created DESC';
+        }
 
         $orders = Order::get()
             ->where(implode(' AND ', $where_filter))
@@ -73,30 +86,35 @@ class OrderReport extends SS_Report {
         return $orders;
     }
 
-    public function parameterFields() {
+    public function parameterFields()
+    {
         $fields = new FieldList();
 
-        if(class_exists("Subsite")) {
+        if (class_exists("Subsite")) {
             $first_order = Subsite::get_from_all_subsites("Order")
-                ->sort('Created','ASC')
+                ->sort('Created', 'ASC')
                 ->first();
         } else {
             $first_order = Order::get()
-                ->sort('Created','ASC')
+                ->sort('Created', 'ASC')
                 ->first();
         }
 
         // Check if any order exist
-        if($first_order) {
+        if ($first_order) {
             // List all months
             $months = array('All');
-            for ($i = 1; $i <= 12; $i++) { $months[] = date("F", mktime(0, 0, 0, $i + 1, 0, 0)); }
+            for ($i = 1; $i <= 12; $i++) {
+                $months[] = date("F", mktime(0, 0, 0, $i + 1, 0, 0));
+            }
 
             // Get the first order, then count down from current year to that
             $firstyear = new SS_Datetime('FirstDate');
             $firstyear->setValue($first_order->Created);
             $years = array();
-            for ($i = date('Y'); $i >= $firstyear->Year(); $i--) { $years[$i] = $i; }
+            for ($i = date('Y'); $i >= $firstyear->Year(); $i--) {
+                $years[$i] = $i;
+            }
 
             // Order Status
             $status = singleton('Order')->dbObject('Status')->enumValues();

@@ -1,6 +1,7 @@
 <?php
 
-class Ext_Commerce_Member extends DataExtension {
+class Ext_Commerce_Member extends DataExtension
+{
     private static $db = array(
         "PhoneNumber"   => "Varchar",
         "Company"       => "Varchar(99)"
@@ -11,7 +12,8 @@ class Ext_Commerce_Member extends DataExtension {
         "Addresses"     => "MemberAddress"
     );
 
-    public function updateCMSFields(FieldList $fields) {
+    public function updateCMSFields(FieldList $fields)
+    {
         $fields->remove("PhoneNumber");
 
         $fields->addFieldToTab(
@@ -34,11 +36,12 @@ class Ext_Commerce_Member extends DataExtension {
      *
      * @return Discount
      */
-    public function getDiscount() {
+    public function getDiscount()
+    {
         $discounts = ArrayList::create();
 
-        foreach($this->owner->Groups() as $group) {
-            foreach($group->Discounts() as $discount) {
+        foreach ($this->owner->Groups() as $group) {
+            foreach ($group->Discounts() as $discount) {
                 $discounts->add($discount);
             }
         }
@@ -54,12 +57,13 @@ class Ext_Commerce_Member extends DataExtension {
      *
      * @return DataList
      */
-    public function getOutstandingOrders() {
+    public function getOutstandingOrders()
+    {
         $orders = $this
             ->owner
             ->Orders()
             ->filter(array(
-                "Status" => array("paid","processing")
+                "Status" => array("paid", "processing")
             ));
 
         return $orders;
@@ -71,12 +75,13 @@ class Ext_Commerce_Member extends DataExtension {
      *
      * @return DataList
      */
-    public function getHistoricOrders() {
+    public function getHistoricOrders()
+    {
         $orders = $this
             ->owner
             ->Orders()
             ->filter(array(
-                "Status" => array("dispatched","canceled")
+                "Status" => array("dispatched", "canceled")
             ));
 
         return $orders;

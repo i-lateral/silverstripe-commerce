@@ -1,6 +1,7 @@
 <?php
 
-class PayPal extends CommercePaymentMethod {
+class PayPal extends CommercePaymentMethod
+{
 
     public static $handler = "PayPalHandler";
 
@@ -12,10 +13,11 @@ class PayPal extends CommercePaymentMethod {
         'BusinessID' => 'Varchar(99)'
     );
 
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
 
-        if($this->ID) {
+        if ($this->ID) {
             $fields->removeByName("URL");
 
             $fields->addFieldToTab(
@@ -28,7 +30,8 @@ class PayPal extends CommercePaymentMethod {
         return $fields;
     }
 
-    public function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
 
         $this->CallBackSlug = (!$this->CallBackSlug) ? 'paypal' : $this->CallBackSlug;

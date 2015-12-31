@@ -5,7 +5,8 @@
  *
  * @package commerce
  */
-class CommerceGridFieldBulkAction_Paid extends GridFieldBulkActionHandler {
+class CommerceGridFieldBulkAction_Paid extends GridFieldBulkActionHandler
+{
 
     private static $allowed_actions = array(
         'paid'
@@ -15,10 +16,11 @@ class CommerceGridFieldBulkAction_Paid extends GridFieldBulkActionHandler {
         'paid' => 'paid'
     );
 
-    public function paid(SS_HTTPRequest $request) {
+    public function paid(SS_HTTPRequest $request)
+    {
         $ids = array();
 
-        foreach($this->getRecords() as $record) {
+        foreach ($this->getRecords() as $record) {
             array_push($ids, $record->ID);
 
             $record->Status = 'paid';

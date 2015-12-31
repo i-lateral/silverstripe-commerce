@@ -1,6 +1,7 @@
 <?php
 
-class ProductCategory extends DataObject {
+class ProductCategory extends DataObject
+{
     private static $db = array(
         'Title'         => 'Varchar',
         'URLSegment'    => 'Varchar',
@@ -40,7 +41,8 @@ class ProductCategory extends DataObject {
     *
     * @return string URL to cart controller
     */
-    public function Link($action = null) {
+    public function Link($action = null)
+    {
         return Controller::join_links(
             BASE_URL,
             $this->URLSegment,
@@ -51,11 +53,13 @@ class ProductCategory extends DataObject {
     /**
      * Return the absolute link to this category
      */
-    public function AbsoluteLink($action = null) {
+    public function AbsoluteLink($action = null)
+    {
         return Director::absoluteURL($this->Link($action));
     }
 
-    public function getMenuTitle() {
+    public function getMenuTitle()
+    {
         return $this->Title;
     }
 
@@ -65,11 +69,13 @@ class ProductCategory extends DataObject {
      *
      * @return bool
      */
-    public function isCurrent() {
-        if($this->ID)
+    public function isCurrent()
+    {
+        if ($this->ID) {
             return $this->ID == Catalogue_Controller::get_current_category()->ID;
-        else
+        } else {
             return $this === Catalogue_Controller::get_current_category();
+        }
     }
 
     /**
@@ -79,21 +85,24 @@ class ProductCategory extends DataObject {
      *
      * @return bool
      */
-    public function isSection() {
+    public function isSection()
+    {
         // First check if we are currently viewing a product
         $product = Catalogue_Controller::get_current_product();
 
-        if($product->ID && $product->Categories()->exists()) {
+        if ($product->ID && $product->Categories()->exists()) {
             $ancestors = $product->Categories()->first()->getAncestors()->column();
             $ancestors[] = $product->Categories()->first()->ID;
         } else {
             // Get a map of ancestors
             $ancestors = Catalogue_Controller::get_current_category()->getAncestors()->column();
 
-            if($this->isCurrent()) $ancestors[] = $this->ID;
+            if ($this->isCurrent()) {
+                $ancestors[] = $this->ID;
+            }
         }
 
-        return in_array($this->ID,$ancestors) ? true : false;
+        return in_array($this->ID, $ancestors) ? true : false;
     }
 
     /**
@@ -102,10 +111,11 @@ class ProductCategory extends DataObject {
      *
      * @return string
      */
-    public function LinkingMode() {
-        if($this->isCurrent()) {
+    public function LinkingMode()
+    {
+        if ($this->isCurrent()) {
             return 'current';
-        } elseif($this->isSection()) {
+        } elseif ($this->isSection()) {
             return 'section';
         } else {
             return 'link';
@@ -117,7 +127,8 @@ class ProductCategory extends DataObject {
      *
      * @return string
      */
-    public function LinkOrSection() {
+    public function LinkOrSection()
+    {
         return $this->isSection() ? 'section' : 'link';
     }
 
@@ -129,7 +140,8 @@ class ProductCategory extends DataObject {
      *
      * @return string The breadcrumb trail.
      */
-    public function Breadcrumbs($maxDepth = 20) {
+    public function Breadcrumbs($maxDepth = 20)
+    {
         $template = new SSViewer('BreadcrumbsTemplate');
 
         return $template->process($this->customise(new ArrayData(array(
@@ -141,10 +153,11 @@ class ProductCategory extends DataObject {
      * Returns the category in the current stack of the given level.
      * Level(1) will return the category item that we're currently inside, etc.
      */
-    public function Level($level) {
+    public function Level($level)
+    {
         $parent = $this;
         $stack = array($parent);
-        while($parent = $parent->Parent) {
+        while ($parent = $parent->Parent) {
             array_unshift($stack, $parent);
         }
 
@@ -157,7 +170,8 @@ class ProductCategory extends DataObject {
      *
      * @return ArrayList
      */
-    public function SortedProducts() {
+    public function SortedProducts()
+    {
         return $this->Products()->Sort("SortOrder ASC, \"Product\".\"Title\" ASC");
     }
 
@@ -167,26 +181,32 @@ class ProductCategory extends DataObject {
      *
      * @return ArrayList
      */
-    public function AllProducts() {
+    public function AllProducts()
+    {
         $products = new ArrayList();
 
         // First add all products from this category
-        foreach($this->Products() as $product) {
-            if(!$product->Disabled) $products->add($product);
+        foreach ($this->Products() as $product) {
+            if (!$product->Disabled) {
+                $products->add($product);
+            }
         }
 
         // Now loop each child product
-        foreach($this->Children() as $child) {
+        foreach ($this->Children() as $child) {
             // First add all products from this category
-            foreach($child->Products() as $product) {
-                if(!$product->Disabled) $products->add($product);
+            foreach ($child->Products() as $product) {
+                if (!$product->Disabled) {
+                    $products->add($product);
+                }
             }
         }
 
         return $products;
     }
 
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
 
         $fields->removeByName('Sort');
@@ -221,22 +241,25 @@ class ProductCategory extends DataObject {
         return $fields;
     }
 
-    public function onBeforeWrite() {
+    public function onBeforeWrite()
+    {
         parent::onBeforeWrite();
 
         // Only call on first creation, ir if title is changed
-        if(($this->ID == 0) || $this->isChanged('Title') || !($this->URLSegment)) {
+        if (($this->ID == 0) || $this->isChanged('Title') || !($this->URLSegment)) {
             // Set the URL Segment, so it can be accessed via the controller
             $filter = URLSegmentFilter::create();
             $t = $filter->filter($this->Title);
 
             // Fallback to generic name if path is empty (= no valid, convertable characters)
-            if(!$t || $t == '-' || $t == '-1') $t = "category-{$this->ID}";
+            if (!$t || $t == '-' || $t == '-1') {
+                $t = "category-{$this->ID}";
+            }
 
             // Ensure that this object has a non-conflicting URLSegment value.
-            $existing_cats = ProductCategory::get()->filter('URLSegment',$t)->count();
-            $existing_products = Product::get()->filter('URLSegment',$t)->count();
-            $existing_pages = (class_exists('SiteTree')) ? SiteTree::get()->filter('URLSegment',$t)->count() : 0;
+            $existing_cats = ProductCategory::get()->filter('URLSegment', $t)->count();
+            $existing_products = Product::get()->filter('URLSegment', $t)->count();
+            $existing_pages = (class_exists('SiteTree')) ? SiteTree::get()->filter('URLSegment', $t)->count() : 0;
 
             $count = (int)$existing_cats + (int)$existing_products + (int)$existing_pages;
 
@@ -244,29 +267,34 @@ class ProductCategory extends DataObject {
         }
     }
 
-    public function onBeforeDelete() {
+    public function onBeforeDelete()
+    {
         parent::onBeforeDelete();
 
-        if($this->Children()) {
-            foreach($this->Children() as $child) {
+        if ($this->Children()) {
+            foreach ($this->Children() as $child) {
                 $child->delete();
             }
         }
     }
 
-    public function canView($member = false) {
+    public function canView($member = false)
+    {
         return true;
     }
 
-    public function canCreate($member = false) {
+    public function canCreate($member = false)
+    {
         return true;
     }
 
-    public function canEdit($member = false) {
+    public function canEdit($member = false)
+    {
         return true;
     }
 
-    public function canDelete($member = false) {
+    public function canDelete($member = false)
+    {
         return true;
     }
 }

@@ -4,7 +4,8 @@
  * This class is only used if the CMS is installed, it ensures that the catalog
  * URL is mapped via a page in the CMS
  */
-class Catalog extends Page {
+class Catalog extends Page
+{
     public static $icon = "commerce/images/product.png";
 
     private static $db = array(
@@ -15,11 +16,13 @@ class Catalog extends Page {
         'Category' => 'ProductCategory'
     );
 
-    public function CommerceChildren() {
+    public function CommerceChildren()
+    {
         return ProductCategory::get();
     }
 
-    public function getCMSFields() {
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
 
         $display_types = array(
@@ -30,7 +33,7 @@ class Catalog extends Page {
 
         $fields->addFieldToTab('Root.Main', DropDownField::create('Display', 'What will this catalog display?', $display_types), 'Content');
 
-        if($this->Display == 'Category') {
+        if ($this->Display == 'Category') {
             $fields->addFieldToTab(
                 'Root.Main',
                 TreeDropdownField::create(
@@ -47,10 +50,11 @@ class Catalog extends Page {
         return $fields;
     }
 
-    public function requireDefaultRecords() {
+    public function requireDefaultRecords()
+    {
         parent::requireDefaultRecords();
 
-        if(!Catalog::get()->first()) {
+        if (!Catalog::get()->first()) {
             $catalog = new Catalog();
             $catalog->Title = "Product Catalog";
             $catalog->URLSegment = "catalog";
@@ -63,34 +67,40 @@ class Catalog extends Page {
     }
 }
 
-class Catalog_Controller extends Page_Controller {
+class Catalog_Controller extends Page_Controller
+{
     public static $url_slug = 'catalog';
 
     public static $allowed_actions = array(
         'AddItemForm'
     );
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
-        Requirements::themedCSS("Commerce","commerce");
+        Requirements::themedCSS("Commerce", "commerce");
     }
 
-    public function getRootCategories() {
+    public function getRootCategories()
+    {
         return ProductCategory::get()->filter('ParentID', 0);
     }
 
-    public function getAllProducts() {
+    public function getAllProducts()
+    {
         return Product::get();
     }
 
-    public function getCategoryChildren() {
+    public function getCategoryChildren()
+    {
         $category = ProductCategory::get()->filter('ID', $this->CategoryID)->first();
 
-        if($category && $category->Children()->exists())
+        if ($category && $category->Children()->exists()) {
             return $category->Children();
-        else
+        } else {
             return $category->Products();
+        }
     }
     /*
     public function index() {
@@ -100,18 +110,22 @@ class Catalog_Controller extends Page_Controller {
             return $this->renderWith(array('Categorys', 'Page'));
     }*/
 
-    public function isProduct() {
-        if(Controller::curr()->request->Param('ProductID'))
+    public function isProduct()
+    {
+        if (Controller::curr()->request->Param('ProductID')) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
-    public function getCategory() {
+    public function getCategory()
+    {
         return self::get_current_category();
     }
 
-    public function getProduct() {
+    public function getProduct()
+    {
         return self::get_current_product();
     }
 
@@ -119,16 +133,18 @@ class Catalog_Controller extends Page_Controller {
      * Create an array list of either current category children or products
      *
      */
-    public function CategoriesOrProducts() {
+    public function CategoriesOrProducts()
+    {
         $category = $this->getCategory();
         $return = false;
 
-        if($category->Children()->exists())
+        if ($category->Children()->exists()) {
             $return = $category->Children();
-        elseif($category->Products()->exists())
+        } elseif ($category->Products()->exists()) {
             $return = $category->Products();
-        elseif($category->ID == 0)
+        } elseif ($category->ID == 0) {
             $return = Product::get();
+        }
 
         return $return;
     }

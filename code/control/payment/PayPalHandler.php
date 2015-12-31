@@ -1,16 +1,19 @@
 <?php
 
-class PayPalHandler extends CommercePaymentHandler {
+class PayPalHandler extends CommercePaymentHandler
+{
 
-    public function index() {
+    public function index()
+    {
         $site = SiteConfig::current_site_config();
         $order = $this->order;
 
         // Setup the paypal gateway URL
-        if(Director::isDev())
+        if (Director::isDev()) {
             $gateway_url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
-        else
+        } else {
             $gateway_url = "https://www.paypal.com/cgi-bin/webscr";
+        }
 
         $callback_url = Controller::join_links(
             Director::absoluteBaseURL(),
@@ -71,7 +74,7 @@ class PayPalHandler extends CommercePaymentHandler {
 
         $i = 1;
 
-        foreach($order->Items() as $item) {
+        foreach ($order->Items() as $item) {
             $fields->add(HiddenField::create('item_name_' . $i, null, $item->Title));
             $fields->add(HiddenField::create('amount_' . $i, null, number_format(($item->Price + $item->Tax), 2)));
             $fields->add(HiddenField::create('quantity_' . $i, null, $item->Quantity));
@@ -85,22 +88,22 @@ class PayPalHandler extends CommercePaymentHandler {
         $fields->add(HiddenField::create('quantity_' . $i, null, "1"));
 
         $actions = FieldList::create(
-            LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'),
-            FormAction::create('Submit', _t('Commerce.ConfirmPay','Confirm and Pay'))
+            LiteralField::create('BackButton', '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back', 'Back') . '</a>'),
+            FormAction::create('Submit', _t('Commerce.ConfirmPay', 'Confirm and Pay'))
                 ->addExtraClass('btn')
                 ->addExtraClass('btn-green')
         );
 
-        $form = Form::create($this,'Form',$fields,$actions)
+        $form = Form::create($this, 'Form', $fields, $actions)
             ->addExtraClass('forms')
             ->setFormMethod('POST')
             ->setFormAction($gateway_url);
 
-        $this->extend('updateForm',$form);
+        $this->extend('updateForm', $form);
 
         return array(
-            "Title"     => _t('Commerce.CheckoutSummary',"Summary"),
-            "MetaTitle" => _t('Commerce.CheckoutSummary',"Summary"),
+            "Title"     => _t('Commerce.CheckoutSummary', "Summary"),
+            "MetaTitle" => _t('Commerce.CheckoutSummary', "Summary"),
             "Form"      => $form
         );
     }
@@ -108,7 +111,8 @@ class PayPalHandler extends CommercePaymentHandler {
     /**
      * Process the callback data from the payment provider
      */
-    public function callback() {
+    public function callback()
+    {
         $data = $this->request->postVars();
 
         $success_url = Controller::join_links(
@@ -125,20 +129,21 @@ class PayPalHandler extends CommercePaymentHandler {
         );
 
         // Check if CallBack data exists and install id matches the saved ID
-        if(isset($data) && isset($data['custom']) && isset($data['payment_status'])) {
+        if (isset($data) && isset($data['custom']) && isset($data['payment_status'])) {
             $order = Order::get()->filter("OrderNumber", $data['custom'])->first();
 
-            if($order) {
+            if ($order) {
                 $request = 'cmd=_notify-validate';
 
-                foreach($data as $key => $value) {
+                foreach ($data as $key => $value) {
                     $request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
                 }
 
-                if(Director::isDev())
+                if (Director::isDev()) {
                     $paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
-                else
+                } else {
                     $paypal_url = "https://www.paypal.com/cgi-bin/webscr";
+                }
 
                 $curl = curl_init($paypal_url);
 
@@ -151,12 +156,12 @@ class PayPalHandler extends CommercePaymentHandler {
 
                 $response = curl_exec($curl);
 
-                if (!$response)
+                if (!$response) {
                     return false;
+                }
 
-                if((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($data['payment_status'])) {
-
-                    switch($data['payment_status']) {
+                if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($data['payment_status'])) {
+                    switch ($data['payment_status']) {
                         case 'Canceled_Reversal':
                             $order->Status = "canceled";
                             break;
@@ -201,5 +206,4 @@ class PayPalHandler extends CommercePaymentHandler {
 
         return array();
     }
-
 }
