@@ -33,7 +33,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
             ->push(
                 FormAction::create('doAddItemToCart',_t('Commerce.AddToCart','Add to Cart'))
                     ->addExtraClass('btn')
-                    ->addExtraClass('btn-green')
+                    ->addExtraClass('btn-green btn-primary')
             );
 
         // Add validator
