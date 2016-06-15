@@ -20,10 +20,10 @@
         "i-lateral/silverstripe-catalogue": "*",
         "i-lateral/silverstripe-checkout": "*",
         "i-lateral/silverstripe-orders": "*",
-        "i-lateral/silverstripe-sessionmessenger": "*",
+        "i-lateral/silverstripe-sessionmessenger": "1.*",
         "silverstripe-australia/gridfieldextensions": "1.1.*",
         "colymba/gridfield-bulk-editing-tools": "~2.1",
-        "bummzack/sortablefile": "*"
+        "bummzack/sortablefile": "1.2.*"
     },
     "suggest": {
         "silverstripe/cms": "Add full content management support to your site",
