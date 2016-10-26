@@ -1,2 +1,2 @@
 AdminRootController:
-  default_panel: 'CatalogueAdmin'
+  default_panel: 'Dashboard'
