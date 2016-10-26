@@ -17,10 +17,12 @@
     },
     "require": {
         "silverstripe/framework": ">=3.1",
+        "silverstripe/cms": ">=3.1",
         "i-lateral/silverstripe-catalogue": "*",
         "i-lateral/silverstripe-checkout": "*",
         "i-lateral/silverstripe-orders": "*",
         "i-lateral/silverstripe-sessionmessenger": "1.*",
+        "unclecheese/dashboard": "1.1.*",
         "silverstripe-australia/gridfieldextensions": "1.*",
         "colymba/gridfield-bulk-editing-tools": "~2.1",
         "bummzack/sortablefile": "1.*"

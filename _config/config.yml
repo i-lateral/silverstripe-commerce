@@ -26,3 +26,6 @@ CatalogueProductController:
 CatalogueProduct:
   extensions:
     - CommerceCatalogueProductExtension
+DashboardPanel:
+  extensions:
+    - CommerceDashboardPanelExtension
