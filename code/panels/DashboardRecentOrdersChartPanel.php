@@ -27,6 +27,7 @@ class DashboardRecentOrdersChartPanel extends DashboardPanel
         );
 
         $results = ArrayList::create();
+        $status = Order::config()->incomplete_status;
 
         // Get results for the last 30 days
         for ($i = 0; $i < 30; $i++) {
@@ -37,8 +38,10 @@ class DashboardRecentOrdersChartPanel extends DashboardPanel
             }
 
             $orders = Order::get()
-                ->filter("Created:PartialMatch", $date->format('Y-m-d'))
-                ->count();
+                ->filter(array(
+                    "Created:PartialMatch" => $date->format('Y-m-d'),
+                    "Status:not" => $status
+                ))->count();
             
             $results->add(ArrayData::create(array(
                 "Date"  => $date->format('jS F Y'),
