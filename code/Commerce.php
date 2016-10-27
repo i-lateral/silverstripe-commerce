@@ -94,4 +94,12 @@ class Commerce extends ViewableData {
      * @config
      */
     private static $add_out_of_stock = false;
+        
+    /**
+     * If stock items drop below this level, mark as low in stock.
+     * 
+     * @var boolean
+     * @config
+     */
+    private static $low_stock_number = 10;
 }

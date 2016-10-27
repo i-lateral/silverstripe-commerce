@@ -1,12 +1,14 @@
 .DashboardTopProductsPanel .dashboard-panel-content,
 .DashboardNewCustomersPanel .dashboard-panel-content,
-.DashboardRecentOrdersListPanel .dashboard-panel-content {
+.DashboardRecentOrdersListPanel .dashboard-panel-content,
+.DashboardLowStockPanel .dashboard-panel-content {
     position: relative;
 }
 
 .DashboardTopProductsPanel .ss-ui-button,
 .DashboardNewCustomersPanel .ss-ui-button,
-.DashboardRecentOrdersListPanel .ss-ui-button {
+.DashboardRecentOrdersListPanel .ss-ui-button,
+.DashboardLowStockPanel .ss-ui-button {
     position: absolute;
     bottom: 10px;
     left: 10px;
