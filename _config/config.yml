@@ -19,10 +19,10 @@ SiteConfig:
     - CommerceSiteConfigExtension
 Order:
   extensions:
-    - CommerceOrder
+    - CommerceOrderExtension
 OrderItem:
   extensions:
-    - CommerceOrderItem
+    - CommerceOrderItemExtension
 CatalogueProductController:
   extensions:
     - CommerceCatalogueProductControllerExtension

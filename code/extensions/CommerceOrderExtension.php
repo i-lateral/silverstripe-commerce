@@ -8,7 +8,7 @@
  * @author ilateral (http://ilateralweb.co.uk)
  * @package commerce
  */
-class CommerceOrder extends DataExtension
+class CommerceOrderExtension extends DataExtension
 {
     private static $db = array(
         "GatewayData"       => "Text"

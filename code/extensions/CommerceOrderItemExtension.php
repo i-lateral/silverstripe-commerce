@@ -1,6 +1,6 @@
 <?php
 
-class CommerceOrderItem extends DataExtension {
+class CommerceOrderItemExtension extends DataExtension {
     
     /**
      * Find any items in the product catalogue with a matching StockID, good for
