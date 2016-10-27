@@ -17,7 +17,7 @@ class CommercePaymentHandlerExtension extends Extension {
         $data = $this->owner->getOrderData();
         
         // Setup an order based on the data from the shopping cart and load data
-        $order = new Order();
+        $order = new Estimate();
         
         $order->update($data);
         $order->OrderNumber = "";
@@ -69,7 +69,7 @@ class CommercePaymentHandlerExtension extends Extension {
         
         // If a payment is set, add to the order order
         if($data->PaymentID) {
-            $order = Order::get()
+            $order = Estimate::get()
                 ->filter("OrderNumber", $data->OrderNumber)
                 ->first();
                   
@@ -84,18 +84,22 @@ class CommercePaymentHandlerExtension extends Extension {
         $order = null;
         
         if($data->Status && $data->OrderID) {
-            $order = Order::get()
+            $order = Estimate::get()
                 ->filter("OrderNumber", $data->OrderID)
                 ->first();
         }
         
         if(!$order && $data->Status && $data->PaymentID) {
-            $order = Order::get()
+            $order = Estimate::get()
                 ->filter("PaymentNo", $data->PaymentID)
                 ->first();
         }
         
         if($order) {
+            $order->convertToOrder();
+            $order->write();
+
+            $order = Order::get()->byID($order->ID);
             $order->Status = $data->Status;
             $order->PaymentProvider = $data->PaymentProvider;
             $order->PaymentNo = $data->PaymentID;
