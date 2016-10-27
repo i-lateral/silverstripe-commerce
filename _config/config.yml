@@ -3,7 +3,10 @@ Name: commerceconfig
 ---
 # Config overwrites
 Checkout:
-    simple_checkout: false
+  simple_checkout: false
+ShoppingCart:
+  check_stock_levels: true
+
 # Extensions
 Controller:
   extensions:

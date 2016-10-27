@@ -77,4 +77,21 @@ class Commerce extends ViewableData {
         "TRY" => "&#8356;",
         "INR" => "&#x20B9;"
     );
+    
+    /**
+     * Should we track stock levels into the negative, if this is
+     * turned off, all product stock gets set to 0.
+     * 
+     * @var boolean
+     * @config
+     */
+    private static $allow_negative_stock = true;
+    
+    /**
+     * Allow users to add items to cart if there is not enough stock?
+     * 
+     * @var boolean
+     * @config
+     */
+    private static $add_out_of_stock = false;
 }

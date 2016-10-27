@@ -1,7 +1,14 @@
 <?php
 
+/**
+ * Update a Product to add stock levels and pack size and weight fields
+ *
+ * @author ilateral (http://ilateralweb.co.uk)
+ * @package commerce
+ */
 class CommerceCatalogueProductExtension extends DataExtension {
     private static $db = array(
+        "StockLevel" => "Int",
         "PackSize" => "Int",
         "Weight" => "Decimal"
     );
@@ -21,15 +28,23 @@ class CommerceCatalogueProductExtension extends DataExtension {
     }
     
     public function updateCMSFields(FieldList $fields) {
-        $fields->addFieldToTab(
+
+        $fields->addFieldsToTab(
             "Root.Settings",
-            NumericField::create('PackSize', $this->owner->FieldLabel("PackSize")),
-            "TaxRateID"
-        );
-        
-        $fields->addFieldToTab(
-            "Root.Settings",
-            NumericField::create('Weight', $this->owner->FieldLabel("Weight")),
+            array(
+                NumericField::create(
+                    "StockLevel",
+                    $this->owner->FieldLabel("StockLevel")
+                ),
+                NumericField::create(
+                    'PackSize',
+                    $this->owner->FieldLabel("PackSize")
+                ),
+                NumericField::create(
+                    'Weight',
+                    $this->owner->FieldLabel("Weight")
+                )
+            ),
             "TaxRateID"
         );
     }
