@@ -64,7 +64,8 @@ class CommerceCatalogueProductControllerExtension extends Extension {
                 "StockID" => $object->StockID,
                 "ID" => $object->ID,
                 "Weight" => $object->Weight,
-                "ClassName" => $object->ClassName
+                "ClassName" => $object->ClassName,
+                "Stocked" => $object->Stocked
             );
             
             // Try and add item to cart, return any exceptions raised

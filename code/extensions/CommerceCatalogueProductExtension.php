@@ -10,9 +10,16 @@ class CommerceCatalogueProductExtension extends DataExtension
 {
     
     private static $db = array(
+        "Stocked" => "Boolean",
         "StockLevel" => "Int",
         "PackSize" => "Int",
         "Weight" => "Decimal"
+    );
+
+    private static $defaults = array(
+        "Stocked" => true,
+        "StockLevel" => 10,
+        "PackSize" => 1
     );
 
     private static $summary_fields = array(
@@ -55,6 +62,10 @@ class CommerceCatalogueProductExtension extends DataExtension
         $fields->addFieldsToTab(
             "Root.Settings",
             array(
+                CheckboxField::create(
+                    "Stocked",
+                    $this->owner->FieldLabel("Stocked")
+                ),
                 NumericField::create(
                     "StockLevel",
                     $this->owner->FieldLabel("StockLevel")

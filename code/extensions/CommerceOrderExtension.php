@@ -28,7 +28,7 @@ class CommerceOrderExtension extends DataExtension
             foreach ($this->owner->Items() as $order_item) {
                 $product = $order_item->Match();
                 
-                if ($product && $order_item->Quantity) {
+                if ($product && $product->Stocked && $order_item->Quantity) {
                     $product->StockLevel = ($product->StockLevel - $order_item->Quantity);
                     if(!$allow_negative && $product->StockLevel < 0) $product->StockLevel == 0;
                     $product->write();
