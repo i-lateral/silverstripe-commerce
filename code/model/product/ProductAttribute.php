@@ -1,6 +1,7 @@
 <?php
 
-class ProductAttribute extends DataObject {
+class ProductAttribute extends DataObject
+{
     private static $db = array(
         'Title'     => 'Varchar',
         'Content'   => 'Varchar',

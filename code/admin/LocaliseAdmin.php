@@ -4,7 +4,8 @@
   *
   * @package Commerce
   */
-class LocaliseAdmin extends ModelAdmin {
+class LocaliseAdmin extends ModelAdmin
+{
     private static $url_segment = 'localisation';
     private static $menu_title = 'Localisation';
     private static $menu_priority = -1;
@@ -14,7 +15,8 @@ class LocaliseAdmin extends ModelAdmin {
         'ProductWeight',
     );
 
-    public function getEditForm($id = null, $fields = null) {
+    public function getEditForm($id = null, $fields = null)
+    {
         $form = parent::getEditForm($id, $fields);
 
         return $form;

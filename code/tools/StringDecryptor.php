@@ -36,7 +36,8 @@
  *              ->get();
  */
 
-class StringDecryptor {
+class StringDecryptor
+{
 
     /**
      * String that we are going to decrypt
@@ -63,7 +64,8 @@ class StringDecryptor {
      */
     private $hash;
 
-    private function __construct($string) {
+    private function __construct($string)
+    {
         $this->data = $string;
     }
 
@@ -73,7 +75,8 @@ class StringDecryptor {
      * @para, $string string to encrypt
      * @return StringEncryptor
      */
-    public static function create($string) {
+    public static function create($string)
+    {
         return new StringDecryptor($string);
     }
 
@@ -83,7 +86,8 @@ class StringDecryptor {
      * @param $type Type of encryption
      * @return self
      */
-    public function setEncryption($type) {
+    public function setEncryption($type)
+    {
         $this->encryption = $type;
         return $this;
     }
@@ -94,7 +98,8 @@ class StringDecryptor {
      * @param $hash
      * @return self
      */
-    public function setHash($hash) {
+    public function setHash($hash)
+    {
         $this->hash = $hash;
         return $this;
     }
@@ -104,7 +109,8 @@ class StringDecryptor {
      *
      * @return String
      */
-    public function get() {
+    public function get()
+    {
         return $this->encrypted_data;
     }
 
@@ -113,9 +119,10 @@ class StringDecryptor {
      *
      * @return self
      */
-    public function decode() {
+    public function decode()
+    {
         // Fix plus to space conversion issue
-        $this->data = str_replace(' ','+',$this->data);
+        $this->data = str_replace(' ', '+', $this->data);
 
         // Do decoding
         $this->data = base64_decode($this->data);
@@ -128,11 +135,13 @@ class StringDecryptor {
      *
      * @return self
      */
-    public function decrypt() {
-        if($this->encryption == 'XOR')
+    public function decrypt()
+    {
+        if ($this->encryption == 'XOR') {
             $this->encrypted_data = $this->simplexor();
-        elseif($this->encryption == 'MCRYPT')
+        } elseif ($this->encryption == 'MCRYPT') {
             $this->encrypted_data = $this->mcrypt();
+        }
 
         return $this;
     }
@@ -143,17 +152,18 @@ class StringDecryptor {
      *
      * return self
      */
-    private function simplexor() {
+    private function simplexor()
+    {
         $KeyList = array();
         $output = "";
 
         // Convert $Key into array of ASCII values
-        for($i = 0; $i < strlen($this->hash); $i++) {
+        for ($i = 0; $i < strlen($this->hash); $i++) {
             $KeyList[$i] = ord(substr($this->hash, $i, 1));
         }
 
         // Step through string a character at a time
-        for($i = 0; $i < strlen($this->data); $i++) {
+        for ($i = 0; $i < strlen($this->data); $i++) {
             $output.= chr(ord(substr($this->data, $i, 1)) ^ ($KeyList[$i % strlen($this->hash)]));
         }
 
@@ -166,7 +176,8 @@ class StringDecryptor {
      *
      * @return string
      */
-    private function mcrypt() {
+    private function mcrypt()
+    {
         // HEX decoding
         $data = pack('H*', $this->data);
 
@@ -184,7 +195,8 @@ class StringDecryptor {
      *
      * @return string
      */
-    private function removePKCS5Padding($decrypt) {
+    private function removePKCS5Padding($decrypt)
+    {
         $padChar = ord($decrypt[strlen($decrypt) - 1]);
         return substr($decrypt, 0, -$padChar);
     }

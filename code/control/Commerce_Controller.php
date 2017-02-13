@@ -7,7 +7,8 @@
  *
  * Currently this class acts pretty much as just a container for these classes.
  */
-abstract class Commerce_Controller extends Controller {
+abstract class Commerce_Controller extends Controller
+{
 
     /**
      * The URL segment that is matched from the routing rules. This MUST be set
@@ -23,20 +24,24 @@ abstract class Commerce_Controller extends Controller {
     /**
      * Returns the associated database record
      */
-    public function data() {
+    public function data()
+    {
         return $this->dataRecord;
     }
 
-    public function getDataRecord() {
+    public function getDataRecord()
+    {
         return $this->data();
     }
 
-    public function setDataRecord($dataRecord) {
+    public function setDataRecord($dataRecord)
+    {
         $this->dataRecord = $dataRecord;
         return $this;
     }
 
-    public function Link($action = null) {
+    public function Link($action = null)
+    {
         return Controller::join_links(
             Director::BaseURL(),
             $this->config()->url_segment,
@@ -49,9 +54,10 @@ abstract class Commerce_Controller extends Controller {
      *
      * At the moment this is used to set config where database access is required
      */
-    public function init() {
+    public function init()
+    {
         // Set the default currency symbol
-        if($siteconfig = SiteConfig::current_site_config()) {
+        if ($siteconfig = SiteConfig::current_site_config()) {
             Currency::config()->currency_symbol = $siteconfig->Currency()->HTMLNotation;
         }
 
@@ -69,7 +75,8 @@ abstract class Commerce_Controller extends Controller {
      * @param $country String listing the country to search, this has to be an ISO 3166 code
      * @param $zipcode String listing the zip/postage code to filter by
      */
-    public function getPostageAreas($country, $zipcode) {
+    public function getPostageAreas($country, $zipcode)
+    {
         $return = new ArrayList();
         $countries = new ArrayList();
         $cart = ShoppingCart::create();
@@ -79,25 +86,28 @@ abstract class Commerce_Controller extends Controller {
             ->PostageAreas();
 
         // First find all area's for this country directly (no wildcards)
-        foreach($all_rates as $rate) {
-            if(!(strpos(strtolower($rate->Country), strtolower($country)) === false))
+        foreach ($all_rates as $rate) {
+            if (!(strpos(strtolower($rate->Country), strtolower($country)) === false)) {
                 $countries->add($rate);
+            }
         }
 
         // If we have no countries in the list specificly, then check for wildcards
-        if(!$countries->exists()) {
-            foreach($all_rates as $rate) {
-                if($rate->Country == "*") $countries->add($rate);
+        if (!$countries->exists()) {
+            foreach ($all_rates as $rate) {
+                if ($rate->Country == "*") {
+                    $countries->add($rate);
+                }
             }
         }
 
         // If we have a list of countries check them for post codes
-        foreach($countries as $rate) {
-            $rate_codes = explode(",",$rate->ZipCode);
+        foreach ($countries as $rate) {
+            $rate_codes = explode(",", $rate->ZipCode);
 
-            foreach($rate_codes as $rate_to_check) {
+            foreach ($rate_codes as $rate_to_check) {
                 $curr_length = strlen($rate_to_check);
-                if(strtolower(substr($zipcode, 0, $curr_length)) == strtolower($rate_to_check)) {
+                if (strtolower(substr($zipcode, 0, $curr_length)) == strtolower($rate_to_check)) {
                     $return->add($rate);
                 }
             }
@@ -105,57 +115,68 @@ abstract class Commerce_Controller extends Controller {
 
         // If we still don't have anything to return, check or list of countries
         // for a wildcard
-        if(!$return->exists()) {
-            foreach($countries as $rate) {
-                if($rate->ZipCode == "*") $return->add($rate);
+        if (!$return->exists()) {
+            foreach ($countries as $rate) {
+                if ($rate->ZipCode == "*") {
+                    $return->add($rate);
+                }
             }
         }
 
         // Now we have a list of locations, start checking for additional
         // rules an remove if not applicable.
-        $total_cost = str_replace(",","",$cart->SubTotalCost());
-        $total_weight = str_replace(",","",$cart->TotalWeight());
-        $total_items = str_replace(",","",$cart->TotalItems());
+        $total_cost = str_replace(",", "", $cart->SubTotalCost());
+        $total_weight = str_replace(",", "", $cart->TotalWeight());
+        $total_items = str_replace(",", "", $cart->TotalItems());
 
         $max_cost = 0;
         $max_weight = 0;
         $max_items = 0;
 
         // First loop through and find items that are invalid
-        foreach($return as $location) {
-            if($location->Calculation == "Price" && ((float)$total_cost < $location->Unit))
+        foreach ($return as $location) {
+            if ($location->Calculation == "Price" && ((float)$total_cost < $location->Unit)) {
                 $return->remove($location);
+            }
 
-            if($location->Calculation == "Weight" && ((float)$total_weight < $location->Unit))
+            if ($location->Calculation == "Weight" && ((float)$total_weight < $location->Unit)) {
                 $return->remove($location);
+            }
 
-            if($location->Calculation == "Items" && ((float)$total_items < $location->Unit))
+            if ($location->Calculation == "Items" && ((float)$total_items < $location->Unit)) {
                 $return->remove($location);
+            }
         }
 
         // Now find max values based on units
-        foreach($return as $location) {
-            if($location->Calculation == "Price" && ($location->Unit > $max_cost))
+        foreach ($return as $location) {
+            if ($location->Calculation == "Price" && ($location->Unit > $max_cost)) {
                 $max_cost = $location->Unit;
+            }
 
-            if($location->Calculation == "Weight" && ($location->Unit > $max_weight))
+            if ($location->Calculation == "Weight" && ($location->Unit > $max_weight)) {
                 $max_weight = $location->Unit;
+            }
 
-            if($location->Calculation == "Items" && ($location->Unit > $max_items))
+            if ($location->Calculation == "Items" && ($location->Unit > $max_items)) {
                 $max_items = $location->Unit;
+            }
         }
 
         // Now loop through again and calculate which brackets each
         // Location fits in
-        foreach($return as $location) {
-            if($location->Calculation == "Price" && ($location->Unit < $max_cost))
+        foreach ($return as $location) {
+            if ($location->Calculation == "Price" && ($location->Unit < $max_cost)) {
                 $return->remove($location);
+            }
 
-            if($location->Calculation == "Weight" && ($location->Unit < $max_weight))
+            if ($location->Calculation == "Weight" && ($location->Unit < $max_weight)) {
                 $return->remove($location);
+            }
 
-            if($location->Calculation == "Items" && ($location->Unit < $max_items))
+            if ($location->Calculation == "Items" && ($location->Unit < $max_items)) {
                 $return->remove($location);
+            }
         }
 
         return $return;
@@ -170,13 +191,14 @@ abstract class Commerce_Controller extends Controller {
      * @param SearchForm $form The form instance that was submitted
      * @param SS_HTTPRequest $request Request generated for this action
      */
-    public function results($data, $form, $request) {
+    public function results($data, $form, $request)
+    {
         $results = $form->getResults();
 
         // For the moment this will also need to be added to your
         // Page_Controller::results() method (until a more elegant solution can
         // be found
-        if(class_exists("Product")) {
+        if (class_exists("Product")) {
             $products = Product::get()->filterAny(array(
                 "Title:PartialMatch" => $data["Search"],
                 "SKU" => $data["Search"],
@@ -186,7 +208,7 @@ abstract class Commerce_Controller extends Controller {
             $results->merge($products);
         }
 
-        $results = $results->sort("Title","ASC");
+        $results = $results->sort("Title", "ASC");
 
         $data = array(
             'Results' => $results,

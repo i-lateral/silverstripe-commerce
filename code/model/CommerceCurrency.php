@@ -4,7 +4,8 @@
  *
  * @author morven
  */
-class CommerceCurrency extends DataObject {
+class CommerceCurrency extends DataObject
+{
     private static $db = array(
         'Title' => 'Varchar',
         'HTMLNotation' => 'Varchar(10)',
@@ -23,10 +24,11 @@ class CommerceCurrency extends DataObject {
         'GatewayCode'  => 'Currency code for payment gateway'
     );
 
-    public function requireDefaultRecords() {
+    public function requireDefaultRecords()
+    {
         parent::requireDefaultRecords();
 
-        if(!CommerceCurrency::get()->exists()) {
+        if (!CommerceCurrency::get()->exists()) {
             $gbp = new CommerceCurrency();
             $gbp->Title = "UK Pounds";
             $gbp->HTMLNotation = "&pound;";
@@ -53,15 +55,18 @@ class CommerceCurrency extends DataObject {
         }
     }
 
-    public function canCreate($member = null) {
+    public function canCreate($member = null)
+    {
         return true;
     }
 
-    public function canEdit($member = null) {
+    public function canEdit($member = null)
+    {
         return true;
     }
 
-    public function canDelete($member = null) {
+    public function canDelete($member = null)
+    {
         return true;
     }
 }

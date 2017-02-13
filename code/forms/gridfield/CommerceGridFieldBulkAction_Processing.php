@@ -5,7 +5,8 @@
  *
  * @package commerce
  */
-class CommerceGridFieldBulkAction_Processing extends GridFieldBulkActionHandler {
+class CommerceGridFieldBulkAction_Processing extends GridFieldBulkActionHandler
+{
 
     private static $allowed_actions = array(
         'processing'
@@ -15,10 +16,11 @@ class CommerceGridFieldBulkAction_Processing extends GridFieldBulkActionHandler 
         'processing' => 'processing'
     );
 
-    public function processing(SS_HTTPRequest $request) {
+    public function processing(SS_HTTPRequest $request)
+    {
         $ids = array();
 
-        foreach($this->getRecords() as $record) {
+        foreach ($this->getRecords() as $record) {
             array_push($ids, $record->ID);
 
             $record->Status = 'processing';

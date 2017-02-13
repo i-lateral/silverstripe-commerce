@@ -4,9 +4,11 @@
  * The add item form is loaded into controllers to allow adding of products to
  * the shopping cart
  */
-class AddItemToCartForm extends Form {
+class AddItemToCartForm extends Form
+{
 
-    public function __construct($controller, $product, $name = "AddItemForm") {
+    public function __construct($controller, $product, $name = "AddItemForm")
+    {
         $productID = ($product) ? $product->ID : 0;
 
         $fields = FieldList::create(
@@ -14,24 +16,26 @@ class AddItemToCartForm extends Form {
         );
 
         $actions = FieldList::create(
-            FormAction::create('doAddItemToCart',_t('Commerce.AddToCart','Add to Cart'))
+            FormAction::create('doAddItemToCart', _t('Commerce.AddToCart', 'Add to Cart'))
                 ->addExtraClass('btn')
         );
 
         $requirements = new RequiredFields(array("Quantity"));
 
         // If product colour customisations are set, add them to the item form
-        if($product && $product->Customisations()->exists()) {
-            foreach($product->Customisations() as $customisation) {
+        if ($product && $product->Customisations()->exists()) {
+            foreach ($product->Customisations() as $customisation) {
                 $field = $customisation->Field();
                 $fields->add($field);
 
                 // Check if field required
-                if($customisation->Required) $requirements->addRequiredField($field->getName());
+                if ($customisation->Required) {
+                    $requirements->addRequiredField($field->getName());
+                }
             }
         }
 
-        $quantity_fields = QuantityField::create('Quantity', _t('Commerce.CartQty','Qty'))
+        $quantity_fields = QuantityField::create('Quantity', _t('Commerce.CartQty', 'Qty'))
             ->setValue('1')
             ->addExtraClass('commerce-additem-quantity');
 
@@ -41,22 +45,23 @@ class AddItemToCartForm extends Form {
         parent::__construct($controller, $name, $fields, $actions, $requirements);
     }
 
-    public function doAddItemToCart($data) {
+    public function doAddItemToCart($data)
+    {
         $product = Product::get()->byID($data['ProductID']);
         $customisations = array();
 
-        foreach($data as $key => $value) {
-            if(!(strpos($key, 'customise') === false) && $value) {
-                $custom_data = explode("_",$key);
+        foreach ($data as $key => $value) {
+            if (!(strpos($key, 'customise') === false) && $value) {
+                $custom_data = explode("_", $key);
 
-                if($custom_item = ProductCustomisation::get()->byID($custom_data[1])) {
+                if ($custom_item = ProductCustomisation::get()->byID($custom_data[1])) {
                     $modify_price = 0;
 
                     // Check if the current selected option has a price modification
-                    if($custom_item->Options()->exists()) {
+                    if ($custom_item->Options()->exists()) {
                         $option = $custom_item
                             ->Options()
-                            ->filter("Title",$value)
+                            ->filter("Title", $value)
                             ->first();
                         $modify_price = ($option) ? $option->ModifyPrice : 0;
                     }
@@ -67,11 +72,10 @@ class AddItemToCartForm extends Form {
                         "ModifyPrice" => $modify_price,
                     );
                 }
-
             }
         }
 
-        if($product) {
+        if ($product) {
             $cart = ShoppingCart::create();
             $cart->add($product, $data['Quantity'], $customisations);
             $cart->save();
@@ -92,5 +96,4 @@ class AddItemToCartForm extends Form {
 
         return $this->controller->redirectBack();
     }
-
 }

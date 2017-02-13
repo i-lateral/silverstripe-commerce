@@ -1,12 +1,13 @@
 <?php
 
-class SagePayServerHandler extends CommercePaymentHandler {
+class SagePayServerHandler extends CommercePaymentHandler
+{
 
     /**
      * Default action
      */
-    public function index() {
-
+    public function index()
+    {
         $order = $this->order;
         $site = SiteConfig::current_site_config();
 
@@ -76,13 +77,14 @@ class SagePayServerHandler extends CommercePaymentHandler {
         $payload = "";
         $i=0;
 
-        foreach($payload_data as $key=>$value) {
+        foreach ($payload_data as $key=>$value) {
             $payload .= $key . "=" . $value;
 
             $i++;
 
-            if($i < count($payload_data))
+            if ($i < count($payload_data)) {
                 $payload .= "&";
+            }
         }
 
         // Write our connection and check result
@@ -102,41 +104,43 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
         $socket = fsockopen("ssl://{$host}", $port, $errno, $errstr, 30);
 
-        if(!$socket)
+        if (!$socket) {
             return null;
+        }
 
-        for($written = 0; $written < strlen($request); $written += $fwrite) {
+        for ($written = 0; $written < strlen($request); $written += $fwrite) {
             $fwrite = fwrite($socket, substr($request, $written));
         }
 
-        while(!feof($socket))
-            $response .= fgets($socket,1024);
+        while (!feof($socket)) {
+            $response .= fgets($socket, 1024);
+        }
 
         fclose($socket);
 
         // Ready to deal with response data
         $response_data = array();
 
-        foreach(explode("\n", $response) as $item) {
-            if(!strpos($item, "=") === false) {
-                $item_array = explode("=",$item, 2);
+        foreach (explode("\n", $response) as $item) {
+            if (!strpos($item, "=") === false) {
+                $item_array = explode("=", $item, 2);
                 $response_data[$item_array[0]] = $item_array[1];
             }
         }
 
         // Check our data was recieved ok
-        if(strpos($response_data['Status'],'OK') === false) {
+        if (strpos($response_data['Status'], 'OK') === false) {
             $form = null;
         } else {
             $order->PaymentID = $response_data['VPSTxId'];
             $order->write();
 
-            Session::set('Commerce.Order',$order);
+            Session::set('Commerce.Order', $order);
 
             // now setup our form
             $actions = FieldList::create(
-                LiteralField::create('BackButton','<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'),
-                FormAction::create('Submit', _t('Commerce.ConfirmPay','Confirm and Pay'))
+                LiteralField::create('BackButton', '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back', 'Back') . '</a>'),
+                FormAction::create('Submit', _t('Commerce.ConfirmPay', 'Confirm and Pay'))
                     ->addExtraClass('btn')
                     ->addExtraClass('btn-green')
             );
@@ -146,12 +150,12 @@ class SagePayServerHandler extends CommercePaymentHandler {
                 ->setFormMethod('POST')
                 ->setFormAction($response_data['NextURL']);
 
-            $this->extend('updateForm',$form);
+            $this->extend('updateForm', $form);
         }
 
         return array(
-            'Title'       => _t('Commerce.CheckoutSummary',"Summary"),
-            'MetaTitle'   => _t('Commerce.CheckoutSummary',"Summary"),
+            'Title'       => _t('Commerce.CheckoutSummary', "Summary"),
+            'MetaTitle'   => _t('Commerce.CheckoutSummary', "Summary"),
             "Form" => $form
         );
     }
@@ -159,7 +163,8 @@ class SagePayServerHandler extends CommercePaymentHandler {
     /**
      * Retrieve and process order data from the request
      */
-    public function callback() {
+    public function callback()
+    {
         $vars = array();
         $data = $this->request->postVars();
 
@@ -177,7 +182,7 @@ class SagePayServerHandler extends CommercePaymentHandler {
         );
 
         // Check if CallBack data exists and install id matches the saved ID
-        if(isset($data) && isset($data['VendorTxCode']) && isset($data['Status'])) {
+        if (isset($data) && isset($data['VendorTxCode']) && isset($data['Status'])) {
             $order = Order::get()
                 ->filter(array(
                     'OrderNumber' => $data['VendorTxCode'],
@@ -186,25 +191,25 @@ class SagePayServerHandler extends CommercePaymentHandler {
 
             $order_status = $data['Status'];
 
-            if($order && trim($order->PaymentID) == trim($data['VPSTxId'])) {
+            if ($order && trim($order->PaymentID) == trim($data['VPSTxId'])) {
                 $order->Status = ($order_status == 'OK' || $order_status == 'AUTHENTICATED') ? 'paid' : 'failed';
                 // Store all the data sent from the gateway in a json
                 $order->GatewayData = json_encode($data);
                 $order->write();
 
-                if($order_status == 'OK' || $order_status == 'AUTHENTICATED') {
+                if ($order_status == 'OK' || $order_status == 'AUTHENTICATED') {
                     $vars['Status'] = "OK";
-                    $vars['StatusDetail'] =  _t('Commerce.OrderComplete',"Order Complete");
+                    $vars['StatusDetail'] =  _t('Commerce.OrderComplete', "Order Complete");
                     $vars['RedirectURL'] = $success_url;
                 }
             } else {
                 $vars['Status'] = "INVALID";
-                $vars['StatusDetail'] =  _t('Commerce.OrderError',"An error occured, Order ID's do not match");
+                $vars['StatusDetail'] =  _t('Commerce.OrderError', "An error occured, Order ID's do not match");
                 $vars['RedirectURL'] = $error_url;
             }
         } else {
             $vars['Status'] = "ERROR";
-            $vars['StatusDetail'] =  _t('Commerce.OrderError',"An error occured, Order ID's do not match");
+            $vars['StatusDetail'] =  _t('Commerce.OrderError', "An error occured, Order ID's do not match");
             $vars['RedirectURL'] = $error_url;
         }
 

@@ -4,7 +4,8 @@
  * Controller used to render pages in the catalogue (either categories or pages)
  *
  */
-class Catalogue_Controller extends Commerce_Controller {
+class Catalogue_Controller extends Commerce_Controller
+{
 
     private static $allowed_actions = array(
         'image',
@@ -17,17 +18,20 @@ class Catalogue_Controller extends Commerce_Controller {
      * @return ProductCategory
      *
      */
-    public static function get_current_category() {
+    public static function get_current_category()
+    {
         $segment = Controller::curr()->request->param('URLSegment');
         $return = null;
 
-        if($segment) {
+        if ($segment) {
             $return = ProductCategory::get()
-                ->filter('URLSegment',$segment)
+                ->filter('URLSegment', $segment)
                 ->first();
         }
 
-        if(!$return) $return = ProductCategory::create();
+        if (!$return) {
+            $return = ProductCategory::create();
+        }
 
         return $return;
     }
@@ -38,11 +42,12 @@ class Catalogue_Controller extends Commerce_Controller {
      * @return Product
      *
      */
-    public static function get_current_product() {
+    public static function get_current_product()
+    {
         $segment = Controller::curr()->request->param('URLSegment');
         $return = null;
 
-        if($segment) {
+        if ($segment) {
             $return = Product::get()
                 ->filter(array(
                     'URLSegment'=> $segment,
@@ -50,7 +55,9 @@ class Catalogue_Controller extends Commerce_Controller {
                 ))->first();
         }
 
-        if(!$return) $return = Product::create();
+        if (!$return) {
+            $return = Product::create();
+        }
 
         return $return;
     }
@@ -60,12 +67,14 @@ class Catalogue_Controller extends Commerce_Controller {
      *
      * @return PaginatedList
      */
-    public function PaginatedProducts($limit = 10) {
-        if($this->dataRecord instanceOf ProductCategory)
+    public function PaginatedProducts($limit = 10)
+    {
+        if ($this->dataRecord instanceof ProductCategory) {
             return PaginatedList::create($this->SortedProducts(), $this->request)
                 ->setPageLength($limit);
-        else
+        } else {
             return ArrayList::create();
+        }
     }
 
 
@@ -74,12 +83,14 @@ class Catalogue_Controller extends Commerce_Controller {
      *
      * @return PaginatedList
      */
-    public function PaginatedAllProducts($limit = 10) {
-        if($this->dataRecord instanceOf ProductCategory)
+    public function PaginatedAllProducts($limit = 10)
+    {
+        if ($this->dataRecord instanceof ProductCategory) {
             return PaginatedList::create($this->AllProducts(), $this->request)
                 ->setPageLength($limit);
-        else
+        } else {
             return ArrayList::create();
+        }
     }
 
     /**
@@ -88,7 +99,8 @@ class Catalogue_Controller extends Commerce_Controller {
      *
      * @return string
      */
-    public function Link($action = null) {
+    public function Link($action = null)
+    {
         return $this->data()->Link(($action ? $action : true));
     }
 
@@ -102,9 +114,10 @@ class Catalogue_Controller extends Commerce_Controller {
      * @param boolean $includeTitle Show default <title>-tag, set to false for custom templating
      * @return string The XHTML metatags
      */
-    public function MetaTags($includeTitle = true) {
+    public function MetaTags($includeTitle = true)
+    {
         $tags = "";
-        if($includeTitle === true || $includeTitle == 'true') {
+        if ($includeTitle === true || $includeTitle == 'true') {
             $tags .= "<title>" . $this->Title . "</title>\n";
         }
 
@@ -115,14 +128,14 @@ class Catalogue_Controller extends Commerce_Controller {
 
         $charset = Config::inst()->get('ContentNegotiator', 'encoding');
         $tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
-        if($this->MetaDescription) {
+        if ($this->MetaDescription) {
             $tags .= "<meta name=\"description\" content=\"" . Convert::raw2att($this->MetaDescription) . "\" />\n";
         }
-        if($this->ExtraMeta) {
+        if ($this->ExtraMeta) {
             $tags .= $this->ExtraMeta . "\n";
         }
 
-        if(Permission::check('CMS_ACCESS_CMSMain') && in_array('CMSPreviewable', class_implements($this)) && !$this instanceof ErrorPage) {
+        if (Permission::check('CMS_ACCESS_CMSMain') && in_array('CMSPreviewable', class_implements($this)) && !$this instanceof ErrorPage) {
             $tags .= "<meta name=\"x-page-id\" content=\"{$this->ID}\" />\n";
             $tags .= "<meta name=\"x-cms-edit-link\" content=\"" . $this->CMSEditLink() . "\" />\n";
         }
@@ -136,14 +149,16 @@ class Catalogue_Controller extends Commerce_Controller {
      * The ContentController will take the URLSegment parameter from the URL and use that to look
      * up a SiteTree record.
      */
-    public function __construct($dataRecord = null) {
+    public function __construct($dataRecord = null)
+    {
         $this->dataRecord = $dataRecord;
         $this->failover = $this->dataRecord;
         parent::__construct();
     }
 
-    public function index() {
-        $first = ($this->dataRecord instanceOf Product) ? "Commerce_product" : "Commerce_category";
+    public function index()
+    {
+        $first = ($this->dataRecord instanceof Product) ? "Commerce_product" : "Commerce_category";
 
         return $this->renderWith(array(
             $first,
@@ -155,9 +170,11 @@ class Catalogue_Controller extends Commerce_Controller {
     /**
      * Action used to display an image for a product
      */
-    public function image() {
-        if(!($this->dataRecord instanceOf Product))
+    public function image()
+    {
+        if (!($this->dataRecord instanceof Product)) {
             return $this->redirect(BASE_URL);
+        }
 
         return $this->renderWith(array(
             "Commerce_product",
@@ -172,24 +189,28 @@ class Catalogue_Controller extends Commerce_Controller {
      *
      * @return Image
      */
-    public function ProductImage() {
+    public function ProductImage()
+    {
         $images = $this->SortedImages();
         $action = $this->request->param('Action');
         $id = $this->request->param('ID');
 
         $image = null;
 
-        if($action && $action == "image" && $id)
-            $image = $images->filter("ID",$id)->first();
+        if ($action && $action == "image" && $id) {
+            $image = $images->filter("ID", $id)->first();
+        }
 
-        if(!$image)
+        if (!$image) {
             $image = $images->first();
+        }
 
         return $image;
     }
 
-    public function AddItemForm() {
-        if(ShoppingCart::config()->enabled) {
+    public function AddItemForm()
+    {
+        if (ShoppingCart::config()->enabled) {
             $form = AddItemToCartForm::create($this, $this->dataRecord, "AddItemForm")
                 ->addExtraClass('forms')
                 ->addExtraClass('forms-columnar');
@@ -197,9 +218,8 @@ class Catalogue_Controller extends Commerce_Controller {
             $this->extend("updateAddItemForm", $form);
 
             return $form;
-        } else
+        } else {
             return false;
+        }
     }
-
-
 }

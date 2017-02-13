@@ -35,7 +35,8 @@
  *
  */
 
-class StringEncryptor {
+class StringEncryptor
+{
 
     /**
      * String that we are going to encrypt
@@ -62,7 +63,8 @@ class StringEncryptor {
      */
     private $hash;
 
-    private function __construct($string) {
+    private function __construct($string)
+    {
         $this->data = $string;
     }
 
@@ -72,7 +74,8 @@ class StringEncryptor {
      * @para, $string string to encrypt
      * @return StringEncryptor
      */
-    public static function create($string) {
+    public static function create($string)
+    {
         return new StringEncryptor($string);
     }
 
@@ -82,7 +85,8 @@ class StringEncryptor {
      * @param $type Type of encryption
      * @return self
      */
-    public function setEncryption($type) {
+    public function setEncryption($type)
+    {
         $this->encryption = $type;
         return $this;
     }
@@ -93,7 +97,8 @@ class StringEncryptor {
      * @param $hash
      * @return self
      */
-    public function setHash($hash) {
+    public function setHash($hash)
+    {
         $this->hash = $hash;
         return $this;
     }
@@ -103,7 +108,8 @@ class StringEncryptor {
      *
      * @return String
      */
-    public function get() {
+    public function get()
+    {
         return $this->encrypted_data;
     }
 
@@ -112,11 +118,13 @@ class StringEncryptor {
      *
      * @return self
      */
-    public function encrypt() {
-        if($this->encryption == 'XOR')
+    public function encrypt()
+    {
+        if ($this->encryption == 'XOR') {
             $this->encrypted_data = $this->simplexor();
-        elseif($this->encryption == 'MCRYPT')
+        } elseif ($this->encryption == 'MCRYPT') {
             $this->encrypted_data = $this->mcrypt();
+        }
 
         return $this;
     }
@@ -126,7 +134,8 @@ class StringEncryptor {
      *
      * @return self
      */
-    public function encode() {
+    public function encode()
+    {
         // Encode data string
         $this->encrypted_data = base64_encode($this->encrypted_data);
 
@@ -139,17 +148,18 @@ class StringEncryptor {
      *
      * return self
      */
-    private function simplexor() {
+    private function simplexor()
+    {
         $KeyList = array();
         $output = "";
 
         // Convert $Key into array of ASCII values
-        for($i = 0; $i < strlen($this->hash); $i++) {
+        for ($i = 0; $i < strlen($this->hash); $i++) {
             $KeyList[$i] = ord(substr($this->hash, $i, 1));
         }
 
         // Step through string a character at a time
-        for($i = 0; $i < strlen($this->data); $i++) {
+        for ($i = 0; $i < strlen($this->data); $i++) {
             $output.= chr(ord(substr($this->data, $i, 1)) ^ ($KeyList[$i % strlen($this->hash)]));
         }
 
@@ -162,7 +172,8 @@ class StringEncryptor {
      *
      * @return self
      */
-    private function mcrypt() {
+    private function mcrypt()
+    {
         $strIV = $this->hash;
 
         // add PKCS5 padding to the text to be encypted
@@ -178,16 +189,17 @@ class StringEncryptor {
     /**
      * PHP's mcrypt does not have built in PKCS5 Padding, so we use this
      */
-    private function addPKCS5Padding() {
-       $blocksize = 16;
-       $padding = "";
+    private function addPKCS5Padding()
+    {
+        $blocksize = 16;
+        $padding = "";
 
        // Pad input to an even block size boundary
        $padlength = $blocksize - (strlen($this->data) % $blocksize);
-       for($i = 1; $i <= $padlength; $i++) {
-          $padding .= chr($padlength);
-       }
+        for ($i = 1; $i <= $padlength; $i++) {
+            $padding .= chr($padlength);
+        }
 
-       return $this->data . $padding;
+        return $this->data . $padding;
     }
 }

@@ -4,17 +4,18 @@
  *
  * @author morven
  */
-class DeliveryDetailsForm extends Form {
-    public function __construct($controller, $name = "DeliveryDetailsForm") {
-
+class DeliveryDetailsForm extends Form
+{
+    public function __construct($controller, $name = "DeliveryDetailsForm")
+    {
         $personal_fields = CompositeField::create(
             HeaderField::create(
                 'PersonalHeader',
-                _t('Commerce.PersonalDetails','Personal Details'),
+                _t('Commerce.PersonalDetails', 'Personal Details'),
                 3
             ),
-            TextField::create('DeliveryFirstnames',_t('Commerce.FirstName','First Name(s)') . '*'),
-            TextField::create('DeliverySurname',_t('Commerce.Surname','Surname') . '*')
+            TextField::create('DeliveryFirstnames', _t('Commerce.FirstName', 'First Name(s)') . '*'),
+            TextField::create('DeliverySurname', _t('Commerce.Surname', 'Surname') . '*')
         )->setName("PersonalFields")
         ->addExtraClass('unit')
         ->addExtraClass('size1of2')
@@ -23,17 +24,17 @@ class DeliveryDetailsForm extends Form {
         $address_fields = CompositeField::create(
             HeaderField::create(
                 'AddressHeader',
-                _t('Commerce.Address','Address'),
+                _t('Commerce.Address', 'Address'),
                 3
             ),
-            TextField::create('DeliveryAddress1',_t('Commerce.Address1','Address Line 1') . '*'),
-            TextField::create('DeliveryAddress2',_t('Commerce.Address2','Address Line 2')),
-            TextField::create('DeliveryCity',_t('Commerce.City','City') . '*'),
-            TextField::create('DeliveryPostCode',_t('Commerce.PostCode','Post Code') . '*'),
+            TextField::create('DeliveryAddress1', _t('Commerce.Address1', 'Address Line 1') . '*'),
+            TextField::create('DeliveryAddress2', _t('Commerce.Address2', 'Address Line 2')),
+            TextField::create('DeliveryCity', _t('Commerce.City', 'City') . '*'),
+            TextField::create('DeliveryPostCode', _t('Commerce.PostCode', 'Post Code') . '*'),
             CountryDropdownField::create(
                     'DeliveryCountry',
-                    _t('Commerce.Country','Country')
-                )->setAttribute("class",'countrydropdown dropdown btn')
+                    _t('Commerce.Country', 'Country')
+                )->setAttribute("class", 'countrydropdown dropdown btn')
         )->setName("AddressFields")
         ->addExtraClass('unit')
         ->addExtraClass('size1of2')
@@ -49,14 +50,14 @@ class DeliveryDetailsForm extends Form {
         );
 
         // Add a save address for later checkbox if a user is logged in
-        if(Member::currentUserID()) {
+        if (Member::currentUserID()) {
             $member = Member::currentUser();
 
             $fields->add(
                 CompositeField::create(
                     CheckboxField::create(
                         "SaveAddress",
-                        _t('Commerce.SaveAddress','Save this address for later')
+                        _t('Commerce.SaveAddress', 'Save this address for later')
                     )
                 )->setName("SaveAddressHolder")
                 ->addExtraClass('line')
@@ -69,10 +70,10 @@ class DeliveryDetailsForm extends Form {
         $actions = FieldList::create(
             LiteralField::create(
                 'BackButton',
-                '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back','Back') . '</a>'
+                '<a href="' . $back_url . '" class="btn btn-red commerce-action-back">' . _t('Commerce.Back', 'Back') . '</a>'
             ),
 
-            FormAction::create('doContinue', _t('Commerce.PostageDetails','Select Postage'))
+            FormAction::create('doContinue', _t('Commerce.PostageDetails', 'Select Postage'))
                 ->addExtraClass('btn')
                 ->addExtraClass('commerce-action-next')
                 ->addExtraClass('btn-green')
@@ -90,11 +91,12 @@ class DeliveryDetailsForm extends Form {
         parent::__construct($controller, $name, $fields, $actions, $validator);
     }
 
-    public function doContinue($data) {
-        Session::set("Commerce.DeliveryDetailsForm.data",$data);
+    public function doContinue($data)
+    {
+        Session::set("Commerce.DeliveryDetailsForm.data", $data);
 
         // If the user ticked "save address" then add to their account
-        if(array_key_exists('SaveAddress',$data) && $data['SaveAddress']) {
+        if (array_key_exists('SaveAddress', $data) && $data['SaveAddress']) {
             $address = MemberAddress::create();
             $address->FirstName = $data['DeliveryFirstnames'];
             $address->Surname = $data['DeliverySurname'];

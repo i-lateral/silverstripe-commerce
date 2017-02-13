@@ -4,7 +4,8 @@
  * Item that can be loaded into an OrderItem report
  *
  */
-class OrderItemReportItem extends Object {
+class OrderItemReportItem extends Object
+{
 
     public $ClassName = "OrderItemReportItem";
 
@@ -14,7 +15,8 @@ class OrderItemReportItem extends Object {
     public $Price;
     public $Quantity;
 
-    public function canView($member = null) {
+    public function canView($member = null)
+    {
         return true;
     }
 }

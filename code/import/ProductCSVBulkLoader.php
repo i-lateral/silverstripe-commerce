@@ -6,15 +6,19 @@
  * @package commerce
  * @author i-lateral (http://www.i-lateral.com)
  */
-class ProductCSVBulkLoader extends CsvBulkLoader {
+class ProductCSVBulkLoader extends CsvBulkLoader
+{
 
     public $duplicateChecks = array(
         'ID'    => 'ID',
         'SKU'   => 'SKU'
     );
 
-    public function __construct($objectClass = null) {
-        if(!$objectClass) $objectClass = 'Product';
+    public function __construct($objectClass = null)
+    {
+        if (!$objectClass) {
+            $objectClass = 'Product';
+        }
 
         parent::__construct($objectClass);
     }
@@ -24,7 +28,8 @@ class ProductCSVBulkLoader extends CsvBulkLoader {
      * Perform more complex imports of generic columns
      *
      */
-    public function processRecord($record, $columnMap, &$results, $preview = false) {
+    public function processRecord($record, $columnMap, &$results, $preview = false)
+    {
 
         // Get Current Object
         $objID = parent::processRecord($record, $columnMap, $results, $preview);
@@ -33,65 +38,71 @@ class ProductCSVBulkLoader extends CsvBulkLoader {
         $this->extend("onBeforeProcess", $record, $object);
 
         // Loop through all fields and setup associations
-        foreach($record as $key => $value) {
+        foreach ($record as $key => $value) {
 
             // Find any categories (denoted by a 'CategoryXX' column)
-            if(strpos($key,'Category') !== false) {
+            if (strpos($key, 'Category') !== false) {
                 $category = ProductCategory::get()
                     ->filter("Title", $value)
                     ->first();
 
-                if($category)
+                if ($category) {
                     $object->Categories()->add($category);
+                }
             }
 
-            if($key == 'Categories') {
+            if ($key == 'Categories') {
                 $parts = explode(',', $value);
-                if(!count($parts)) return false;
+                if (!count($parts)) {
+                    return false;
+                }
 
                 // First remove all categories
-                foreach($object->Categories() as $category) {
+                foreach ($object->Categories() as $category) {
                     $object->Categories()->remove($category);
                 }
 
                 // Now re-add categories
-                foreach($parts as $part) {
+                foreach ($parts as $part) {
                     $category = ProductCategory::get()
                         ->filter("Title", trim($part))
                         ->first();
 
-                    if($category)
+                    if ($category) {
                         $object->Categories()->add($category);
+                    }
                 }
             }
 
             // Find any Images (denoted by a 'ImageXX' column)
-            if(strpos($key,'Image') !== false && $key != "Images") {
+            if (strpos($key, 'Image') !== false && $key != "Images") {
                 $image = Image::get()
                     ->filter("Name", $value)
                     ->first();
 
-                if($image)
+                if ($image) {
                     $object->Images()->add($image);
+                }
             }
 
             // Alternativley look for the 'Images' field as a CSV
-            if($key == "Images") {
+            if ($key == "Images") {
                 $parts = explode(',', $value);
-                if(count($parts)) {
+                if (count($parts)) {
                     // First remove all Images
-                    foreach($object->Images() as $image) {
+                    foreach ($object->Images() as $image) {
                         $object->Images()->remove($image);
                     }
 
                     // Now re-add categories
-                    foreach($parts as $part) {
+                    foreach ($parts as $part) {
                         $image = Image::get()
                             ->filter("Name", trim($part))
                             ->first();
 
-                        if($image)
+                        if ($image) {
                             $object->Images()->add($image);
+                        }
                     }
                 }
             }
@@ -104,5 +115,4 @@ class ProductCSVBulkLoader extends CsvBulkLoader {
 
         return $objID;
     }
-
 }
