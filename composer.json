@@ -19,7 +19,6 @@
         "silverstripe/framework": ">=3.1",
         "silverstripe/cms": ">=3.1",
         "i-lateral/silverstripe-catalogue": "3.*",
-        "i-lateral/silverstripe-checkout": "3.*",
         "i-lateral/silverstripe-orders": "3.*",
         "i-lateral/silverstripe-sessionmessenger": "1.*",
         "unclecheese/dashboard": "1.1.*",
