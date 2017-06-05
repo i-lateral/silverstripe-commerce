@@ -9,9 +9,6 @@ Checkout:
 Controller:
   extensions:
     - CommerceControllerExtension
-Payment_Controller:
-  extensions:
-    - CommercePaymentControllerExtension
 SiteConfig:
   extensions:
     - CommerceSiteConfigExtension
