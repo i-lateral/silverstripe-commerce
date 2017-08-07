@@ -13,11 +13,11 @@ class CommerceCatalogueProductControllerExtension extends Extension {
         // Add object type and classname
         $form
             ->Fields()
-            ->push(HiddenField::create('ID')->setValue($object->ID));
+            ->push(HiddenField::create('ID')->setValue($object->ID)->setForm($form));
             
         $form
             ->Fields()
-            ->push(HiddenField::create('ClassName')->setValue($object->ClassName));
+            ->push(HiddenField::create('ClassName')->setValue($object->ClassName)->setForm($form));
             
         $form
             ->Fields()
@@ -25,6 +25,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
                 QuantityField::create('Quantity', _t('Commerce.Qty','Qty'))
                     ->setValue('1')
                     ->addExtraClass('checkout-additem-quantity')
+                    ->setForm($form)
             );
         
         // Add "Add item" button
@@ -34,6 +35,7 @@ class CommerceCatalogueProductControllerExtension extends Extension {
                 FormAction::create('doAddItemToCart',_t('Commerce.AddToCart','Add to Cart'))
                     ->addExtraClass('btn')
                     ->addExtraClass('btn-green btn-primary')
+                    ->setForm($form)
             );
 
         // Add validator
