@@ -22,7 +22,7 @@
         "i-lateral/silverstripe-orders": "3.*",
         "i-lateral/silverstripe-sessionmessenger": "1.*",
         "unclecheese/dashboard": "1.1.*",
-        "silverstripe-australia/gridfieldextensions": "1.*",
+        "symbiote/silverstripe-gridfieldextensions": "~2.0",
         "colymba/gridfield-bulk-editing-tools": "~2.1",
         "bummzack/sortablefile": "1.*",
         "i-lateral/silverstripe-users": "1.*"
