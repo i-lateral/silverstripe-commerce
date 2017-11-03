@@ -26,11 +26,6 @@ class DashboardContentSummaryPanel extends DashboardPanel
         return parent::PanelHolder();
     }
 
-    public function Securitylink()
-    {
-        return SecurityAdmin::create()->Link();
-    }
-
     /**
      * Get the total amount of products on this site
      *
