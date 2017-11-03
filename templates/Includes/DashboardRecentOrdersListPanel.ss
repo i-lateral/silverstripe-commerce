@@ -17,8 +17,4 @@
             <% end_loop %>
         </tbody>
     </table>
-
-    <p><a class="ss-ui-button  ss-ui-button-block" href="{$OrdersLink}">
-        <%t Commerce.ViewAllOrders "View All Orders" %>
-    </a></p>
 </div>

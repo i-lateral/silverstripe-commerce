@@ -24,6 +24,16 @@ class DashboardTopProductsPanel extends DashboardPanel
         return _t('Commerce.TopProductsDescription','Shows top selling products this month.');
     }
 
+    /**
+     * Return a link to the "items ordered" report 
+     *
+     * @return string
+     */
+    public function ReportLink()
+    {
+        return Injector::inst()->create("OrderItemReport")->getLink();
+    }
+
     public function PanelHolder()
     {
         Requirements::css("commerce/css/dashboard-commerce.css");
@@ -42,14 +52,27 @@ class DashboardTopProductsPanel extends DashboardPanel
         return $fields;
     }
 
-    public function ReportLink()
+    /**
+     * Add view all button to actions
+     *
+     * @return ArrayList
+     */
+    public function getSecondaryActions()
     {
-        return Controller::join_links(
-            ReportAdmin::create()->Link(),
-            "OrderItemReport"
-        );
-    }
+		$actions = parent::getSecondaryActions();
+		$actions->push(DashboardPanelAction::create(
+            $this->ReportLink(),
+            _t("Commerce.ViewAll", "View All")
+        ));
+			
+		return $actions;
+	}
 
+    /**
+     * Return a list of top products for the template
+     *
+     * @return ArrayList
+     */
     public function Products()
     {
         $return = ArrayList::create();

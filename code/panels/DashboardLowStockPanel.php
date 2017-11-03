@@ -30,23 +30,49 @@ class DashboardLowStockPanel extends DashboardPanel
         return parent::PanelHolder();
     }
 
+    /**
+     * Get a link to the catalogue admin
+     *
+     * @return string
+     */
+    public function CatalogueLink()
+    {
+        return Injector::inst()->create("CatalogueAdmin")->Link();
+    }
+
     public function getConfiguration()
     {
         $fields = parent::getConfiguration();
 
         $fields->push(TextField::create(
-        "Count",
-        "Number of products to show"
+            "Count",
+            "Number of products to show"
         ));
 
         return $fields;
     }
 
-    public function CatalogueLink()
+    /**
+     * Add view all button to actions
+     *
+     * @return ArrayList
+     */
+    public function getSecondaryActions()
     {
-        return CatalogueAdmin::create()->Link();
-    }
+		$actions = parent::getSecondaryActions();
+		$actions->push(DashboardPanelAction::create(
+            $this->CatalogueLink(),
+            _t("Commerce.ViewAll", "View All")
+        ));
+			
+		return $actions;
+	}
 
+    /**
+     * Get a list of products to render in the template
+     *
+     * @return DataList
+     */
     public function Products()
     {
         $count = ($this->Count) ? $this->Count : 7;

@@ -15,8 +15,4 @@
             <% end_loop %>
         </tbody>
     </table>
-
-    <p><a class="ss-ui-button ss-ui-button-block" href="{$SecurityLink}">
-        <%t Commerce.ViewAll "View All" %>
-    </a></p>
 </div>

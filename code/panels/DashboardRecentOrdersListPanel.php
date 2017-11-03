@@ -23,6 +23,16 @@ class DashboardRecentOrdersListPanel extends DashboardPanel
         return _t('Commerce.RecentOrdersListDescription','Shows a list of recent orders.');
     }
 
+    /**
+     * Generate a link to the order admin controller
+     *
+     * @return String
+     */
+    public function Orderslink()
+    {
+        return Injector::inst()->create("OrderAdmin")->Link();
+    }
+
     public function PanelHolder()
     {
         Requirements::css("commerce/css/dashboard-commerce.css");
@@ -34,24 +44,40 @@ class DashboardRecentOrdersListPanel extends DashboardPanel
         $fields = parent::getConfiguration();
 
         $fields->push(TextField::create(
-        "Count",
-        "Number of orders to show"
+            "Count",
+            "Number of orders to show"
         ));
 
         return $fields;
     }
 
-    public function OrdersLink()
+    /**
+     * Add view all button to actions
+     *
+     * @return ArrayList
+     */
+    public function getSecondaryActions()
     {
-        return OrderAdmin::create()->Link();
-    }
+		$actions = parent::getSecondaryActions();
+		$actions->push(DashboardPanelAction::create(
+            $this->OrdersLink(),
+            _t("Commerce.ViewAll", "View All")
+        ));
+			
+		return $actions;
+	}
 
+    /**
+     * Return a full list of orders for the template
+     *
+     * @return DataList
+     */
     public function Orders()
     {
         $count = ($this->Count) ? $this->Count : 7;
 
         return Order::get()
-        ->sort("Created DESC")
-        ->limit($count);
+            ->sort("Created DESC")
+            ->limit($count);
     }
 }

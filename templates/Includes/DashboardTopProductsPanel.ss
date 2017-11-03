@@ -17,8 +17,4 @@
             <% end_loop %>
         </tbody>
     </table>
-
-    <p><a class="ss-ui-button ss-ui-button-block" href="{$ReportLink}">
-        <%t Commerce.ViewFullReport "View Full Report" %>
-    </a></p>
 </div>

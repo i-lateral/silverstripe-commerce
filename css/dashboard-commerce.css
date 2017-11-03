@@ -1,21 +1,3 @@
-.DashboardTopProductsPanel .dashboard-panel-content,
-.DashboardNewCustomersPanel .dashboard-panel-content,
-.DashboardRecentOrdersListPanel .dashboard-panel-content,
-.DashboardLowStockPanel .dashboard-panel-content {
-    position: relative;
-}
-
-.DashboardTopProductsPanel .ss-ui-button,
-.DashboardNewCustomersPanel .ss-ui-button,
-.DashboardRecentOrdersListPanel .ss-ui-button,
-.DashboardLowStockPanel .ss-ui-button {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    display: block;
-}
-
 .dashboard-commerce-panel th,
 .dashboard-commerce-panel td {
     padding: 0.25em;

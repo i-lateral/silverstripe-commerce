@@ -12,7 +12,7 @@ class DashboardNewCustomersPanel extends DashboardPanel
 	private static $defaults = array (
         "Count"     => "7",
 		"PanelSize" => "small"
-	);
+    );
 
     public function getLabel()
     {
@@ -23,6 +23,16 @@ class DashboardNewCustomersPanel extends DashboardPanel
     public function getDescription()
     {
         return _t('Commerce.LatestCustomersDescription','Shows latest customers to join.');
+    }
+
+    /**
+     * Generate a link to the security admin controller
+     *
+     * @return String
+     */
+    public function Securitylink()
+    {
+        return Injector::inst()->create("SecurityAdmin")->Link();
     }
 
     public function PanelHolder()
@@ -43,10 +53,20 @@ class DashboardNewCustomersPanel extends DashboardPanel
         return $fields;
     }
 
-    public function Securitylink()
-    {
-        return SecurityAdmin::create()->Link();
-    }
+    /**
+     * Add view all button to actions
+     *
+     * @return ArrayList
+     */
+    public function getSecondaryActions() {
+		$actions = parent::getSecondaryActions();
+		$actions->push(DashboardPanelAction::create(
+            $this->Securitylink(),
+            _t("Commerce.ViewAll", "View All")
+        ));
+			
+		return $actions;
+	}
 
     /**
      * Get a list of members who registered through the users module
