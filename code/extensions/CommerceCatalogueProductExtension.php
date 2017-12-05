@@ -82,4 +82,49 @@ class CommerceCatalogueProductExtension extends DataExtension
             "TaxRateID"
         );
     }
+
+    public function getModelForm()
+    {
+        $controller = $this->owner->getController();
+
+        $form = $controller->Form();
+        $form->setAttribute('id',$form->FormName().'_'.$this->owner->ID);
+
+        $fields = $form->Fields();
+        $fields->removeByName('Quantity');
+        $fields->push(
+            HiddenField::create('Quantity')
+                ->setValue('1')
+                ->setForm($form)
+        );
+
+        foreach ($form->Actions() as $action) {
+            $action->addExtraClass('btn-block');
+        }
+
+        return $form;
+    }
+
+    public function getController()
+    {
+        $ancestry = ClassInfo::ancestry($this->owner->class);
+        
+        while ($class = array_pop($ancestry)) {
+            if (class_exists($class . "_Controller")) {
+                break;
+            }
+        }
+        
+        // Find the controller we need, or revert to a default
+        if ($class !== null) {
+            $controller = "{$class}_Controller";
+        } elseif (ClassInfo::baseDataClass($this->owner->class) == "CatalogueProduct") {
+            $controller = "CatalogueProductController";
+        } elseif (ClassInfo::baseDataClass($this->owner->class) == "CatalogueCategory") {
+            $controller = "CatalogueCategoryController";
+        }
+
+        return class_exists($controller) ? Injector::inst()->create($controller, $this->owner) : $this->owner;
+        
+    }
 }
