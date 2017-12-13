@@ -47,15 +47,17 @@ class CommerceCatalogueProductControllerExtension extends Extension {
     public function doAddItemToCart($data, $form) {
         $classname = $data["ClassName"];
         $id = $data["ID"];
-        
         $cart = ShoppingCart::get();
-        
+
         if($object = $classname::get()->byID($id)) {
-            if($object->TaxRateID && $object->TaxRate()->Amount)
+            if ($object->TaxRateID && $object->TaxRate()->Amount) {
                 $tax_rate = $object->TaxRate()->Amount;
-            else
+            } else {
                 $tax_rate = 0;
-            
+            }
+
+            $deliverable = (isset($object->Deliverable)) ? $object->Deliverable : true;
+
             $item_to_add = array(
                 "Key" => $object->ID,
                 "Title" => $object->Title,
@@ -67,9 +69,10 @@ class CommerceCatalogueProductControllerExtension extends Extension {
                 "ID" => $object->ID,
                 "Weight" => $object->Weight,
                 "ClassName" => $object->ClassName,
-                "Stocked" => $object->Stocked
+                "Stocked" => $object->Stocked,
+                "Deliverable" => $deliverable
             );
-            
+
             // Try and add item to cart, return any exceptions raised
             // as a message
             try {
