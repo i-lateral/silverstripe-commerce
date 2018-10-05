@@ -17,7 +17,7 @@
     "require": {
         "silverstripe/framework": ">=3.1",
         "i-lateral/silverstripe-sessionmessenger": "dev-master",
-        "ajshort/silverstripe-gridfieldextensions": "dev-master",
+        "symbiote/silverstripe-gridfieldextensions": "~1.1",
         "colymba/gridfield-bulk-editing-tools": "dev-master",
         "bummzack/sortablefile": "dev-master"
     },
