@@ -7,20 +7,20 @@ class DashboardRecentOrdersListPanel extends DashboardPanel
         'Count' => 'Int'
     );
 
-	private static $defaults = array (
-		'PanelSize' => "normal"
-	);
+    private static $defaults = array (
+        'PanelSize' => "normal"
+    );
 
     private static $icon = "commerce/images/order_162.png";
 
     public function getLabel()
     {
-        return _t('Commerce.RecentOrdersList','Recent Orders List');
+        return _t('Commerce.RecentOrdersList', 'Recent Orders List');
     }
 
     public function getDescription()
     {
-        return _t('Commerce.RecentOrdersListDescription','Shows a list of recent orders.');
+        return _t('Commerce.RecentOrdersListDescription', 'Shows a list of recent orders.');
     }
 
     /**
@@ -43,10 +43,12 @@ class DashboardRecentOrdersListPanel extends DashboardPanel
     {
         $fields = parent::getConfiguration();
 
-        $fields->push(TextField::create(
-            "Count",
-            "Number of orders to show"
-        ));
+        $fields->push(
+            TextField::create(
+                "Count",
+                "Number of orders to show"
+            )
+        );
 
         return $fields;
     }
@@ -58,14 +60,16 @@ class DashboardRecentOrdersListPanel extends DashboardPanel
      */
     public function getSecondaryActions()
     {
-		$actions = parent::getSecondaryActions();
-		$actions->push(DashboardPanelAction::create(
-            $this->OrdersLink(),
-            _t("Commerce.ViewAll", "View All")
-        ));
-			
-		return $actions;
-	}
+        $actions = parent::getSecondaryActions();
+        $actions->push(
+            DashboardPanelAction::create(
+                $this->OrdersLink(),
+                _t("Commerce.ViewAll", "View All")
+            )
+        );
+            
+        return $actions;
+    }
 
     /**
      * Return a full list of orders for the template
@@ -75,9 +79,15 @@ class DashboardRecentOrdersListPanel extends DashboardPanel
     public function Orders()
     {
         $count = ($this->Count) ? $this->Count : 7;
+        $status = Order::config()->incomplete_status;
 
         return Order::get()
-            ->sort("Created DESC")
+            ->filter(
+                array(
+                    "ClassName" => "Order",
+                    "Status:not" => $status
+                )
+            )->sort("Created DESC")
             ->limit($count);
     }
 }

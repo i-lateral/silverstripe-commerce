@@ -5,21 +5,22 @@ class DashboardRecentOrdersChartPanel extends DashboardPanel
 
     private static $icon = "commerce/images/order_162.png";
 
-	private static $defaults = array (
-		'PanelSize' => "large"
-	);
+    private static $defaults = array (
+        'PanelSize' => "large"
+    );
 
     public function getLabel()
     {
-        return _t('Commerce.RecentOrdersChart','Recent Orders Chart');
+        return _t('Commerce.RecentOrdersChart', 'Recent Orders Chart');
     }
 
     public function getDescription()
     {
-        return _t('Commerce.RecentOrdersChartDescription','Shows a chart of the last months orders.');
+        return _t('Commerce.RecentOrdersChartDescription', 'Shows a chart of the last months orders.');
     }
 
-    public function Chart() {
+    public function Chart()
+    {
         $chart = DashboardChart::create(
             "Last 30 days orders",
             "Date",
@@ -38,15 +39,22 @@ class DashboardRecentOrdersChartPanel extends DashboardPanel
             }
 
             $orders = Order::get()
-                ->filter(array(
-                    "Created:PartialMatch" => $date->format('Y-m-d'),
-                    "Status:not" => $status
-                ))->count();
+                ->filter(
+                    array(
+                        "Created:PartialMatch" => $date->format('Y-m-d'),
+                        "ClassName" => "Order",
+                        "Status:not" => $status
+                    )
+                )->count();
             
-            $results->add(ArrayData::create(array(
-                "Date"  => $date->format('jS F Y'),
-                "Count" => $orders
-            )));
+            $results->add(
+                ArrayData::create(
+                    array(
+                        "Date"  => $date->format('jS F Y'),
+                        "Count" => $orders
+                    )
+                )
+            );
         }
 
         // Reverse the data
