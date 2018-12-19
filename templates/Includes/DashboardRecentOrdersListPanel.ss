@@ -10,7 +10,7 @@
         <tbody>
             <% loop Orders %>
                 <tr>
-                    <td><a href="{$Link}">$OrderNumber</a></td>
+                    <td><a href="{$AdminEditLink}">$OrderNumber</a></td>
                     <td>$Created.Nice</td>
                     <td>$Total.Nice</td>
                 <tr>

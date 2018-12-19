@@ -36,4 +36,16 @@ class CommerceOrderExtension extends DataExtension
             }
         }
     }
+
+    public function AdminEditLink()
+    {
+        $admin = Injector::inst()->get('OrderAdmin');
+
+        return Controller::join_links(
+            $admin->Link(),
+            'Order/EditForm/field/Order/item',
+            $this->owner->ID,
+            'edit'
+        );
+    }
 }
