@@ -7,7 +7,7 @@
  * The advantage of this is that we can perform a more complex upgrade
  * that an SQL file can provide.
  */
-class CommerceUpgrader extends Object {
+class CommerceUpgrader extends SS_Object {
 
     
     /**
