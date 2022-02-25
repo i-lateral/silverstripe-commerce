@@ -1,0 +1,12 @@
+# List of tasks to run when running `upgrade-code doctor`
+recipeEquivalences:
+  i-lateral/silverstripe-commerce:
+    - silvercommerce/silvercommerce-recipe
+  i-lateral/silverstripe-orders:
+    - silvercommerce/orders-admin
+  i-lateral/silverstripe-commerce-customisableproduct:
+    - silvercommerce/customisable-products
+  i-lateral/silverstripe-commerce-bulkprice:
+    - silvercommerce/bulk-pricing
+  silverstripe/silverstripe-omnipay:
+    - silvercommerce/checkout
